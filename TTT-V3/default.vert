@@ -12,10 +12,15 @@ out vec2 texCoord;
 // use scale uniform
 uniform float scale;
 
+// uniforms for 3D
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
+
 void main()
 {
     // add+mul scale uniform to each position
-    gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
+    gl_Position = proj * view * model * vec4(aPos, 1.0);
     // Assign color to colors based on layout
     color = aColor;
     // Assign texture based on layout

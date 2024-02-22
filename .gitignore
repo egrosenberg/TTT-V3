@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+# ignore vim files
+*~
+*.swp
+*.swo
