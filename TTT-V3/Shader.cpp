@@ -6,7 +6,7 @@ std::string Shader::readFile(const char* filename)
 	std::ifstream in(filename, std::ios::binary);
 	// verify file is open
 	if (in)
-	{	
+	{
 		// create buffer to store file
 		std::string contents;
 		// resize string to size of input file

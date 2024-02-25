@@ -14,9 +14,11 @@
 #include "VAO.h"
 #include "EBO.h"
 #include "Texture.h"
+#include "Camera.h"
 
 #define NAME "TTT-V3"
-#define WIN_WIDTH  800
-#define WIN_HEIGHT 800
+#define WIN_WIDTH  1080
+#define WIN_HEIGHT 1080
+#define FOV 45.0f
 
 #endif
