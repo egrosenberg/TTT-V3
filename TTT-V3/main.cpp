@@ -119,7 +119,7 @@ int main()
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// define position and model for light
-	glm::vec3 lightPos = glm::vec3(0.25f, 0.25f, 0.25f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
