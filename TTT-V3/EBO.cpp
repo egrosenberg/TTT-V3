@@ -6,13 +6,13 @@
  * @param indices: 1d array containing order to draw indices in
  * @param size: size of indices
  */
-EBO::EBO(GLuint* indices, GLsizeiptr size)
+EBO::EBO(std::vector <GLuint>* indices)
 {
 	// generate inex buffer
 	glGenBuffers(1, &m_ID);
 	// Bind index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(GLuint), indices->data(), GL_STATIC_DRAW);
 }
 
 // Binds the EBO

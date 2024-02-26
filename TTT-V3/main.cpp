@@ -1,12 +1,12 @@
 #include "main.h"
 
 // create some vertices to draw 3 triangles
-GLfloat vertices[] =
-{ //     vertex coords   /        color coords    /    tex coords  /        normals       //
-	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+Vertex vertices[] =
+{ //     vertex coords   /                     colors                /          normals            / tex coords
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
 };
 
 // mark rendering order indices for vertices
@@ -17,16 +17,16 @@ GLuint indices[] =
 };
 
 // create vertices for light source
-GLfloat lightVertices[] =
+Vertex lightVertices[] =
 { //     COORDINATES     //
-	-0.1f, -0.1f,  0.1f,
-	-0.1f, -0.1f, -0.1f,
-	 0.1f, -0.1f, -0.1f,
-	 0.1f, -0.1f,  0.1f,
-	-0.1f,  0.1f,  0.1f,
-	-0.1f,  0.1f, -0.1f,
-	 0.1f,  0.1f, -0.1f,
-	 0.1f,  0.1f,  0.1f
+	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
 };
 
 // mark rendering order for light source
@@ -76,43 +76,31 @@ int main()
 	// Define the viewport of the OpenGL window
 	glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 
+	// define our textures
+	Texture textures[]
+	{
+		// Create and generate our texture
+		Texture("Textures/planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		// specular texture
+		Texture("Textures/planksSpec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
 	// set up shader program
 	Shader* shaderProgram = new Shader("default.vert", "default.frag");
 
-	// Create and bind VAO
-	VAO *VAO1 = new VAO();
-	VAO1->Bind();
-
-	// create VBO and EBO
-	VBO *VBO1 = new VBO(vertices, sizeof(vertices));
-	EBO *EBO1 = new EBO(indices, sizeof(indices));
-
-	// Link our VBO to our VAO
-	VAO1->LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
-	VAO1->LinkAttrib(VBO1, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1->LinkAttrib(VBO1, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-	VAO1->LinkAttrib(VBO1, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
-	// unbind so we dont accidentally modify them
-	VAO1->Unbind();
-	VBO1->Unbind();
-	EBO1->Unbind();
+	// define our vectors for mesh
+	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	// create our mesh
+	Mesh *floor = new Mesh(verts, ind, tex);
 
 	// create shader program for light
 	Shader *lightShader = new Shader("light.vert", "light.frag");
-	// create and bind light vao
-	VAO *lightVAO = new VAO();
-	lightVAO->Bind();
-
-	// create light vbo and ebo
-	VBO *lightVBO = new VBO(lightVertices, sizeof(lightVertices));
-	EBO* lightEBO = new EBO(lightIndices, sizeof(lightIndices));
-	// link light vbo to vao
-	lightVAO->LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-
-	// unbind light vao etc. so we dont modify later
-	lightVAO->Unbind();
-	lightVBO->Unbind();
-	lightEBO->Unbind();
+	// create light mesh
+	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+	Mesh *light = new Mesh(lightVerts, lightInd, tex);
 
 
 	// def light color
@@ -138,13 +126,6 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram->m_ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	// Create and generate our texture
-	Texture* cat2 = new Texture("Textures/planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	// set up texture unit
-	cat2->texUnit(shaderProgram, "tex0", 0);
-	// specular texture
-	Texture* cat2Spec = new Texture("Textures/planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
-	cat2Spec->texUnit(shaderProgram, "tex1", 1);
 	
 	// enable depth testing buffer
 	glEnable(GL_DEPTH_TEST);
@@ -170,19 +151,10 @@ int main()
 		glm::vec3 cameraPos = mainCamera->GetPos();
 		glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "camPos"), cameraPos.x, cameraPos.y, cameraPos.z);
 		mainCamera->Matrix(shaderProgram, "camMatrix");
-		// bind cat texture
-		cat2->Bind();
-		cat2Spec->Bind();
-		// Bind the VAO so OpenGL knows to use it
-		VAO1->Bind();
-		// Draw primitives
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 
-		// draw light source
-		lightShader->Activate();
-		mainCamera->Matrix(lightShader, "camMatrix");
-		lightVAO->Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		// draw light and floor
+		floor->Draw(shaderProgram, mainCamera);
+		light->Draw(lightShader, mainCamera);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);
@@ -191,17 +163,8 @@ int main()
 	}
 
 	// clean up objects used for shaders and drawing
-	delete VAO1;
-	delete VBO1;
-	delete EBO1;
-
-	delete cat2;
-	delete cat2Spec;
-
-
-	delete lightVAO;
-	delete lightVBO;
-	delete lightEBO;
+	delete floor;
+	delete light;
 
 	delete shaderProgram;
 

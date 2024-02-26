@@ -1,19 +1,20 @@
 #version 330 core
 out vec4 FragColor;
 
+// inputs current position
+in vec3 crntPos;
+// inputs normal vector
+in vec3 Normal;
 // inputs color for shader
 in vec3 color;
 // inputs texture coordinates
 in vec2 texCoord;
-// inputs normal vector and current pos
-in vec3 Normal;
-in vec3 crntPos;
 
 
 // use texture sampler uniform
-uniform sampler2D tex0;
+uniform sampler2D diffuse0;
 // use specular map texture
-uniform sampler2D tex1;
+uniform sampler2D specular0;
 
 // use light color uniform
 uniform vec4 lightColor;
@@ -27,9 +28,9 @@ vec4 pointLight()
 	vec3 lightVec = lightPos - crntPos;
 	// calculate light intensity with respect to dist
 	float dist = length(lightVec);
-	float a = 3.0;
-	float b = 0.7;
-	float inten = 1.0f / (1 * dist * dist + b * dist + 1.0f);
+	float a = 1.0;
+	float b = 0.2;
+	float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
 
 	// add ambient light
 	float ambient = 0.2f;
@@ -53,7 +54,7 @@ vec4 pointLight()
 	float specular = specAmount * specularLight;
 
 	// calculate final pixel color
-    return (texture(tex0, texCoord) * (diffuse * inten + ambient) + texture(tex1, texCoord).r * specular * inten) * lightColor;
+    return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
 
 vec4 directionalLight()
@@ -80,7 +81,7 @@ vec4 directionalLight()
 	float specular = specAmount * specularLight;
 
 	// calculate final pixel color
-    return (texture(tex0, texCoord) * (diffuse + ambient) + texture(tex1, texCoord).r * specular) * lightColor;
+    return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
 
 vec4 spotLight()
@@ -114,10 +115,11 @@ vec4 spotLight()
 	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
 	// calculate final pixel color
-    return (texture(tex0, texCoord) * (diffuse * inten + ambient) + texture(tex1, texCoord).r * specular * inten) * lightColor;
+    return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
 
 void main()
 {
-	FragColor = pointLight();
+	vec4 col = pointLight();
+	FragColor = col;
 }

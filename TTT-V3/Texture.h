@@ -12,11 +12,11 @@ class Texture
 {
 private:
 	GLuint m_ID;
-	GLuint m_type;
 	GLuint m_unit;
+	const char *m_type;
 
 public:
-	Texture(const char *fname, GLenum texType, GLuint slot, GLenum format, GLenum pixelType);
+	Texture(const char *fname, const char *texType, GLuint slot, GLenum format, GLenum pixelType);
 
 	void texUnit(Shader *shader, const char *uniform, GLuint unit);
 	void Bind();
@@ -24,7 +24,7 @@ public:
 	void Delete();
 
 	GLuint getID() { return m_ID; }
-	GLuint getType() { return m_type; }
+	const char *getType() { return m_type; }
 
 	virtual ~Texture();
 };
