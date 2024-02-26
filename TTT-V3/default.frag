@@ -12,6 +12,8 @@ in vec3 crntPos;
 
 // use texture sampler uniform
 uniform sampler2D tex0;
+// use specular map texture
+uniform sampler2D tex1;
 
 // use light color uniform
 uniform vec4 lightColor;
@@ -33,7 +35,7 @@ void main()
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 
 	// set maximum intensity of specular light
-	float specularLight = 0.5f;
+	float specularLight = 0.50f;
 	vec3 viewDirection = normalize(camPos - crntPos);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
 	// calculate ammount of specular light at specified angle
@@ -41,7 +43,6 @@ void main()
 	// calculate final specular value
 	float specular = specAmount * specularLight;
 
-
-	// set color based on input
-    FragColor = texture(tex0, texCoord) * lightColor * (diffuse + ambient + specular);
+	// calculate final pixel color
+    FragColor = (texture(tex0, texCoord) * (diffuse + ambient) + texture(tex1, texCoord).r * specular) * lightColor;
 }

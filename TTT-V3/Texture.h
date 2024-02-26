@@ -13,9 +13,10 @@ class Texture
 private:
 	GLuint m_ID;
 	GLuint m_type;
+	GLuint m_unit;
 
 public:
-	Texture(const char *fname, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
+	Texture(const char *fname, GLenum texType, GLuint slot, GLenum format, GLenum pixelType);
 
 	void texUnit(Shader *shader, const char *uniform, GLuint unit);
 	void Bind();

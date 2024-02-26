@@ -90,5 +90,14 @@
     <Image Include="Textures\cat2.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="Textures\cat2_specular.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\planks.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\planksSpec.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

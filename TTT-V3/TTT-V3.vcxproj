@@ -172,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\cat2.png" />
+    <Image Include="Textures\cat2_specular.png" />
+    <Image Include="Textures\planks.png" />
+    <Image Include="Textures\planksSpec.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

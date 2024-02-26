@@ -3,37 +3,17 @@
 // create some vertices to draw 3 triangles
 GLfloat vertices[] =
 { //     vertex coords   /        color coords    /    tex coords  /        normals       //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 1.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 1.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
-
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
+	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
 };
 
 // mark rendering order indices for vertices
 GLuint indices[] =
 {
-	0, 1, 2, // Bottom side
-	0, 2, 3, // Bottom side
-	4, 6, 5, // Left side
-	7, 9, 8, // Non-facing side
-	10, 12, 11, // Right side
-	13, 15, 14 // Facing side
+	0, 1, 2,
+	0, 2, 3
 };
 
 // create vertices for light source
@@ -139,7 +119,7 @@ int main()
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// define position and model for light
-	glm::vec3 lightPos = glm::vec3(0.5f, 1.0f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.25f, 0.25f, 0.25f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -159,15 +139,18 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	// Create and generate our texture
-	Texture* cat2 = new Texture("Textures/cat2.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture* cat2 = new Texture("Textures/planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
 	// set up texture unit
 	cat2->texUnit(shaderProgram, "tex0", 0);
+	// specular texture
+	Texture* cat2Spec = new Texture("Textures/planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
+	cat2Spec->texUnit(shaderProgram, "tex1", 1);
 	
 	// enable depth testing buffer
 	glEnable(GL_DEPTH_TEST);
 
 	// create camera object
-	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 1.0f, 2.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
@@ -184,11 +167,12 @@ int main()
 		// Tell OpenGL which shader program to use
 		shaderProgram->Activate();
 		// Send camera location data for specular lighting
-		glm::vec3 cameraPos = mainCamera->GetPos();;
-		glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "cameraPos"), cameraPos.x, cameraPos.y, cameraPos.z);
+		glm::vec3 cameraPos = mainCamera->GetPos();
+		glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "camPos"), cameraPos.x, cameraPos.y, cameraPos.z);
 		mainCamera->Matrix(shaderProgram, "camMatrix");
 		// bind cat texture
 		cat2->Bind();
+		cat2Spec->Bind();
 		// Bind the VAO so OpenGL knows to use it
 		VAO1->Bind();
 		// Draw primitives
@@ -212,6 +196,7 @@ int main()
 	delete EBO1;
 
 	delete cat2;
+	delete cat2Spec;
 
 
 	delete lightVAO;

@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-Texture::Texture(const char* fname, GLenum texType, GLenum slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* fname, GLenum texType, GLuint slot, GLenum format, GLenum pixelType)
 {
 	m_type = texType;
 
@@ -12,7 +12,8 @@ Texture::Texture(const char* fname, GLenum texType, GLenum slot, GLenum format, 
 	// Create and generate our texture
 	glGenTextures(1, &m_ID);
 	// activate texture unit
-	glActiveTexture(slot);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	m_unit = slot;
 	// bind texture
 	glBindTexture(texType, m_ID);
 
@@ -41,6 +42,7 @@ void Texture::texUnit(Shader* shader, const char* uniform, GLuint unit)
 
 void Texture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + m_unit);
 	glBindTexture(m_type, m_ID);
 }
 
