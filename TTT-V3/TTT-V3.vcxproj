@@ -171,6 +171,8 @@
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="outline.frag" />
+    <None Include="outline.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\cat2.png" />

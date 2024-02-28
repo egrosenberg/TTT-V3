@@ -81,7 +81,6 @@ vec4 directionalLight()
 	float specular = specAmount * specularLight;
 
 	// calculate final pixel color
-    //return (vec4(0.5, 0.5, 0.5, 1.0f) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
     return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
 
@@ -118,6 +117,32 @@ vec4 spotLight()
 	// calculate final pixel color
     return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
+
+
+// Some depth buffer fun, ignoring for now
+
+/*
+float near = 0.1f;	// use uniforms for this later?
+float far = 100.0f; // use uniforms for this later?
+
+// function to turn logarithmic depth into linear function
+float linearizeDepth(float depth)
+{
+	return (2.0 * near * far) / (far + near - (depth * 2.0 - 1.0) * (far - near));
+}
+
+float logisticDepth(float depth, float steepness = 0.5f, float offset = 5.0f)
+{
+	float zVal = linearizeDepth(depth);
+	return (1 / (1 + exp(-steepness * (zVal - offset))));
+}
+
+// function to apply a fog effect to a color
+vec4 fog(vec4 col)
+{
+	float depth = logisticDepth(gl_FragCoord.z);
+	return col * (1.0f - depth) + vec4(depth * vec3(0.85f), 1.0f);
+}*/
 
 void main()
 {

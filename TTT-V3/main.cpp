@@ -53,8 +53,10 @@ int main()
 	// Define the viewport of the OpenGL window
 	glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 
-	// set up shader program
+	// set up shader program for main object
 	Shader *shaderProgram = new Shader("default.vert", "default.frag");
+	// set up shader program for outline
+	Shader *outliningProgram = new Shader("outline.vert", "outline.frag");
 
 	// def light color
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -71,6 +73,12 @@ int main()
 	
 	// enable depth testing buffer
 	glEnable(GL_DEPTH_TEST);
+	// set depth function
+	glDepthFunc(GL_LESS);
+	// enable stencil buffer
+	glEnable(GL_STENCIL_TEST);
+	// set up stencil function so that it calls the stencil function when both pass
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	// create camera object
 	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -94,17 +102,38 @@ int main()
 	while (!glfwWindowShouldClose(winMain))
 	{
 		// Specify the background color
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		// Clean the back depth and color buffers
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
 		// Camera control
 		mainCamera->Inputs(winMain);
 		// update camera matrix
-		mainCamera->UpdateMatrix(FOV, 0.1f, 500.0f);
+		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
 		// draw model
+		// make stencil test pass
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
 		model->Draw(shaderProgram, mainCamera);
+
+		// make it so stencil function only passes if NEQ 1
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		// disable depth buffer so we can draw outline
+		glDisable(GL_DEPTH_TEST);
+		// send outlining info to shader
+		outliningProgram->Activate();
+		glUniform1f(glGetUniformLocation(outliningProgram->m_ID, "outlining"), 0.08f);
+		// draw model with stencil
+		model->Draw(outliningProgram, mainCamera);
+
+		// enable writing to stencil
+		glStencilMask(0xFF);
+		// clear stencil
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		// reenable depth buffer
+		glEnable(GL_DEPTH_TEST);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);
@@ -115,6 +144,7 @@ int main()
 	// clean up objects used for shaders and drawing
 	delete model;
 	delete shaderProgram;
+	delete outliningProgram;
 
 	// close window
 	glfwDestroyWindow(winMain);
