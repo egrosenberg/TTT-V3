@@ -15,19 +15,22 @@ out vec2 texCoord;
 
 // uniforms for camera 3D
 uniform mat4 camMatrix;
-
+// imports transformation matrices from c++
 uniform mat4 model;
+uniform mat4 translation;
+uniform mat4 rotation;
+uniform mat4 scale;
 
 void main()
 {
-    // calculate current position
-    crntPos = vec3(model * vec4(aPos, 1.0f));
+    // calculate current position (flipping rotation because of gltf discrepancies)
+    crntPos = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
     // assigns the normal from vertex data
     Normal = aNormal;
     // Assign color to colors based on layout
     color = aColor;
-    // Assign texture based on layout
-    texCoord = aTex;
+    // Assign texture based on layout (rotating 90 degrees to account for gltf discrepancies)
+    texCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTex;
 
     // add+mul scale uniform to each position
     gl_Position = camMatrix * vec4(crntPos, 1.0);

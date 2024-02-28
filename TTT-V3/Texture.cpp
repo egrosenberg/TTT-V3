@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-Texture::Texture(const char* fname, const char *texType, GLuint slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* fname, const char *texType, GLuint slot)
 {
 	m_type = texType;
 
@@ -8,7 +8,10 @@ Texture::Texture(const char* fname, const char *texType, GLuint slot, GLenum for
 	stbi_set_flip_vertically_on_load(true);
 	int widthImg, heightImg, numColCh;
 	unsigned char* bytes = stbi_load(fname, &widthImg, &heightImg, &numColCh, 0);
-
+	if (!bytes) {
+		std::cout << stbi_failure_reason();
+		throw new std::exception(stbi_failure_reason());
+	}
 	// Create and generate our texture
 	glGenTextures(1, &m_ID);
 	// activate texture unit
@@ -18,14 +21,64 @@ Texture::Texture(const char* fname, const char *texType, GLuint slot, GLenum for
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 
 	// set scaling mode
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	// set repeat mode
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	// Generate texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
+	// check number of color channels and create texture
+	if (numColCh == 4)
+	{
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	}
+	else if (numColCh == 3)
+	{
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	}
+	else if (numColCh == 1)
+	{
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	}
+	else
+	{
+		throw std::invalid_argument("Texture type recognition failed: Invalid number of color channels");
+	}
+
+	// Generate Mimaps
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// delete img data and unbind texture

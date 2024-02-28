@@ -16,7 +16,7 @@ private:
 	const char *m_type;
 
 public:
-	Texture(const char *fname, const char *texType, GLuint slot, GLenum format, GLenum pixelType);
+	Texture(const char *fname, const char *texType, GLuint slot);
 
 	void texUnit(Shader *shader, const char *uniform, GLuint unit);
 	void Bind();

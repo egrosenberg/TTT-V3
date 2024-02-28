@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures)
+Mesh::Mesh(std::vector <Vertex> &vertices, std::vector <GLuint> &indices, std::vector <Texture*> &textures)
 {
 	m_vertices = vertices;
 	m_indices = indices;
@@ -25,7 +25,14 @@ Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::v
 	m_EBO->Unbind();
 }
 
-void Mesh::Draw(Shader* shader, Camera* camera)
+void Mesh::Draw(
+	Shader* shader,
+	Camera* camera,
+	glm::mat4 matrix,
+	glm::vec3 translation,
+	glm::quat rotation,
+	glm::vec3 scale
+	)
 {
 	// activate shader and bind vao
 	shader->Activate();
@@ -38,7 +45,7 @@ void Mesh::Draw(Shader* shader, Camera* camera)
 	for (unsigned int i = 0; i < m_textures.size(); ++i)
 	{
 		std::string num;
-		std::string type = m_textures[i].getType();
+		std::string type = m_textures[i]->getType();
 		if (type == "diffuse")
 		{
 			num = std::to_string(numDiffuse++);
@@ -48,13 +55,28 @@ void Mesh::Draw(Shader* shader, Camera* camera)
 			num = std::to_string(numSpecular++);
 		}
 		// send texture to shader
-		m_textures[i].texUnit(shader, (type + num).c_str(), i);
-		m_textures[i].Bind();
+		m_textures[i]->texUnit(shader, (type + num).c_str(), i);
+		m_textures[i]->Bind();
 	}
 	// send uniforms to shader
 	glm::vec3 camPos = camera->GetPos();
 	glUniform3f(glGetUniformLocation(shader->m_ID, "camPos"), camPos.x, camPos.y, camPos.z);
 	camera->Matrix(shader, "camMatrix");
+
+	// calculate transformation matrices
+	glm::mat4 trans = glm::mat4(1.0f);
+	glm::mat4 rot = glm::mat4(1.0f);
+	glm::mat4 sca = glm::mat4(1.0f);
+
+	trans = glm::translate(trans, translation);
+	rot = glm::mat4_cast(rotation);
+	sca = glm::scale(sca, scale);
+
+	// send transformation matrices as uniforms
+	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "translation"), 1, GL_FALSE, glm::value_ptr(trans));
+	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "scale"), 1, GL_FALSE, glm::value_ptr(sca));
+	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 	// draw our mesh
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);

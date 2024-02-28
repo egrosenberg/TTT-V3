@@ -1,3 +1,2 @@
-﻿  Mesh.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Mesh.cpp(60,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+﻿  main.cpp
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe

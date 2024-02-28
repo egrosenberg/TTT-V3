@@ -18,7 +18,6 @@ public:
 	void Activate();
 	void Delete();
 private:
-	std::string readFile(const char* filename);
 
 	void CompileErrors(unsigned int shader, const char* type);
 };

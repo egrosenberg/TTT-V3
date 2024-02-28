@@ -1,28 +1,5 @@
 #include "Shader.h"
-
-std::string Shader::readFile(const char* filename)
-{
-	// create input stream
-	std::ifstream in(filename, std::ios::binary);
-	// verify file is open
-	if (in)
-	{
-		// create buffer to store file
-		std::string contents;
-		// resize string to size of input file
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		// move back to begin of file
-		in.seekg(0, std::ios::beg);
-		// read file to contents
-		in.read(&contents[0], contents.size());
-		// close file
-		in.close();
-		// return file data
-		return(contents);
-	}
-	throw(errno);
-}
+#include "main.h"
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {

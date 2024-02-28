@@ -18,6 +18,8 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	
 	// initalize position
 	m_position = position;
+
+	m_cameraMatrix = glm::mat4(1.0f);
 }
 
 // calculares view and projection matrices based on camera

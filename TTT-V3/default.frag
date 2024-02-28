@@ -28,12 +28,12 @@ vec4 pointLight()
 	vec3 lightVec = lightPos - crntPos;
 	// calculate light intensity with respect to dist
 	float dist = length(lightVec);
-	float a = 1.0;
+	float a = 0.1;
 	float b = 0.2;
 	float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
 
 	// add ambient light
-	float ambient = 0.2f;
+	float ambient = 0.3f;
 	
 	// diffuse lighting
 	// normalize the normal
@@ -66,7 +66,7 @@ vec4 directionalLight()
 	// normalize the normal
 	vec3 normal = normalize(Normal);
 	// calculate light direction
-	vec3 lightDirection = normalize(vec3(1.0f, 1.0f, 0.0f)); // WE CAN USE A UNIFORM FOR THIS LATER
+	vec3 lightDirection = normalize(vec3(0.5f, 1.0f, 1.0f)); // WE CAN USE A UNIFORM FOR THIS LATER
 	// calculate diffuse lighting
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 	
@@ -81,6 +81,7 @@ vec4 directionalLight()
 	float specular = specAmount * specularLight;
 
 	// calculate final pixel color
+    //return (vec4(0.5, 0.5, 0.5, 1.0f) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
     return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
 
@@ -120,6 +121,6 @@ vec4 spotLight()
 
 void main()
 {
-	vec4 col = pointLight();
+	vec4 col = directionalLight();
 	FragColor = col;
 }
