@@ -55,8 +55,6 @@ int main()
 
 	// set up shader program for main object
 	Shader *shaderProgram = new Shader("default.vert", "default.frag");
-	// set up shader program for outline
-	Shader *outliningProgram = new Shader("outline.vert", "outline.frag");
 
 	// def light color
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -70,15 +68,15 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram->m_ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	
 	// enable depth testing buffer
 	glEnable(GL_DEPTH_TEST);
 	// set depth function
 	glDepthFunc(GL_LESS);
-	// enable stencil buffer
-	glEnable(GL_STENCIL_TEST);
-	// set up stencil function so that it calls the stencil function when both pass
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	// enable face culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CW);
 
 	// create camera object
 	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -98,9 +96,29 @@ int main()
 	// set transform of model
 	model->SetTransform(transform);
 
+	// set up variables for FPS tracking
+	double prevTime = 0.0;
+	double crntTime = 0.0;
+	double timeDiff = 0.0;
+	unsigned int frameCounter = 0;
+
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
 	{
+		// calculate fps
+		crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		++frameCounter;
+		if (timeDiff >= 1.0 / 30.0)
+		{
+			std::string fps = std::to_string((1.0 / timeDiff) * frameCounter);
+			std::string ms = std::to_string((timeDiff / frameCounter) * 1000);
+			std::string newTitle = NAME + (" - " + fps + "fps / " + ms + "ms");
+			glfwSetWindowTitle(winMain, newTitle.c_str());
+			prevTime = crntTime;
+			frameCounter = 0;
+		}
+
 		// Specify the background color
 		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		// Clean the back depth and color buffers
@@ -112,28 +130,7 @@ int main()
 		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
 		// draw model
-		// make stencil test pass
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
 		model->Draw(shaderProgram, mainCamera);
-
-		// make it so stencil function only passes if NEQ 1
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		// disable depth buffer so we can draw outline
-		glDisable(GL_DEPTH_TEST);
-		// send outlining info to shader
-		outliningProgram->Activate();
-		glUniform1f(glGetUniformLocation(outliningProgram->m_ID, "outlining"), 0.08f);
-		// draw model with stencil
-		model->Draw(outliningProgram, mainCamera);
-
-		// enable writing to stencil
-		glStencilMask(0xFF);
-		// clear stencil
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		// reenable depth buffer
-		glEnable(GL_DEPTH_TEST);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);
@@ -144,7 +141,6 @@ int main()
 	// clean up objects used for shaders and drawing
 	delete model;
 	delete shaderProgram;
-	delete outliningProgram;
 
 	// close window
 	glfwDestroyWindow(winMain);
