@@ -82,6 +82,19 @@ void Mesh::Draw(
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 }
 
+// deletes texture at index and replaces it
+void Mesh::ReplaceTex(unsigned int index, Texture *tex)
+{
+	// error checking
+	if (index >= m_textures.size())
+	{
+		std::cout << "ERROR: invalid texture index" << std::endl;
+		return;
+	}
+	delete m_textures[index];
+	m_textures[index] = tex;
+}
+
 Mesh::~Mesh()
 {
 	delete m_VAO;

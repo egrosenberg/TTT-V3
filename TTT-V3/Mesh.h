@@ -32,6 +32,8 @@ public:
 		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f)
 	);
 
+	void ReplaceTex(unsigned int index, Texture *tex);
+
 	virtual ~Mesh();
 };
 

@@ -1,5 +1,19 @@
 #include "main.h"
 
+
+// verts for post processing rect
+float rectangleVertices[] =
+{
+	// Coords    // texCoords
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	-1.0f,  1.0f,  0.0f, 1.0f,
+
+	 1.0f,  1.0f,  1.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	-1.0f,  1.0f,  0.0f, 1.0f
+};
+
 std::string readFile(const char* filename)
 {
 	// create input stream
@@ -55,18 +69,23 @@ int main()
 
 	// set up shader program for main object
 	Shader *shaderProgram = new Shader("default.vert", "default.frag");
+	// set up shader for framebuffer
+	Shader *frameProgram = new Shader("framebuffer.vert", "framebuffer.frag");
 
 	// def light color
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	// define position and model for light
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPos);
 
-	// Activate pyramid shader and set uniforms
+	// Activate model shader and set uniforms
 	shaderProgram->Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram->m_ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	// Activate framebuffer shader and set uniform
+	frameProgram->Activate();
+	glUniform1i(glGetUniformLocation(frameProgram->m_ID, "screenTexture"), 0);
+
+
 
 	// enable depth testing buffer
 	glEnable(GL_DEPTH_TEST);
@@ -83,6 +102,7 @@ int main()
 
 	// create model object
 	Model *model = new Model("models/cat/scene.gltf");
+
 
 	// transform the model
 	glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -102,6 +122,8 @@ int main()
 	double timeDiff = 0.0;
 	unsigned int frameCounter = 0;
 
+	Display* display = new Display();
+
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
 	{
@@ -119,11 +141,18 @@ int main()
 			frameCounter = 0;
 		}
 
+		// bind display buffer before drawing
+		display->Bind(WIN_WIDTH, WIN_HEIGHT);
+
 		// Specify the background color
 		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		// Clean the back depth and color buffers
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// make sure depth testing is enabled
+		glEnable(GL_DEPTH_TEST);
+		// enable face culling
+		glEnable(GL_CULL_FACE);
+
 		// Camera control
 		mainCamera->Inputs(winMain);
 		// update camera matrix
@@ -131,6 +160,12 @@ int main()
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
+
+		// unbind display buffer
+		display->Unbind();
+
+		// draw display buffer
+		display->Draw(frameProgram, winMain);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);
@@ -141,6 +176,8 @@ int main()
 	// clean up objects used for shaders and drawing
 	delete model;
 	delete shaderProgram;
+	delete frameProgram;
+	delete display;
 
 	// close window
 	glfwDestroyWindow(winMain);

@@ -9,14 +9,6 @@ using json = nlohmann::json;
 // gltf model loader
 class Model
 {
-public:
-	Model(const char *fname);
-
-	void Draw(Shader *shader, Camera *camera);
-
-	void SetTransform(glm::mat4 mat) { m_transform = mat; }
-
-	virtual ~Model();
 private:
 	const char *m_fname;
 	std::vector<unsigned char> *m_data;
@@ -51,6 +43,16 @@ private:
 	std::vector<glm::vec2> GroupFloatsVec2(std::vector<float> floatVec);
 	std::vector<glm::vec3> GroupFloatsVec3(std::vector<float> floatVec);
 	std::vector<glm::vec4> GroupFloatsVec4(std::vector<float> floatVec);
+public:
+	Model(const char* fname);
+
+	void Draw(Shader* shader, Camera* camera);
+
+	void SetTransform(glm::mat4 mat) { m_transform = mat; }
+
+	std::vector<Mesh*> *Meshes() { return m_meshes; };
+
+	virtual ~Model();
 };
 
 #endif
