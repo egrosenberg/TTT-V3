@@ -3,6 +3,8 @@
 
 #include "Model.h"
 #include "Display.h"
+#include "CubeMap.h"
+#include "Skybox.h"
 
 #define NAME "TTT-V3"
 #define WIN_WIDTH  1080

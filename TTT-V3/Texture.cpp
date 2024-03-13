@@ -8,7 +8,8 @@ Texture::Texture(const char* fname, const char *texType, GLuint slot)
 	stbi_set_flip_vertically_on_load(true);
 	int widthImg, heightImg, numColCh;
 	unsigned char* bytes = stbi_load(fname, &widthImg, &heightImg, &numColCh, 0);
-	if (!bytes) {
+	if (!bytes)
+	{
 		std::cout << stbi_failure_reason();
 		throw new std::exception(stbi_failure_reason());
 	}
@@ -88,7 +89,7 @@ Texture::Texture(const char* fname, const char *texType, GLuint slot)
 
 void Texture::texUnit(Shader* shader, const char* uniform, GLuint unit)
 {
-	GLuint texUni = glGetUniformLocation(shader->m_ID, uniform);
+	GLuint texUni = glGetUniformLocation(shader->ID(), uniform);
 	shader->Activate();
 	glUniform1i(texUni, unit);
 }
@@ -104,12 +105,7 @@ void Texture::Unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::Delete()
-{
-	glDeleteTextures(1, &m_ID);
-}
-
 Texture::~Texture()
 {
-	Delete();
+	glDeleteTextures(1, &m_ID);
 }

@@ -1,17 +1,40 @@
 #include "main.h"
 
-
-// verts for post processing rect
-float rectangleVertices[] =
+// vertices for skybox cube
+float skyboxVertices[] =
 {
-	// Coords    // texCoords
-	 1.0f, -1.0f,  1.0f, 0.0f,
-	-1.0f, -1.0f,  0.0f, 0.0f,
-	-1.0f,  1.0f,  0.0f, 1.0f,
+	//   Coordinates
+	-1.0f, -1.0f,  1.0f,//        7--------6
+	 1.0f, -1.0f,  1.0f,//       /|       /|
+	 1.0f, -1.0f, -1.0f,//      4--------5 |
+	-1.0f, -1.0f, -1.0f,//      | |      | |
+	-1.0f,  1.0f,  1.0f,//      | 3------|-2
+	 1.0f,  1.0f,  1.0f,//      |/       |/
+	 1.0f,  1.0f, -1.0f,//      0--------1
+	-1.0f,  1.0f, -1.0f
+};
 
-	 1.0f,  1.0f,  1.0f, 1.0f,
-	 1.0f, -1.0f,  1.0f, 0.0f,
-	-1.0f,  1.0f,  0.0f, 1.0f
+// indices for skybox cube
+unsigned int skyboxIndices[] =
+{
+	// Right
+	1, 2, 6,
+	6, 5, 1,
+	// Left
+	0, 4, 7,
+	7, 3, 0,
+	// Top
+	4, 5, 6,
+	6, 7, 4,
+	// Bottom
+	0, 3, 2,
+	2, 1, 0,
+	// Back
+	0, 1, 5,
+	5, 4, 0,
+	// Front
+	3, 7, 6,
+	6, 2, 3
 };
 
 std::string readFile(const char* filename)
@@ -38,6 +61,11 @@ std::string readFile(const char* filename)
 	throw(errno);
 }
 
+void test(float f[])
+{
+	std::cout << sizeof(f)/sizeof(float) << std::endl;
+}
+
 int main()
 {
 	// initialize glfw
@@ -51,7 +79,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create our window and ensure it opened properly
-	GLFWwindow *winMain = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, NAME, NULL, NULL);
+	GLFWwindow* winMain = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, NAME, NULL, NULL);
 	if (!winMain)
 	{
 		std::cerr << "Failed to initalize window, exiting." << std::endl;
@@ -68,23 +96,27 @@ int main()
 	glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 
 	// set up shader program for main object
-	Shader *shaderProgram = new Shader("default.vert", "default.frag");
+	Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag");
 	// set up shader for framebuffer
-	Shader *frameProgram = new Shader("framebuffer.vert", "framebuffer.frag");
+	Shader *frameProgram = new Shader("Shaders/framebuffer.vert", "Shaders/framebuffer.frag");
+	// set up shader for skybox
+	Shader *skyboxProgram = new Shader("Shaders/skybox.vert", "Shaders/skybox.frag");
 
 	// def light color
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(1.00f, 0.77f, 0.77f, 1.0f);
 	// define position and model for light
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	// Activate model shader and set uniforms
 	shaderProgram->Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram->m_ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram->m_ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform4f(glGetUniformLocation(shaderProgram->ID(), "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	// Activate framebuffer shader and set uniform
 	frameProgram->Activate();
-	glUniform1i(glGetUniformLocation(frameProgram->m_ID, "screenTexture"), 0);
-
+	glUniform1i(glGetUniformLocation(frameProgram->ID(), "screenTexture"), 0);
+	// Activate skybox shader
+	skyboxProgram->Activate();
+	glUniform1i(glGetUniformLocation(skyboxProgram->ID(), "skybox"), 0);
 
 
 	// enable depth testing buffer
@@ -101,7 +133,7 @@ int main()
 	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// create model object
-	Model *model = new Model("models/cat/scene.gltf");
+	Model* model = new Model("models/cat/scene.gltf");
 
 
 	// transform the model
@@ -122,7 +154,22 @@ int main()
 	double timeDiff = 0.0;
 	unsigned int frameCounter = 0;
 
+	// set up post proccessing display
 	Display* display = new Display();
+
+	// create an array of strings to hold cubemap faces
+	std::vector<std::string> skyboxFaces =
+	{
+		"Textures/Skybox/px.png",
+		"Textures/Skybox/nx.png",
+		"Textures/Skybox/py.png",
+		"Textures/Skybox/ny.png",
+		"Textures/Skybox/pz.png",
+		"Textures/Skybox/nz.png",
+	};
+
+	// Create skybox
+	Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
@@ -150,6 +197,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// make sure depth testing is enabled
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 		// enable face culling
 		glEnable(GL_CULL_FACE);
 
@@ -160,6 +208,9 @@ int main()
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
+
+		// draw skybox
+		skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
 
 		// unbind display buffer
 		display->Unbind();
@@ -178,6 +229,7 @@ int main()
 	delete shaderProgram;
 	delete frameProgram;
 	delete display;
+	delete skybox;
 
 	// close window
 	glfwDestroyWindow(winMain);

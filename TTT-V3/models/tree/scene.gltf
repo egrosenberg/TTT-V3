@@ -1,0 +1,572 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        -2.5208380222320557,
+        0.8782228827476501,
+        3.7611708641052246
+      ],
+      "min": [
+        -5.877058982849121,
+        -2.0746240615844727,
+        -5.2214789390563965
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 455376,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.9999802708625793,
+        0.9999980926513672,
+        0.9999535083770752
+      ],
+      "min": [
+        -0.9999803900718689,
+        -0.9999924898147583,
+        -0.9990085959434509
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        1.0,
+        0.9996141791343689,
+        0.9999305009841919,
+        1.0
+      ],
+      "min": [
+        -0.9999721050262451,
+        -0.9993017315864563,
+        -0.9998714923858643,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.961151123046875,
+        1.0
+      ],
+      "min": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 303584,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.961151123046875,
+        1.0
+      ],
+      "min": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 607168,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.961151123046875,
+        1.0
+      ],
+      "min": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 910752,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.961151123046875,
+        1.0
+      ],
+      "min": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1214336,
+      "componentType": 5126,
+      "count": 37948,
+      "max": [
+        0.961151123046875,
+        1.0
+      ],
+      "min": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 216852,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 910752,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        -3.3981359004974365,
+        0.07493394613265991,
+        1.8726248741149902
+      ],
+      "min": [
+        -5.000244140625,
+        -0.06542503833770752,
+        1.7323639392852783
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 962136,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.9995903372764587,
+        0.9988524913787842,
+        0.9994757175445557
+      ],
+      "min": [
+        -0.9995903372764587,
+        -0.9988524913787842,
+        -0.9994785785675049
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 607168,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.999939501285553,
+        0.8113911747932434,
+        0.9996852278709412,
+        1.0
+      ],
+      "min": [
+        -0.9874575138092041,
+        -0.9997988343238831,
+        -0.9271290302276611,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1517920,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.99884033203125,
+        0.9999990463256836
+      ],
+      "min": [
+        1.0058283805847168e-06,
+        1.0132789611816406e-06
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1552176,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.99884033203125,
+        0.9999990463256836
+      ],
+      "min": [
+        1.0058283805847168e-06,
+        1.0132789611816406e-06
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1586432,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.99884033203125,
+        0.9999990463256836
+      ],
+      "min": [
+        1.0058283805847168e-06,
+        1.0132789611816406e-06
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1620688,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.99884033203125,
+        0.9999990463256836
+      ],
+      "min": [
+        1.0058283805847168e-06,
+        1.0132789611816406e-06
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1654944,
+      "componentType": 5126,
+      "count": 4282,
+      "max": [
+        0.99884033203125,
+        0.9999990463256836
+      ],
+      "min": [
+        1.0058283805847168e-06,
+        1.0132789611816406e-06
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 867408,
+      "componentType": 5125,
+      "count": 23808,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Olof_3D (https://sketchfab.com/Olof_3D)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/humpback-whale-c67ae7b564524dcc88229e84848f47f4",
+      "title": "Humpback Whale"
+    },
+    "generator": "Sketchfab-15.59.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 962640,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1689200,
+      "byteOffset": 962640,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1013520,
+      "byteOffset": 2651840,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 675680,
+      "byteOffset": 3665360,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 4341040,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Whale_baseColor.png"
+    },
+    {
+      "uri": "textures/Whale_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Whale_normal.png"
+    },
+    {
+      "uri": "textures/eyes_baseColor.png"
+    },
+    {
+      "uri": "textures/eyes_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/eyes_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Whale",
+      "normalTexture": {
+        "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "name": "eyes",
+      "normalTexture": {
+        "index": 5
+      },
+      "occlusionTexture": {
+        "index": 4
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicRoughnessTexture": {
+          "index": 4
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3,
+            "TEXCOORD_1": 4,
+            "TEXCOORD_2": 5,
+            "TEXCOORD_3": 6,
+            "TEXCOORD_4": 7
+          },
+          "indices": 8,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_1",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 10,
+            "POSITION": 9,
+            "TANGENT": 11,
+            "TEXCOORD_0": 12,
+            "TEXCOORD_1": 13,
+            "TEXCOORD_2": 14,
+            "TEXCOORD_3": 15,
+            "TEXCOORD_4": 16
+          },
+          "indices": 17,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "root"
+    },
+    {
+      "children": [
+        3
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "GLTF_SceneRootNode"
+    },
+    {
+      "children": [
+        4,
+        7
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "WhaleSubstance2.obj_0"
+    },
+    {
+      "children": [
+        5
+      ],
+      "name": "RetopoFlow.003_Whale_1"
+    },
+    {
+      "children": [
+        6
+      ],
+      "name": "RetopoFlow.003_Whale_2"
+    },
+    {
+      "mesh": 0,
+      "name": "Object_6"
+    },
+    {
+      "children": [
+        8
+      ],
+      "name": "Sphere_eyes_3"
+    },
+    {
+      "children": [
+        9
+      ],
+      "name": "Sphere_eyes_4"
+    },
+    {
+      "mesh": 1,
+      "name": "Object_9"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    }
+  ]
+}

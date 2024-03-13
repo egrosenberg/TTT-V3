@@ -40,7 +40,7 @@ void Camera::UpdateMatrix(float FOVdeg, float nearDist, float farDist)
 
 void Camera::Matrix(Shader* shader, const char* uniform)
 {
-	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, uniform), 1, GL_FALSE, glm::value_ptr(m_cameraMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader->ID(), uniform), 1, GL_FALSE, glm::value_ptr(m_cameraMatrix));
 }
 
 

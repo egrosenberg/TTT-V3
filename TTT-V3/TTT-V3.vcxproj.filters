@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{3b8f3ca4-cd84-415a-bab3-5242c3d2de21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures\Skybox">
+      <UniqueIdentifier>{b9101db6-54d3-4814-8f38-f2dbb63483f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -57,6 +60,12 @@
     <ClCompile Include="Display.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -89,20 +98,12 @@
     <ClInclude Include="Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="framebuffer.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="framebuffer.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <ClInclude Include="CubeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\cat2.png">
@@ -117,5 +118,37 @@
     <Image Include="Textures\planksSpec.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="Textures\Skybox\back.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Textures\Skybox\bottom.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Textures\Skybox\front.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Textures\Skybox\left.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Textures\Skybox\right.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Textures\Skybox\top.png">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\default.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\framebuffer.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\framebuffer.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\default.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

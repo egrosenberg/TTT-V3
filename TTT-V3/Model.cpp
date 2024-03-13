@@ -265,7 +265,11 @@ std::vector<GLuint> Model::GetIndices(json accessor)
 	// get bufferview nwo that we have its index
 	json bufferView = m_JSON["bufferViews"][buffViewInd];
 	// get byte offset for where bufferview starts
-	unsigned int byteOffset = bufferView["byteOffset"];
+	unsigned int byteOffset = bufferView.value("byteOffset", 0);
+	if (byteOffset == 0)
+	{
+		std::cout << "ERROR: MODEL LOADER FAILED TO FIND BYTE OFFSET" << std::endl;
+	}
 
 	// calculate data start point
 	unsigned int beginningOfData = byteOffset + accByteOffset;

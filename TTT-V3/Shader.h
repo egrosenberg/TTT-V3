@@ -11,13 +11,15 @@
 class Shader
 {
 public:
-	GLuint m_ID;
 	Shader(const char* vertexFile, const char* fragmentFile);
 	virtual ~Shader();
 
 	void Activate();
 	void Delete();
+
+	GLuint ID() { return m_ID; }
 private:
+	GLuint m_ID;
 
 	void CompileErrors(unsigned int shader, const char* type);
 };

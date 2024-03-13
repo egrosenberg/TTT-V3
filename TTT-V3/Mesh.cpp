@@ -60,7 +60,7 @@ void Mesh::Draw(
 	}
 	// send uniforms to shader
 	glm::vec3 camPos = camera->GetPos();
-	glUniform3f(glGetUniformLocation(shader->m_ID, "camPos"), camPos.x, camPos.y, camPos.z);
+	glUniform3f(glGetUniformLocation(shader->ID(), "camPos"), camPos.x, camPos.y, camPos.z);
 	camera->Matrix(shader, "camMatrix");
 
 	// calculate transformation matrices
@@ -73,10 +73,10 @@ void Mesh::Draw(
 	sca = glm::scale(sca, scale);
 
 	// send transformation matrices as uniforms
-	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "translation"), 1, GL_FALSE, glm::value_ptr(trans));
-	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
-	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "scale"), 1, GL_FALSE, glm::value_ptr(sca));
-	glUniformMatrix4fv(glGetUniformLocation(shader->m_ID, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "translation"), 1, GL_FALSE, glm::value_ptr(trans));
+	glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "scale"), 1, GL_FALSE, glm::value_ptr(sca));
+	glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "model"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 	// draw our mesh
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);

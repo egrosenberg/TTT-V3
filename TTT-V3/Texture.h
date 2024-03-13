@@ -21,7 +21,6 @@ public:
 	void texUnit(Shader *shader, const char *uniform, GLuint unit);
 	void Bind();
 	void Unbind();
-	void Delete();
 
 	GLuint getID() { return m_ID; }
 	const char *getType() { return m_type; }
