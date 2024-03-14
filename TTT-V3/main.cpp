@@ -61,11 +61,6 @@ std::string readFile(const char* filename)
 	throw(errno);
 }
 
-void test(float f[])
-{
-	std::cout << sizeof(f)/sizeof(float) << std::endl;
-}
-
 int main()
 {
 	// initialize glfw
@@ -189,7 +184,7 @@ int main()
 		}
 
 		// bind display buffer before drawing
-		display->Bind(WIN_WIDTH, WIN_HEIGHT);
+		//display->Bind(WIN_WIDTH, WIN_HEIGHT);
 
 		// Specify the background color
 		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
@@ -206,6 +201,9 @@ int main()
 		// update camera matrix
 		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
+		// create ortho matrix for window size
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "ortho"), 1, GL_FALSE, NULL);
+
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
 
@@ -216,7 +214,7 @@ int main()
 		display->Unbind();
 
 		// draw display buffer
-		display->Draw(frameProgram, winMain);
+		//display->Draw(frameProgram, winMain);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);

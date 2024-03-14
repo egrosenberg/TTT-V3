@@ -33,7 +33,7 @@ void Camera::UpdateMatrix(float FOVdeg, float nearDist, float farDist)
 	view = glm::lookAt(m_position, m_position + m_direction, m_up);
 	
 	// set perspective matrix based on params
-	projection = glm::perspective(FOVdeg, (float)(m_width / m_height), nearDist, farDist);
+	projection = glm::perspective(FOVdeg, (float)m_width / m_height, nearDist, farDist);
 
 	m_cameraMatrix = projection * view;
 }
