@@ -13,6 +13,15 @@ out vec3 color;
 // outputs the texture coords for the fragment shader
 out vec2 texCoord;
 
+// output for geom shader
+out DATA
+{
+	vec3 Normal;
+	vec3 color;
+	vec2 texCoord;
+	mat4 projection;
+} data_out;
+
 // uniforms for camera 3D
 uniform mat4 camMatrix;
 // imports transformation matrices from c++
@@ -23,15 +32,12 @@ uniform mat4 scale;
 
 void main()
 {
-    // calculate current position (flipping rotation because of gltf discrepancies)
-    crntPos = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
-    // assigns the normal from vertex data
-    Normal = aNormal;
-    // Assign color to colors based on layout
-    color = aColor;
-    // Assign texture based on layout (rotating 90 degrees to account for gltf discrepancies)
-    texCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTex;
-
-    // add+mul scale uniform to each position
-    gl_Position = camMatrix * vec4(crntPos, 1.0);
+    // calculate current position
+    gl_Position = model * translation * rotation * scale * vec4(aPos, 1.0f);
+    // output variables we pass through
+    data_out.Normal = aNormal;
+    data_out.color = aColor;
+    // rotating 90 degrees to account for gltf discrepancies
+    data_out.texCoord = texCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTex;
+    data_out.projection = camMatrix;
 }

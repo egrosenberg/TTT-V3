@@ -91,7 +91,8 @@ int main()
 	glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 
 	// set up shader program for main object
-	Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag");
+	Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag", "Shaders/default.geom");
+	Shader *wireProgram = new Shader("Shaders/default.vert", "Shaders/wireframe.frag", "Shaders/wireframe.geom");
 	// set up shader for framebuffer
 	Shader *frameProgram = new Shader("Shaders/framebuffer.vert", "Shaders/framebuffer.frag");
 	// set up shader for skybox
@@ -122,7 +123,7 @@ int main()
 	// enable face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-	glFrontFace(GL_CW);
+	glFrontFace(GL_CCW);
 
 	// create camera object
 	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -137,7 +138,7 @@ int main()
 	glm::vec3 scale = glm::vec3(0.05f);
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, translation);
-	transform = glm::rotate(transform, glm::radians(90.0f), rotation);
+	transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
 	transform = glm::scale(transform, scale);
 
 	// set transform of model
@@ -184,10 +185,8 @@ int main()
 		}
 
 		// bind display buffer before drawing
-		//display->Bind(WIN_WIDTH, WIN_HEIGHT);
+		display->Bind(WIN_WIDTH, WIN_HEIGHT);
 
-		// Specify the background color
-		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		// Clean the back depth and color buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// make sure depth testing is enabled
@@ -201,11 +200,9 @@ int main()
 		// update camera matrix
 		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
-		// create ortho matrix for window size
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "ortho"), 1, GL_FALSE, NULL);
-
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
+		model->Draw(wireProgram, mainCamera);
 
 		// draw skybox
 		skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
@@ -214,7 +211,7 @@ int main()
 		display->Unbind();
 
 		// draw display buffer
-		//display->Draw(frameProgram, winMain);
+		display->Draw(frameProgram, winMain);
 
 		// Swap the back and front buffers
 		glfwSwapBuffers(winMain);

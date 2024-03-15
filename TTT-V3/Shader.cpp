@@ -1,15 +1,17 @@
 #include "Shader.h"
 #include "main.h"
 
-Shader::Shader(const char* vertexFile, const char* fragmentFile)
+Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geometryFile)
 {
+	bool m_geomPresent = (strcmp(geometryFile, "none") != 0);
 	// read vertex and fragment shader code from files
 	std::string vertexCode = readFile(vertexFile);
 	std::string fragmentCode = readFile(fragmentFile);
-
+	std::string geometryCode = m_geomPresent ? readFile(geometryFile) : "";
 	// convert shader code to c-strings
-	const char* vertexSource = vertexCode.c_str();
-	const char* fragmentSource = fragmentCode.c_str();
+	const char *vertexSource = vertexCode.c_str();
+	const char *fragmentSource = fragmentCode.c_str();
+	const char* geometrySource = m_geomPresent ? geometryCode.c_str() :"";
 
 	// set up vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -29,12 +31,28 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	// compile fragment shader errors
 	CompileErrors(fragmentShader, "FRAGMENT");
 
+	// compile geometry shader
+	GLuint geometryShader = 0;
+	if (m_geomPresent)
+	{
+		// set up geometry shader
+		geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+		// attach shader source code to geometry shader object
+		glShaderSource(geometryShader, 1, &geometrySource, NULL);
+		// compile the geometry shader machine code
+		glCompileShader(geometryShader);
+		// compile geometry shader errors
+		CompileErrors(geometryShader, "GEOMETRY");
+	}
+
 	// create shader program
 	m_ID = glCreateProgram();
 
 	// attach shaders to our shader program
 	glAttachShader(m_ID, vertexShader);
 	glAttachShader(m_ID, fragmentShader);
+	if (m_geomPresent) glAttachShader(m_ID, geometryShader);
+
 
 	// link our program
 	glLinkProgram(m_ID);
