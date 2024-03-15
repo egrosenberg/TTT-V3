@@ -167,6 +167,10 @@ int main()
 	// Create skybox
 	Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
+	// boolean to track if we should draw wireframe
+	bool wireframe = false;
+	bool q_pressed = false;
+
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
 	{
@@ -202,7 +206,23 @@ int main()
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
-		model->Draw(wireProgram, mainCamera);
+
+		if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			if (q_pressed == false)
+			{
+				wireframe = wireframe ? false : true;
+				q_pressed = true;
+			}
+		}
+		else
+		{
+			q_pressed = false;
+		}
+		if (wireframe)
+		{
+			model->Draw(wireProgram, mainCamera);
+		}
 
 		// draw skybox
 		skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
