@@ -27,6 +27,7 @@ void scaleViewport(GLFWwindow *window)
 	glViewport(offsetX, offsetY, cWidth, cHeight);
 }
 
+// default constructor
 Display::Display()
 {
 	// create rectangle for post proccessing
@@ -41,31 +42,10 @@ Display::Display()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-
 	// initalize frame buffer
-	glGenFramebuffers(1, &m_ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
-	// Create a texture to store the framebuffer in
-	glGenTextures(1, &m_Tex);
-	glBindTexture(GL_TEXTURE_2D, m_Tex);
-	// configure texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	// set upscaling mode
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// Prevent edge bleeding
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// attach the texture to the framebuffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Tex, 0);
-
-	// init RBO
-	glGenRenderbuffers(1, &m_RBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	// configured RBO storage          // store stencil and depth buffer
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIN_WIDTH, WIN_HEIGHT);
-	// attach RBO to FBO
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+	m_FBO = new FBO(WIN_WIDTH, WIN_HEIGHT, false);
+	// intialize render buffer
+	m_RBO = new RBO(WIN_WIDTH, WIN_HEIGHT);
 
 	// error checking
 	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -80,12 +60,12 @@ void Display::Bind(GLuint internalW, GLuint internalH)
 	// set viewport to internal resolution
 	glViewport(0, 0, internalW, internalH);
 	// bind frame buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+	m_FBO->Bind();
 }
 
 void Display::Unbind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	m_FBO->Unbind();
 }
 
 // Draws the contents of the fbo to the screen, scaled to current window size
@@ -100,7 +80,7 @@ void Display::Draw(Shader *shader, GLFWwindow *window)
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	// bind our texture
-	glBindTexture(GL_TEXTURE_2D, m_Tex);
+	m_FBO->BindTex();
 	// draw our rect
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	// reenable depth testing and face culling
@@ -110,5 +90,6 @@ void Display::Draw(Shader *shader, GLFWwindow *window)
 
 Display::~Display()
 {
-
+	delete m_FBO;
+	delete m_RBO;
 }

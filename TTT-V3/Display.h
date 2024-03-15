@@ -2,6 +2,8 @@
 #define DISPLAY_H
 
 #include "main.h"
+#include "FBO.h"
+#include "RBO.h"
 
 // verts for post processing rect
 const float SCREEN_VERTS[] =
@@ -19,10 +21,10 @@ const float SCREEN_VERTS[] =
 class Display
 {
 private:
-	GLuint m_ID;
-	GLuint m_Tex;
 	GLuint m_VAO;
-	GLuint m_RBO;
+
+	FBO *m_FBO;
+	RBO *m_RBO;
 
 public:
 	Display();
