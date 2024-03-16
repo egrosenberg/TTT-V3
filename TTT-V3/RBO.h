@@ -8,7 +8,7 @@ class RBO
 private:
 	GLuint m_ID;
 public:
-	RBO(unsigned int width, unsigned int height);
+	RBO(unsigned int width, unsigned int height, unsigned int samples);
 
 	void Bind();
 	void Unbind();

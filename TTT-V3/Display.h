@@ -24,10 +24,11 @@ private:
 	GLuint m_VAO;
 
 	FBO *m_FBO;
+	FBO *m_multisampleFBO;
 	RBO *m_RBO;
 
 public:
-	Display();
+	Display(unsigned int samples);
 
 	void Bind(GLuint internalW, GLuint internalH);
 	void Unbind();

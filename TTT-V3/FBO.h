@@ -11,17 +11,19 @@ private:
 	GLuint m_Tex;
 	unsigned int m_Width;
 	unsigned int m_Height;
-	bool m_MSAA;
+	unsigned int m_Samples;
 
 	void TexGen();
 	void TexGenMultisample();
 public:
-	FBO(unsigned int width, unsigned int height, bool multisample);
+	FBO(unsigned int width, unsigned int height, unsigned int samples);
 
 	void Bind(GLenum target = GL_FRAMEBUFFER);
 	void Unbind();
 	void BindTex();
 	void UnbindTex();
+
+	static void CheckStatus(const char *name);
 
 	virtual ~FBO();
 };

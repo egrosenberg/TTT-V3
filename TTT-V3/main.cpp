@@ -151,7 +151,7 @@ int main()
 	unsigned int frameCounter = 0;
 
 	// set up post proccessing display
-	Display* display = new Display();
+	Display* display = new Display(AA_SAMPLES);
 
 	// create an array of strings to hold cubemap faces
 	std::vector<std::string> skyboxFaces =

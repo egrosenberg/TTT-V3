@@ -28,7 +28,7 @@ void scaleViewport(GLFWwindow *window)
 }
 
 // default constructor
-Display::Display()
+Display::Display(unsigned int samples)
 {
 	// create rectangle for post proccessing
 	GLuint VBO;
@@ -42,17 +42,18 @@ Display::Display()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	// initalize frame buffer
-	m_FBO = new FBO(WIN_WIDTH, WIN_HEIGHT, false);
-	// intialize render buffer
-	m_RBO = new RBO(WIN_WIDTH, WIN_HEIGHT);
+	// initalize msaa buffer
+	m_multisampleFBO = new FBO(WIN_WIDTH, WIN_HEIGHT, samples);
 
-	// error checking
-	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::cout << "ERROR (FRAMEBUFFER): " << fboStatus << std::endl;
-	}
+	// intialize render buffer
+	m_RBO = new RBO(WIN_WIDTH, WIN_HEIGHT, samples);
+
+	FBO::CheckStatus("MSAA");
+
+	// initalize normal framebuffer
+	m_FBO = new FBO(WIN_WIDTH, WIN_HEIGHT, 0);
+
+	FBO::CheckStatus("POST-PROCESSING");
 }
 
 void Display::Bind(GLuint internalW, GLuint internalH)
@@ -60,18 +61,29 @@ void Display::Bind(GLuint internalW, GLuint internalH)
 	// set viewport to internal resolution
 	glViewport(0, 0, internalW, internalH);
 	// bind frame buffer
-	m_FBO->Bind();
+	m_multisampleFBO->Bind();
 }
 
 void Display::Unbind()
 {
-	m_FBO->Unbind();
+	m_multisampleFBO->Unbind();
 }
 
 // Draws the contents of the fbo to the screen, scaled to current window size
 void Display::Draw(Shader *shader, GLFWwindow *window)
 {
+	// bind MSAA buffer as readonly & pp as writeonly
+	m_multisampleFBO->Bind(GL_READ_FRAMEBUFFER);
+	m_FBO->Bind(GL_DRAW_FRAMEBUFFER);
+	// blit FBOs
+	glBlitFramebuffer(0, 0, WIN_WIDTH, WIN_HEIGHT, 0, 0, WIN_WIDTH, WIN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+	// rebind default framebuffer
+	m_FBO->Unbind();
+
+	// scale window
 	scaleViewport(window);
+	// activate shader
 	shader->Activate();
 	// Draw Post Proccessing:
 	// bind rect vao
