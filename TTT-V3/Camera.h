@@ -11,7 +11,7 @@
 
 #include "Shader.h"
 
-#define CAM_SPEED 1.0f
+#define CAM_SPEED 0.2f
 #define CAM_SPRINT 5.0f
 #define CAM_SENS 100.0f
 

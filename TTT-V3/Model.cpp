@@ -75,6 +75,10 @@ void Model::LoadMesh(unsigned int indMesh)
 // traverse nodes to get transformations
 void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)
 {
+	if (nextNode >= m_JSON["nodes"].size())
+	{
+		return;
+	}
 	// get current node as a json
 	json node = m_JSON["nodes"][nextNode];
 
@@ -265,10 +269,10 @@ std::vector<GLuint> Model::GetIndices(json accessor)
 	// get bufferview nwo that we have its index
 	json bufferView = m_JSON["bufferViews"][buffViewInd];
 	// get byte offset for where bufferview starts
-	unsigned int byteOffset = bufferView.value("byteOffset", 0);
-	if (byteOffset == 0)
+	unsigned int byteOffset = bufferView.value("byteOffset", -1);
+	if (byteOffset == -1)
 	{
-		std::cout << "ERROR: MODEL LOADER FAILED TO FIND BYTE OFFSET" << std::endl;
+		std::cout << "ERROR: MODEL LOADER FAILED TO FIND BYTE OFFSET FOR BUFFVIEW " << buffViewInd << std::endl;
 	}
 
 	// calculate data start point

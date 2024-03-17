@@ -7,5 +7,6 @@
 #define WIN_RATIO  1.77	// width / height 
 #define FOV 45.0f
 #define AA_SAMPLES 8
+#define GAMMA 2.2f
 
 #endif

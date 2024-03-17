@@ -25,7 +25,7 @@ void FBO::TexGen()
 	glGenTextures(1, &m_Tex);
 	glBindTexture(GL_TEXTURE_2D, m_Tex);
 	// configure texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	// set upscaling mode
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -41,7 +41,7 @@ void FBO::TexGenMultisample()
 	glGenTextures(1, &m_Tex);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_Tex);
 	// configure texture
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_Samples, GL_RGB, m_Width, m_Height, GL_TRUE);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_Samples, GL_RGB32F, m_Width, m_Height, GL_TRUE);
 	// set upscaling mode
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

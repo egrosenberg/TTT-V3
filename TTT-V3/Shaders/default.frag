@@ -44,14 +44,23 @@ vec4 pointLight()
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 	
 	// specular lighting
-	// set maximum intensity of specular light
-	float specularLight = 0.50f;
-	vec3 viewDirection = normalize(camPos - crntPos);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	// calculate ammount of specular light at specified angle
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	// calculate final specular value
-	float specular = specAmount * specularLight;
+	float specular = 0.0f;
+	// only apply specular light if there is already light
+	if (diffuse != 0.0f)
+	{
+		// set maximum intensity of specular light
+		float specularLight = 0.50f;
+		vec3 viewDirection = normalize(camPos - crntPos);
+		vec3 reflectionDirection = reflect(-lightDirection, normal);
+
+		// calculate halfway vector
+		vec3 halfwayVec = normalize(viewDirection + lightDirection);
+
+		// calculate ammount of specular light at specified angle
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
+		// calculate final specular value
+		specular = specAmount * specularLight;
+	}
 
 	// calculate final pixel color
     return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
@@ -146,6 +155,7 @@ vec4 fog(vec4 col)
 
 void main()
 {
-	vec4 col = directionalLight();
+	vec4 col = pointLight();
+	//col = texture(diffuse0, texCoord);
 	FragColor = col;
 }

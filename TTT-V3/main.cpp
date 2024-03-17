@@ -110,6 +110,7 @@ int main()
 	// Activate framebuffer shader and set uniform
 	frameProgram->Activate();
 	glUniform1i(glGetUniformLocation(frameProgram->ID(), "screenTexture"), 0);
+	glUniform1f(glGetUniformLocation(frameProgram->ID(), "gamma"), GAMMA);
 	// Activate skybox shader
 	skyboxProgram->Activate();
 	glUniform1i(glGetUniformLocation(skyboxProgram->ID(), "skybox"), 0);
@@ -135,9 +136,9 @@ int main()
 	// transform the model
 	glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 scale = glm::vec3(0.05f);
+	glm::vec3 scale = glm::vec3(0.050f);
 	glm::mat4 transform = glm::mat4(1.0f);
-	transform = glm::translate(transform, translation);
+	//transform = glm::translate(transform, translation);
 	transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
 	transform = glm::scale(transform, scale);
 
@@ -202,7 +203,7 @@ int main()
 		// Camera control
 		mainCamera->Inputs(winMain);
 		// update camera matrix
-		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
+		mainCamera->UpdateMatrix(FOV, 0.1f, 10000.0f);
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);

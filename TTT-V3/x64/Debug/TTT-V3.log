@@ -2,9 +2,10 @@
 C:\Users\ethan\git\TTT-V3\TTT-V3\Display.cpp(16,20): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\ethan\git\TTT-V3\TTT-V3\Display.cpp(23,20): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Model.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(357,102): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(365,104): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(361,102): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(369,104): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
   Shader.cpp
+  Texture.cpp
   main.cpp
   Generating Code...
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe
