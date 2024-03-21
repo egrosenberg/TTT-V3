@@ -97,9 +97,11 @@ int main()
 	Shader *frameProgram = new Shader("Shaders/framebuffer.vert", "Shaders/framebuffer.frag");
 	// set up shader for skybox
 	Shader *skyboxProgram = new Shader("Shaders/skybox.vert", "Shaders/skybox.frag");
+	// shader for shadow map
+	Shader *shadowProgram = new Shader("Shaders/shadow.vert", "Shaders/shadow.frag");
 
 	// def light color
-	glm::vec4 lightColor = glm::vec4(1.00f, 0.77f, 0.77f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(1.00f, 1.00f, 1.00f, 1.0f);
 	// define position and model for light
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 
@@ -168,6 +170,44 @@ int main()
 	// Create skybox
 	Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
+	// create fbo for shadow map
+	GLuint shadowFBO;
+	glGenFramebuffers(1, &shadowFBO);
+	// create fbo tex for shadowmapv
+	GLuint shadowMap;
+	glGenTextures(1, &shadowMap);
+	glBindTexture(GL_TEXTURE_2D, shadowMap);
+	// specify texture is storing depth component
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_W, SHADOW_H, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	// set scaling mode
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// make clamp to border
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	// make it so any value outside of shadow map has depth value of 1 so it wont be in shadow
+	float shadowClampColor[] = { 1.0f , 1.0f , 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, shadowClampColor);
+
+	// bind depth buffer attachment to FBO & texture
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
+	// specify we wont use color of the buffer
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	// unbind fbo
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// create matrix for light projection for calculating shadow
+	float SW = 35.0f;
+	glm::mat4 orthoProj = glm::ortho(-SW, SW, -SW, SW, 0.1f, 75.0f);
+	glm::mat4 lightView = glm::lookAt(20.0f * lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightProj = orthoProj * lightView;
+
+	// export light projection to shadowmap shader
+	shadowProgram->Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+
 	// boolean to track if we should draw wireframe
 	bool wireframe = false;
 	bool q_pressed = false;
@@ -189,6 +229,20 @@ int main()
 			frameCounter = 0;
 		}
 
+		// get depth buffer from pov of the light
+		glEnable(GL_DEPTH_TEST);
+		glViewport(0, 0, SHADOW_W, SHADOW_H);
+		glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		
+		// draw model in shadow map
+		model->Draw(shadowProgram, mainCamera);
+		// bind default framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		// set default viewport size
+		glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
+
 		// bind display buffer before drawing
 		display->Bind(WIN_WIDTH, WIN_HEIGHT);
 
@@ -204,6 +258,16 @@ int main()
 		mainCamera->Inputs(winMain);
 		// update camera matrix
 		mainCamera->UpdateMatrix(FOV, 0.1f, 10000.0f);
+
+
+		// Send the light matrix to the shader
+		shaderProgram->Activate();
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+
+		// Bind the Shadow Map
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, shadowMap);
+		glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowMap"), 2);
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
@@ -243,7 +307,9 @@ int main()
 	// clean up objects used for shaders and drawing
 	delete model;
 	delete shaderProgram;
+	delete wireProgram;
 	delete frameProgram;
+	delete shadowProgram;
 	delete display;
 	delete skybox;
 

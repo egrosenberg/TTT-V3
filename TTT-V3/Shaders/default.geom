@@ -9,6 +9,7 @@ layout (triangle_strip, max_vertices = 3) out;
 out vec3 Normal;
 out vec3 color;
 out vec2 texCoord;
+out vec4 fragPosLight;
 
 // specify geometry data input struct
 in DATA
@@ -17,6 +18,7 @@ in DATA
 	vec3 color;
 	vec2 texCoord;
 	mat4 projection;
+	mat4 lightProj;
 } data_in[];
 
 void main()
@@ -28,6 +30,7 @@ void main()
 	Normal = data_in[0].Normal;
 	color = data_in[0].color;
 	texCoord = data_in[0].texCoord;
+    fragPosLight = data_in[0].lightProj * gl_in[0].gl_Position;
 	EmitVertex();
 	
 	// Vertex 1
@@ -37,6 +40,7 @@ void main()
 	Normal = data_in[1].Normal;
 	color = data_in[1].color;
 	texCoord = data_in[1].texCoord;
+    fragPosLight = data_in[1].lightProj * gl_in[1].gl_Position;
 	EmitVertex();
 	
 	// Vertex 2
@@ -46,8 +50,8 @@ void main()
 	Normal = data_in[2].Normal;
 	color = data_in[2].color;
 	texCoord = data_in[2].texCoord;
+    fragPosLight = data_in[2].lightProj * gl_in[2].gl_Position;
 	EmitVertex();
-	
 	// Send triangle
 	EndPrimitive();
 }
