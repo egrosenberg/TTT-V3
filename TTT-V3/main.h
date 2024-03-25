@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "Constants.h"
+#include "TTT.h"
 #include "Model.h"
 #include "Display.h"
 #include "CubeMap.h"

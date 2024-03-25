@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <glad/glad.h>
+#include "TTT.h"
 
 class FBO
 {
@@ -15,8 +16,9 @@ private:
 
 	void TexGen();
 	void TexGenMultisample();
+	void TexGenDepthonly();
 public:
-	FBO(unsigned int width, unsigned int height, unsigned int samples);
+	FBO(unsigned int width, unsigned int height, TTTenum fboType, unsigned int samples = 0);
 
 	void Bind(GLenum target = GL_FRAMEBUFFER);
 	void Unbind();

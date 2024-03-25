@@ -170,33 +170,8 @@ int main()
 	// Create skybox
 	Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
-	// create fbo for shadow map
-	GLuint shadowFBO;
-	glGenFramebuffers(1, &shadowFBO);
-	// create fbo tex for shadowmapv
-	GLuint shadowMap;
-	glGenTextures(1, &shadowMap);
-	glBindTexture(GL_TEXTURE_2D, shadowMap);
-	// specify texture is storing depth component
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_W, SHADOW_H, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	// set scaling mode
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	// make clamp to border
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	// make it so any value outside of shadow map has depth value of 1 so it wont be in shadow
-	float shadowClampColor[] = { 1.0f , 1.0f , 1.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, shadowClampColor);
-
-	// bind depth buffer attachment to FBO & texture
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
-	// specify we wont use color of the buffer
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	// unbind fbo
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// Create shadow map fbo
+	FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER);
 
 	// create matrix for light projection for calculating shadow
 	float SW = 35.0f;
@@ -211,6 +186,9 @@ int main()
 	// boolean to track if we should draw wireframe
 	bool wireframe = false;
 	bool q_pressed = false;
+	// boolean to track if we should visualize shadowmap
+	bool shadowOnly = false;
+	bool e_pressed = false;
 
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
@@ -228,17 +206,44 @@ int main()
 			prevTime = crntTime;
 			frameCounter = 0;
 		}
+		// Check inputs
+		if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			if (q_pressed == false)
+			{
+				wireframe = wireframe ? false : true;
+				q_pressed = true;
+			}
+		}
+		else
+		{
+			q_pressed = false;
+		}
+		if (glfwGetKey(winMain, GLFW_KEY_E) == GLFW_PRESS)
+		{
+			if (e_pressed == false)
+			{
+				shadowOnly = shadowOnly ? false : true;
+				e_pressed = true;
+			}
+		}
+		else
+		{
+			e_pressed = false;
+		}
 
 		// get depth buffer from pov of the light
 		glEnable(GL_DEPTH_TEST);
 		glViewport(0, 0, SHADOW_W, SHADOW_H);
-		glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+		//glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+		shadowFBO->Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		
 		// draw model in shadow map
 		model->Draw(shadowProgram, mainCamera);
 		// bind default framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		shadowFBO->Unbind();
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		// set default viewport size
 		glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
@@ -259,36 +264,24 @@ int main()
 		// update camera matrix
 		mainCamera->UpdateMatrix(FOV, 0.1f, 10000.0f);
 
-
 		// Send the light matrix to the shader
 		shaderProgram->Activate();
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+		glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowOnly"), shadowOnly);
 
 		// Bind the Shadow Map
 		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, shadowMap);
+		shadowFBO->BindTex();
+		//glBindTexture(GL_TEXTURE_2D, shadowMap);
 		glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowMap"), 2);
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
-
-		if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
-		{
-			if (q_pressed == false)
-			{
-				wireframe = wireframe ? false : true;
-				q_pressed = true;
-			}
-		}
-		else
-		{
-			q_pressed = false;
-		}
+		// draw wireframe if we want
 		if (wireframe)
 		{
 			model->Draw(wireProgram, mainCamera);
 		}
-
 		// draw skybox
 		skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
 
@@ -312,6 +305,7 @@ int main()
 	delete shadowProgram;
 	delete display;
 	delete skybox;
+	delete shadowFBO;
 
 	// close window
 	glfwDestroyWindow(winMain);

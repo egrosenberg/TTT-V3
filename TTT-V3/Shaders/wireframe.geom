@@ -12,6 +12,7 @@ in DATA
 	vec3 color;
 	vec2 texCoord;
 	mat4 projection;
+	mat4 lightProj;
 } data_in[];
 
 void main()

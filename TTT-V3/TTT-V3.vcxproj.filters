@@ -113,7 +113,7 @@
     <ClInclude Include="FBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Constants.h">
+    <ClInclude Include="TTT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RBO.h">
@@ -180,5 +180,7 @@
     <None Include="Shaders\shadow.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\wireframe.frag" />
+    <None Include="Shaders\wireframe.geom" />
   </ItemGroup>
 </Project>

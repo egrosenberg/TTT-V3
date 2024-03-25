@@ -19,6 +19,8 @@ uniform sampler2D diffuse0;
 uniform sampler2D specular0;
 // use shadowmap texture
 uniform sampler2D shadowMap;
+// uniform to check if we only want to render shadow map
+uniform bool shadowOnly;
 
 // use light color uniform
 uniform vec4 lightColor;
@@ -114,7 +116,7 @@ vec4 directionalLight()
 		float bias = max(0.025f * (1.0f - dot(normal, lightDirection)), 0.0005f);
 
 		// Smoothens out the shadows
-		int sampleRadius = 2;
+		int sampleRadius = 8;
 		vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
 		for(int y = -sampleRadius; y <= sampleRadius; y++)
 		{
@@ -128,7 +130,11 @@ vec4 directionalLight()
 		// Get average shadow
 		shadow /= pow((sampleRadius * 2 + 1), 2);
 	}
-	//return vec4(vec3(1- shadow), 1.0f); // can be used to just display shadow map
+	// display just shadows if uniform is toggled
+	if (shadowOnly)
+	{
+		return vec4(vec3(1- shadow), 1.0f);
+	}
 
 	// calculate final pixel color
     return (texture(diffuse0, texCoord) * (diffuse*(1.0f - shadow) + ambient) + texture(specular0, texCoord).r * specular*(1.0f - shadow)) * lightColor;
