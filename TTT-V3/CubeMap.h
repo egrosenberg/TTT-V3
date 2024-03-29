@@ -10,16 +10,16 @@
 class CubeMap
 {
 private:
-	GLuint m_ID;
-	GLuint m_unit;
+    GLuint m_ID;
+    GLuint m_unit;
 
 public:
-	CubeMap(std::vector<std::string> *paths, GLuint slot);
+    CubeMap(std::vector<std::string> *paths, GLuint slot);
 
-	void Bind();
-	void Unbind();
+    void Bind();
+    void Unbind();
 
-	virtual ~CubeMap();
+    virtual ~CubeMap();
 };
 
 #endif

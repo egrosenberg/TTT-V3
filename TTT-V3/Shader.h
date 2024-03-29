@@ -11,18 +11,18 @@
 class Shader
 {
 private:
-	GLuint m_ID;
-	bool m_geomPresent;
+    GLuint m_ID;
+    bool m_geomPresent;
 
-	void CompileErrors(unsigned int shader, const char* type);
+    void CompileErrors(unsigned int shader, const char* type);
 public:
-	Shader(const char *vertexFile, const char *fragmentFile, const char *geometryFile = "none");
-	virtual ~Shader();
+    Shader(const char *vertexFile, const char *fragmentFile, const char *geometryFile = "none");
+    virtual ~Shader();
 
-	void Activate();
-	void Delete();
+    void Activate();
+    void Delete();
 
-	GLuint ID() { return m_ID; }
+    GLuint ID() { return m_ID; }
 };
 
 #endif

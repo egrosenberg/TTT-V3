@@ -8,29 +8,29 @@
 class FBO
 {
 private:
-	GLuint m_ID;
-	GLuint m_Tex;
-	TTTenum m_Type;
-	TTTenum m_TexType;
-	unsigned int m_Width;
-	unsigned int m_Height;
-	unsigned int m_Samples;
+    GLuint m_ID;
+    GLuint m_Tex;
+    TTTenum m_Type;
+    TTTenum m_TexType;
+    unsigned int m_Width;
+    unsigned int m_Height;
+    unsigned int m_Samples;
 
-	void TexGen();
-	void TexGenMultisample();
-	void TexGenDepthonly();
-	void TexGenCubemap();
+    void TexGen();
+    void TexGenMultisample();
+    void TexGenDepthonly();
+    void TexGenCubemap();
 public:
-	FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texType, unsigned int samples = 0);
+    FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texType, unsigned int samples = 0);
 
-	void Bind(GLenum target = GL_FRAMEBUFFER);
-	void Unbind();
-	void BindTex();
-	void UnbindTex();
+    void Bind(GLenum target = GL_FRAMEBUFFER);
+    void Unbind();
+    void BindTex();
+    void UnbindTex();
 
-	static void CheckStatus(const char *name);
+    static void CheckStatus(const char *name);
 
-	virtual ~FBO();
+    virtual ~FBO();
 };
 
 #endif

@@ -7,14 +7,14 @@
 class EBO
 {
 public:
-	GLuint m_ID;
-	EBO(std::vector <GLuint> *indices);
+    GLuint m_ID;
+    EBO(std::vector <GLuint> *indices);
 
-	void Bind();
-	void Unbind();
-	void Delete();
+    void Bind();
+    void Unbind();
+    void Delete();
 
-	virtual ~EBO();
+    virtual ~EBO();
 };
 
 #endif

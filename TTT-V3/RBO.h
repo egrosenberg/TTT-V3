@@ -6,14 +6,14 @@
 class RBO
 {
 private:
-	GLuint m_ID;
+    GLuint m_ID;
 public:
-	RBO(unsigned int width, unsigned int height, unsigned int samples);
+    RBO(unsigned int width, unsigned int height, unsigned int samples);
 
-	void Bind();
-	void Unbind();
+    void Bind();
+    void Unbind();
 
-	virtual ~RBO();
+    virtual ~RBO();
 };
 
 #endif

@@ -11,21 +11,21 @@
 class Texture
 {
 private:
-	GLuint m_ID;
-	GLuint m_unit;
-	const char *m_type;
+    GLuint m_ID;
+    GLuint m_unit;
+    const char *m_type;
 
 public:
-	Texture(const char *fname, const char *texType, GLuint slot);
+    Texture(const char *fname, const char *texType, GLuint slot);
 
-	void texUnit(Shader *shader, const char *uniform, GLuint unit);
-	void Bind();
-	void Unbind();
+    void texUnit(Shader *shader, const char *uniform, GLuint unit);
+    void Bind();
+    void Unbind();
 
-	GLuint getID() { return m_ID; }
-	const char *getType() { return m_type; }
+    GLuint getID() { return m_ID; }
+    const char *getType() { return m_type; }
 
-	virtual ~Texture();
+    virtual ~Texture();
 };
 
 #endif

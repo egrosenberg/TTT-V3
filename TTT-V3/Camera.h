@@ -18,36 +18,36 @@
 class Camera
 {
 private:
-	glm::vec3 m_position;
-	glm::vec3 m_direction;
-	glm::vec3 m_up;
+    glm::vec3 m_position;
+    glm::vec3 m_direction;
+    glm::vec3 m_up;
 
-	glm::mat4 m_cameraMatrix;
+    glm::mat4 m_cameraMatrix;
 
-	int m_width;
-	int m_height;
+    int m_width;
+    int m_height;
 
-	float m_speed;
-	float m_sensitivity;
+    float m_speed;
+    float m_sensitivity;
 
-	bool m_firstClick;
+    bool m_firstClick;
 
 
 public:
-	Camera(int width, int height, glm::vec3 position);
+    Camera(int width, int height, glm::vec3 position);
 
-	void UpdateMatrix(float FOVdeg, float nearDist, float farDist);
-	void Matrix(Shader* shader, const char* uniform);
-	void Inputs(GLFWwindow* window);
+    void UpdateMatrix(float FOVdeg, float nearDist, float farDist);
+    void Matrix(Shader* shader, const char* uniform);
+    void Inputs(GLFWwindow* window);
 
-	// getters and setters for up
-	void SetUp(glm::vec3 up) { m_up = up; }
-	glm::vec3 GetUp() { return m_up; }
-	
-	glm::vec3 GetPos() { return m_position; }
-	glm::vec3 GetDirection() { return m_direction; }
+    // getters and setters for up
+    void SetUp(glm::vec3 up) { m_up = up; }
+    glm::vec3 GetUp() { return m_up; }
+    
+    glm::vec3 GetPos() { return m_position; }
+    glm::vec3 GetDirection() { return m_direction; }
 
-	virtual ~Camera();
+    virtual ~Camera();
 };
 
 #endif
