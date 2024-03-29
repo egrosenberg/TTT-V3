@@ -199,6 +199,9 @@
     <None Include="Shaders\framebuffer.vert" />
     <None Include="Shaders\shadow.frag" />
     <None Include="Shaders\shadow.vert" />
+    <None Include="Shaders\shadowCubemap.frag" />
+    <None Include="Shaders\shadowCubemap.geom" />
+    <None Include="Shaders\shadowCubemap.vert" />
     <None Include="Shaders\skybox.frag" />
     <None Include="Shaders\skybox.vert" />
     <None Include="Shaders\wireframe.frag" />

@@ -343,7 +343,7 @@ std::vector<Texture*> Model::GetTextures()
 
 		// avoid loading duplicate textures
 		bool skip = false;
-		for (unsigned int j = 0; j < m_loadedTexName->size(); ++i)
+		for (unsigned int j = 0; j < m_loadedTexName->size(); ++j)
 		{
 			if ((*m_loadedTexName)[j] == texPath)
 			{

@@ -99,11 +99,13 @@ int main()
 	Shader *skyboxProgram = new Shader("Shaders/skybox.vert", "Shaders/skybox.frag");
 	// shader for shadow map
 	Shader *shadowProgram = new Shader("Shaders/shadow.vert", "Shaders/shadow.frag");
+	Shader *shadowCubemapProgram = new Shader("Shaders/shadowcubemap.vert", "Shaders/shadowcubemap.frag", "Shaders/shadowcubemap.geom");
 
 	// def light color
 	glm::vec4 lightColor = glm::vec4(1.00f, 1.00f, 1.00f, 1.0f);
 	// define position and model for light
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
+	glm::vec3 lightPosDirec = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	// Activate model shader and set uniforms
 	shaderProgram->Activate();
@@ -129,10 +131,11 @@ int main()
 	glFrontFace(GL_CCW);
 
 	// create camera object
-	Camera* mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera *mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// create model object
-	Model* model = new Model("models/cat/scene.gltf");
+	Model *model = new Model("models/ground/scene.gltf");
+	Model *trees = new Model("models/trees/scene.gltf");
 
 
 	// transform the model
@@ -141,11 +144,12 @@ int main()
 	glm::vec3 scale = glm::vec3(0.050f);
 	glm::mat4 transform = glm::mat4(1.0f);
 	//transform = glm::translate(transform, translation);
-	transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
+	//transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
 	transform = glm::scale(transform, scale);
 
 	// set transform of model
-	model->SetTransform(transform);
+	//model->SetTransform(transform);
+	//trees->SetTransform(transform);
 
 	// set up variables for FPS tracking
 	double prevTime = 0.0;
@@ -171,17 +175,43 @@ int main()
 	Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
 	// Create shadow map fbo
-	FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER);
+	FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER, TTT_TEXTURE_2D);
 
 	// create matrix for light projection for calculating shadow
 	float SW = 35.0f;
-	glm::mat4 orthoProj = glm::ortho(-SW, SW, -SW, SW, 0.1f, 75.0f);
-	glm::mat4 lightView = glm::lookAt(20.0f * lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightProj = orthoProj * lightView;
+	glm::mat4 orthoProj = glm::ortho(-SW, SW, -SW, SW, 0.1f, SHADOW_FARPLANE);
+	glm::mat4 perspProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 lightViewDirec = glm::lookAt(20.0f * lightPosDirec, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 lightProj = perspProj * lightView;
 
 	// export light projection to shadowmap shader
 	shadowProgram->Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+
+	// Shadow 
+	FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER, TTT_TEXTURE_CUBEMAP);
+	// define shadow matrices
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
+	glm::mat4 shadowTransforms[] =
+	{
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)),
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)),
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  1.0,  0.0), glm::vec3(0.0,  0.0,  1.0)),
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0, -1.0,  0.0), glm::vec3(0.0,  0.0, -1.0)),
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  0.0,  1.0), glm::vec3(0.0, -1.0,  0.0)),
+		shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  0.0, -1.0), glm::vec3(0.0, -1.0,  0.0))
+	};
+	// activate shaderprogram and pass uniforms
+	shadowCubemapProgram->Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[0]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[1]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[2]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[3]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[4]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
+	glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
+	glUniform3f(glGetUniformLocation(shadowCubemapProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform1f(glGetUniformLocation(shadowCubemapProgram->ID(), "farPlane"), SHADOW_FARPLANE);
 
 	// boolean to track if we should draw wireframe
 	bool wireframe = false;
@@ -189,6 +219,9 @@ int main()
 	// boolean to track if we should visualize shadowmap
 	bool shadowOnly = false;
 	bool e_pressed = false;
+	// cycling shadow modes
+	TTTenum lightMode = TTT_POINT_LIGHT;
+	bool r_pressed = false;
 
 	// Main loop
 	while (!glfwWindowShouldClose(winMain))
@@ -211,7 +244,7 @@ int main()
 		{
 			if (q_pressed == false)
 			{
-				wireframe = wireframe ? false : true;
+				wireframe = !wireframe;
 				q_pressed = true;
 			}
 		}
@@ -223,7 +256,7 @@ int main()
 		{
 			if (e_pressed == false)
 			{
-				shadowOnly = shadowOnly ? false : true;
+				shadowOnly = !shadowOnly;
 				e_pressed = true;
 			}
 		}
@@ -231,19 +264,67 @@ int main()
 		{
 			e_pressed = false;
 		}
+		if (glfwGetKey(winMain, GLFW_KEY_R) == GLFW_PRESS)
+		{
+			if (r_pressed == false)
+			{
+				// cycle through shadow modes
+				if (lightMode == TTT_POINT_LIGHT)
+				{
+					lightMode = TTT_DIRECTIONAL_LIGHT;
+					lightProj = orthoProj * lightViewDirec;
+
+					// export light projection to shadowmap shader
+					shadowProgram->Activate();
+					glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+				}
+				else if (lightMode == TTT_DIRECTIONAL_LIGHT)
+				{
+					lightMode = TTT_SPOT_LIGHT;
+					lightProj = perspProj * lightView;
+
+					// export light projection to shadowmap shader
+					shadowProgram->Activate();
+					glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+				}
+				else if (lightMode == TTT_SPOT_LIGHT)
+				{
+					lightMode = TTT_POINT_LIGHT;
+				}
+				r_pressed = true;
+			}
+		}
+		else
+		{
+			r_pressed = false;
+		}
 
 		// get depth buffer from pov of the light
 		glEnable(GL_DEPTH_TEST);
 		glViewport(0, 0, SHADOW_W, SHADOW_H);
-		//glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-		shadowFBO->Bind();
+		if (lightMode == TTT_POINT_LIGHT)
+		{
+			shadowPointFBO->Bind();
+		}
+		else
+		{
+			shadowFBO->Bind();
+		}
 		glClear(GL_DEPTH_BUFFER_BIT);
 		
 		// draw model in shadow map
-		model->Draw(shadowProgram, mainCamera);
+		if (lightMode == TTT_POINT_LIGHT)
+		{
+			model->Draw(shadowCubemapProgram, mainCamera);
+			trees->Draw(shadowCubemapProgram, mainCamera);
+		}
+		else
+		{
+			model->Draw(shadowProgram, mainCamera);
+			trees->Draw(shadowProgram, mainCamera);
+		}
 		// bind default framebuffer
-		shadowFBO->Unbind();
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		shadowPointFBO->Unbind();
 
 		// set default viewport size
 		glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
@@ -262,25 +343,44 @@ int main()
 		// Camera control
 		mainCamera->Inputs(winMain);
 		// update camera matrix
-		mainCamera->UpdateMatrix(FOV, 0.1f, 10000.0f);
+		mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
 		// Send the light matrix to the shader
 		shaderProgram->Activate();
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 		glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowOnly"), shadowOnly);
+		glUniform1f(glGetUniformLocation(shaderProgram->ID(), "farPlane"), SHADOW_FARPLANE);
 
 		// Bind the Shadow Map
 		glActiveTexture(GL_TEXTURE0 + 2);
-		shadowFBO->BindTex();
-		//glBindTexture(GL_TEXTURE_2D, shadowMap);
-		glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowMap"), 2);
+		if (lightMode == TTT_POINT_LIGHT)
+		{
+			shadowPointFBO->BindTex();
+			glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 22);
+			glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowCubeMap"), 2);
+		}
+		else
+		{
+			shadowFBO->BindTex();
+			if (lightMode == TTT_DIRECTIONAL_LIGHT)
+			{
+				glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 20);
+			}
+			else if (lightMode == TTT_SPOT_LIGHT)
+			{
+				glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 21);
+			}
+			glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowMap"), 2);
+		}
 
 		// draw model
 		model->Draw(shaderProgram, mainCamera);
+		trees->Draw(shaderProgram, mainCamera);
 		// draw wireframe if we want
 		if (wireframe)
 		{
 			model->Draw(wireProgram, mainCamera);
+			trees->Draw(wireProgram, mainCamera);
 		}
 		// draw skybox
 		skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
@@ -306,6 +406,7 @@ int main()
 	delete display;
 	delete skybox;
 	delete shadowFBO;
+	delete shadowPointFBO;
 
 	// close window
 	glfwDestroyWindow(winMain);

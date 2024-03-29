@@ -1,7 +1,9 @@
 #include "FBO.h"
 
-FBO::FBO(unsigned int width, unsigned int height, TTTenum fboType, unsigned int samples)
+FBO::FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texType, unsigned int samples)
 {
+	m_TexType = texType;
+	m_Type = fboType;
 	m_Width = width;
 	m_Height = height;
 	m_Samples = samples;
@@ -9,7 +11,11 @@ FBO::FBO(unsigned int width, unsigned int height, TTTenum fboType, unsigned int 
 	// initalize frame buffer
 	glGenFramebuffers(1, &m_ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
-	if (fboType == TTT_FRAMEBUFFER)
+	if (texType == TTT_TEXTURE_CUBEMAP)
+	{
+		TexGenCubemap();
+	}
+	else if (fboType == TTT_FRAMEBUFFER)
 	{
 		TexGen();
 	}
@@ -86,6 +92,41 @@ void FBO::TexGenDepthonly()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FBO::TexGenCubemap()
+{
+	// generate and bind cubemap texture
+	glGenTextures(1, &m_Tex);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_Tex);
+	// Init cubemap based on texture type
+	if (m_Type == TTT_DEPTH_FRAMEBUFFER)
+	{
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+				m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		}
+		// set scaling mode
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// make clamp to border
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		// bind depth buffer attachment to FBO & texture
+		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_Tex, 0);
+		// specify we wont use color of the buffer
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		// unbind fbo
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	else
+	{
+		std::cout << "ERROR IN FBO: INVALID FBO TYPE FOR CUBEMAP" << std::endl;
+	}
+}
+
 void FBO::Bind(GLenum target)
 {
 	glBindFramebuffer(target, m_ID);
@@ -98,7 +139,13 @@ void FBO::Unbind()
 
 void FBO::BindTex()
 {
-	glBindTexture(GL_TEXTURE_2D, m_Tex);
+	switch (m_TexType)
+	{
+		case TTT_TEXTURE_CUBEMAP:
+			glBindTexture(GL_TEXTURE_CUBE_MAP, m_Tex);
+		default:
+			glBindTexture(GL_TEXTURE_2D, m_Tex);
+	}
 }
 
 void FBO::UnbindTex()

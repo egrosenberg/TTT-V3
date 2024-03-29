@@ -8,11 +8,12 @@ layout (line_strip, max_vertices = 4) out;
 // specify geometry data input struct
 in DATA
 {
+    vec3 crntPos;
 	vec3 Normal;
 	vec3 color;
 	vec2 texCoord;
 	mat4 projection;
-	mat4 lightProj;
+    mat4 lightProj;
 } data_in[];
 
 void main()

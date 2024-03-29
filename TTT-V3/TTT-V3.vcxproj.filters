@@ -180,7 +180,20 @@
     <None Include="Shaders\shadow.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\wireframe.frag" />
-    <None Include="Shaders\wireframe.geom" />
+    <None Include="Shaders\shadowCubemap.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\shadowCubemap.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\shadowCubemap.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\wireframe.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\wireframe.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
