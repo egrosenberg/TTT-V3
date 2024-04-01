@@ -96,7 +96,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,7 +125,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,6 +149,7 @@
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -158,12 +159,15 @@
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="Terminal.h" />
     <ClInclude Include="TTT.h" />
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="Display.h" />
@@ -195,6 +199,8 @@
     <None Include="Shaders\default.frag" />
     <None Include="Shaders\default.geom" />
     <None Include="Shaders\default.vert" />
+    <None Include="Shaders\font.frag" />
+    <None Include="Shaders\font.vert" />
     <None Include="Shaders\framebuffer.frag" />
     <None Include="Shaders\framebuffer.vert" />
     <None Include="Shaders\shadow.frag" />

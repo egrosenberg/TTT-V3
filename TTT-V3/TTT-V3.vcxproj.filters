@@ -72,6 +72,12 @@
     <ClCompile Include="RBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -117,6 +123,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Terminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -193,6 +205,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Shaders\wireframe.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\font.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\font.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

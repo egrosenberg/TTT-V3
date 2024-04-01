@@ -4,15 +4,6 @@ layout (location = 1) in vec3 aNormal; // vector normals
 layout (location = 2) in vec3 aColor; // Colors
 layout (location = 3) in vec2 aTex; // Textures
 
-//// outputs the current position
-//out vec3 crntPos;
-//// output the normal vectors 
-//out vec3 Normal;
-//// outputs the color for the fragment shader
-//out vec3 color;
-//// outputs the texture coords for the fragment shader
-//out vec2 texCoord;
-
 // output for geom shader
 out DATA
 {

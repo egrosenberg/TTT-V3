@@ -11,6 +11,11 @@
 #define SHADOW_W 2048
 #define SHADOW_H 2048
 #define SHADOW_FARPLANE 100.0f
+#define FONT_HEIGHT 36
+#define TERMINAL_ROWS 8
+#define TERMINAL_PADDING 15
+#define LINE_SPACING 1.2f
+#define TERMINAL_BLINK_INTERVAL 0.5f
 
 enum TTTenum
 {

@@ -61,6 +61,52 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
+
+std::string inputRow = "";
+std::list<std::string> terminal;
+bool terminalActive = false;
+// callback to append text characters to terminal
+void charCallback(GLFWwindow *window, unsigned int codepoint)
+{
+    if (terminalActive == false)
+    {
+        return;
+    }
+    inputRow += (char)codepoint;
+}
+// callback to handle text commands (enter, backspace, etc.)
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+    {
+        if (terminalActive == false)
+        {
+            terminalActive = true;
+        }
+        else
+        {
+            terminal.push_front(inputRow);
+            if (terminal.size() > TERMINAL_ROWS)
+            {
+                terminal.pop_back();
+            }
+            inputRow = "";
+            terminalActive = false;
+        }
+    }
+    if (terminalActive == false)
+    {
+        return;
+    }
+    if (key == GLFW_KEY_BACKSPACE && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        if (inputRow.size() > 0)
+        {
+            inputRow.pop_back();
+        }
+    }
+}
+
 int main()
 {
     // initialize glfw
@@ -89,6 +135,8 @@ int main()
 
     // Define the viewport of the OpenGL window
     glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
+    // Disable byte-allignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // set up shader program for main object
     Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag", "Shaders/default.geom");
@@ -100,6 +148,8 @@ int main()
     // shader for shadow map
     Shader *shadowProgram = new Shader("Shaders/shadow.vert", "Shaders/shadow.frag");
     Shader *shadowCubemapProgram = new Shader("Shaders/shadowcubemap.vert", "Shaders/shadowcubemap.frag", "Shaders/shadowcubemap.geom");
+    // shader for text
+    Shader *textProgram = new Shader("Shaders/font.vert", "Shaders/font.frag");
 
     // def light color
     glm::vec4 lightColor = glm::vec4(1.00f, 1.00f, 1.00f, 1.0f);
@@ -129,6 +179,10 @@ int main()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
+
+    // enable blending
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // create camera object
     Camera *mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -213,6 +267,15 @@ int main()
     glUniform3f(glGetUniformLocation(shadowCubemapProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
     glUniform1f(glGetUniformLocation(shadowCubemapProgram->ID(), "farPlane"), SHADOW_FARPLANE);
 
+    // create a font
+    Font *redhat = new Font("Fonts/RedHatDisplay-Regular.ttf", FONT_HEIGHT);
+    Font *redhat_bold = new Font("Fonts/RedHatDisplay-Bold.ttf", FONT_HEIGHT);
+
+    // Crete terminal
+    Terminal *terminal = Terminal::GetSingleton(winMain, TERMINAL_ROWS, TERMINAL_PADDING, LINE_SPACING,
+                                                TERMINAL_BLINK_INTERVAL, redhat, glm::vec3(1.0f));
+    terminal->Log("Terminal loaded!");
+
     // boolean to track if we should draw wireframe
     bool wireframe = false;
     bool q_pressed = false;
@@ -240,63 +303,66 @@ int main()
             frameCounter = 0;
         }
         // Check inputs
-        if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
+        if (!terminal->Active())
         {
-            if (q_pressed == false)
+            if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
             {
-                wireframe = !wireframe;
-                q_pressed = true;
-            }
-        }
-        else
-        {
-            q_pressed = false;
-        }
-        if (glfwGetKey(winMain, GLFW_KEY_E) == GLFW_PRESS)
-        {
-            if (e_pressed == false)
-            {
-                shadowOnly = !shadowOnly;
-                e_pressed = true;
-            }
-        }
-        else
-        {
-            e_pressed = false;
-        }
-        if (glfwGetKey(winMain, GLFW_KEY_R) == GLFW_PRESS)
-        {
-            if (r_pressed == false)
-            {
-                // cycle through shadow modes
-                if (lightMode == TTT_POINT_LIGHT)
+                if (q_pressed == false)
                 {
-                    lightMode = TTT_DIRECTIONAL_LIGHT;
-                    lightProj = orthoProj * lightViewDirec;
+                    wireframe = !wireframe;
+                    q_pressed = true;
+                }
+            }
+            else
+            {
+                q_pressed = false;
+            }
+            if (glfwGetKey(winMain, GLFW_KEY_E) == GLFW_PRESS)
+            {
+                if (e_pressed == false)
+                {
+                    shadowOnly = !shadowOnly;
+                    e_pressed = true;
+                }
+            }
+            else
+            {
+                e_pressed = false;
+            }
+            if (glfwGetKey(winMain, GLFW_KEY_R) == GLFW_PRESS)
+            {
+                if (r_pressed == false)
+                {
+                    // cycle through shadow modes
+                    if (lightMode == TTT_POINT_LIGHT)
+                    {
+                        lightMode = TTT_DIRECTIONAL_LIGHT;
+                        lightProj = orthoProj * lightViewDirec;
 
-                    // export light projection to shadowmap shader
-                    shadowProgram->Activate();
-                    glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
-                }
-                else if (lightMode == TTT_DIRECTIONAL_LIGHT)
-                {
-                    lightMode = TTT_SPOT_LIGHT;
-                    lightProj = perspProj * lightView;
+                        // export light projection to shadowmap shader
+                        shadowProgram->Activate();
+                        glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+                    }
+                    else if (lightMode == TTT_DIRECTIONAL_LIGHT)
+                    {
+                        lightMode = TTT_SPOT_LIGHT;
+                        lightProj = perspProj * lightView;
 
-                    // export light projection to shadowmap shader
-                    shadowProgram->Activate();
-                    glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+                        // export light projection to shadowmap shader
+                        shadowProgram->Activate();
+                        glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
+                    }
+                    else if (lightMode == TTT_SPOT_LIGHT)
+                    {
+                        lightMode = TTT_POINT_LIGHT;
+                    }
+                    r_pressed = true;
                 }
-                else if (lightMode == TTT_SPOT_LIGHT)
-                {
-                    lightMode = TTT_POINT_LIGHT;
-                }
-                r_pressed = true;
             }
-        }
-        else
-        {
-            r_pressed = false;
+            else
+            {
+                r_pressed = false;
+            }
         }
 
         // get depth buffer from pov of the light
@@ -341,7 +407,10 @@ int main()
         glEnable(GL_CULL_FACE);
 
         // Camera control
-        mainCamera->Inputs(winMain);
+        if (!terminal->Active())
+        {
+            mainCamera->Inputs(winMain);
+        }
         // update camera matrix
         mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
 
@@ -383,7 +452,10 @@ int main()
             trees->Draw(wireProgram, mainCamera);
         }
         // draw skybox
-        skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
+        //skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
+
+        // draw terminal
+        terminal->Draw(textProgram, crntTime);
 
         // unbind display buffer
         display->Unbind();
@@ -407,6 +479,8 @@ int main()
     delete skybox;
     delete shadowFBO;
     delete shadowPointFBO;
+    delete redhat;
+    delete redhat_bold;
 
     // close window
     glfwDestroyWindow(winMain);
