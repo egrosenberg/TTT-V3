@@ -1,6 +1,6 @@
 #include "FBO.h"
 
-FBO::FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texType, unsigned int samples)
+FBO::FBO(unsigned int width, unsigned int height, TTT::TTTenum fboType, TTT::TTTenum texType, unsigned int samples)
 {
     m_TexType = texType;
     m_Type = fboType;
@@ -11,19 +11,19 @@ FBO::FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texTy
     // initalize frame buffer
     glGenFramebuffers(1, &m_ID);
     glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
-    if (texType == TTT_TEXTURE_CUBEMAP)
+    if (texType == TTT::TTT_TEXTURE_CUBEMAP)
     {
         TexGenCubemap();
     }
-    else if (fboType == TTT_FRAMEBUFFER)
+    else if (fboType == TTT::TTT_FRAMEBUFFER)
     {
         TexGen();
     }
-    else if (fboType == TTT_MULTISAMPLE_FRAMEBUFFER)
+    else if (fboType == TTT::TTT_MULTISAMPLE_FRAMEBUFFER)
     {
         TexGenMultisample();
     }
-    else if (fboType == TTT_DEPTH_FRAMEBUFFER)
+    else if (fboType == TTT::TTT_DEPTH_FRAMEBUFFER)
     {
         TexGenDepthonly();
     }
@@ -98,7 +98,7 @@ void FBO::TexGenCubemap()
     glGenTextures(1, &m_Tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_Tex);
     // Init cubemap based on texture type
-    if (m_Type == TTT_DEPTH_FRAMEBUFFER)
+    if (m_Type == TTT::TTT_DEPTH_FRAMEBUFFER)
     {
         for (unsigned int i = 0; i < 6; ++i)
         {
@@ -141,7 +141,7 @@ void FBO::BindTex()
 {
     switch (m_TexType)
     {
-        case TTT_TEXTURE_CUBEMAP:
+        case TTT::TTT_TEXTURE_CUBEMAP:
             glBindTexture(GL_TEXTURE_CUBE_MAP, m_Tex);
         default:
             glBindTexture(GL_TEXTURE_2D, m_Tex);

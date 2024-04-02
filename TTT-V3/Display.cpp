@@ -43,7 +43,7 @@ Display::Display(unsigned int samples)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
     // initalize msaa buffer
-    m_multisampleFBO = new FBO(WIN_WIDTH, WIN_HEIGHT, TTT_MULTISAMPLE_FRAMEBUFFER, TTT_TEXTURE_2D, samples);
+    m_multisampleFBO = new FBO(WIN_WIDTH, WIN_HEIGHT, TTT::TTT_MULTISAMPLE_FRAMEBUFFER, TTT::TTT_TEXTURE_2D, samples);
 
     // intialize render buffer
     m_RBO = new RBO(WIN_WIDTH, WIN_HEIGHT, samples);
@@ -51,7 +51,7 @@ Display::Display(unsigned int samples)
     FBO::CheckStatus("MSAA");
 
     // initalize normal framebuffer
-    m_FBO = new FBO(WIN_WIDTH, WIN_HEIGHT, TTT_FRAMEBUFFER, TTT_TEXTURE_2D);
+    m_FBO = new FBO(WIN_WIDTH, WIN_HEIGHT, TTT::TTT_FRAMEBUFFER, TTT::TTT_TEXTURE_2D);
 
     FBO::CheckStatus("POST-PROCESSING");
 }

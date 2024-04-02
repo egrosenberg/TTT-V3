@@ -1,4 +1,8 @@
 #include "Terminal.h"
+#define CMD_NAME_POS 0
+#define CMD_TYPE_POS 1
+#define CMD_FUNC_POS 2
+
 
 Terminal *Terminal::m_singletonInstance = NULL;
 
@@ -60,7 +64,7 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
     m_blinkInterval = blinkInterval;
     m_input = "";
     m_history = new std::list<std::string>();
-    m_commands = new std::vector<std::pair<std::string, std::function<void(void*)>>>();
+    m_commands = new std::vector<std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>>>();
 
     m_font = font;
     m_color = color;
@@ -175,9 +179,17 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
     }
 }
 
-void Terminal::BindFunction(std::string, std::function<void(void*)>)
+/**
+ * Binds a function to a command and adds it to command vector
+ * 
+ * @param name: command as string
+ * @param type: enum containing data type of the function input
+ * @param function: function to bind to the command
+ */
+void Terminal::BindFunction(std::string name, TTT::TTTenum type, std::function<void(void*)> function)
 {
-
+    std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>> cmd = {name, type, function};
+    m_commands->push_back(cmd);
 }
 /**
  * Draws all text in history + current input line

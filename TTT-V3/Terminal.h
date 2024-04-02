@@ -25,7 +25,7 @@ private:
     float m_blinkInterval;
     std::string m_input;
     std::list<std::string> *m_history;
-    std::vector<std::pair<std::string, std::function<void(void*)>>> *m_commands;
+    std::vector<std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>>> *m_commands;
     Font *m_font;
     glm::vec3 m_color;
 
@@ -39,7 +39,7 @@ public:
     static Terminal *GetSingleton(GLFWwindow* window, unsigned int nrows, unsigned int padding, float lineSpacing, float blinkInterval, Font* font, glm::vec3 color);
     Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding, float lineSpacing, float blinkInterval, Font *font, glm::vec3 color);
 
-    void BindFunction(std::string, std::function<void(void*)>);
+    void BindFunction(std::string name, TTT::TTTenum type, std::function<void(void*)> function);
     void Draw(Shader *shader, float crntTime);
     void Log(std::string text);
 

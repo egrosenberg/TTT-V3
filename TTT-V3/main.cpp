@@ -229,7 +229,7 @@ int main()
     Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
     // Create shadow map fbo
-    FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER, TTT_TEXTURE_2D);
+    FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT::TTT_DEPTH_FRAMEBUFFER, TTT::TTT_TEXTURE_2D);
 
     // create matrix for light projection for calculating shadow
     float SW = 35.0f;
@@ -244,7 +244,7 @@ int main()
     glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
     // Shadow 
-    FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTT_DEPTH_FRAMEBUFFER, TTT_TEXTURE_CUBEMAP);
+    FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTT::TTT_DEPTH_FRAMEBUFFER, TTT::TTT_TEXTURE_CUBEMAP);
     // define shadow matrices
     glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
     glm::mat4 shadowTransforms[] =
@@ -283,7 +283,7 @@ int main()
     bool shadowOnly = false;
     bool e_pressed = false;
     // cycling shadow modes
-    TTTenum lightMode = TTT_POINT_LIGHT;
+    TTT::TTTenum lightMode = TTT::TTT_POINT_LIGHT;
     bool r_pressed = false;
 
     // Main loop
@@ -334,27 +334,27 @@ int main()
                 if (r_pressed == false)
                 {
                     // cycle through shadow modes
-                    if (lightMode == TTT_POINT_LIGHT)
+                    if (lightMode == TTT::TTT_POINT_LIGHT)
                     {
-                        lightMode = TTT_DIRECTIONAL_LIGHT;
+                        lightMode = TTT::TTT_DIRECTIONAL_LIGHT;
                         lightProj = orthoProj * lightViewDirec;
 
                         // export light projection to shadowmap shader
                         shadowProgram->Activate();
                         glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
                     }
-                    else if (lightMode == TTT_DIRECTIONAL_LIGHT)
+                    else if (lightMode == TTT::TTT_DIRECTIONAL_LIGHT)
                     {
-                        lightMode = TTT_SPOT_LIGHT;
+                        lightMode = TTT::TTT_SPOT_LIGHT;
                         lightProj = perspProj * lightView;
 
                         // export light projection to shadowmap shader
                         shadowProgram->Activate();
                         glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
                     }
-                    else if (lightMode == TTT_SPOT_LIGHT)
+                    else if (lightMode == TTT::TTT_SPOT_LIGHT)
                     {
-                        lightMode = TTT_POINT_LIGHT;
+                        lightMode = TTT::TTT_POINT_LIGHT;
                     }
                     r_pressed = true;
                 }
@@ -368,7 +368,7 @@ int main()
         // get depth buffer from pov of the light
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, SHADOW_W, SHADOW_H);
-        if (lightMode == TTT_POINT_LIGHT)
+        if (lightMode == TTT::TTT_POINT_LIGHT)
         {
             shadowPointFBO->Bind();
         }
@@ -379,7 +379,7 @@ int main()
         glClear(GL_DEPTH_BUFFER_BIT);
         
         // draw model in shadow map
-        if (lightMode == TTT_POINT_LIGHT)
+        if (lightMode == TTT::TTT_POINT_LIGHT)
         {
             model->Draw(shadowCubemapProgram, mainCamera);
             trees->Draw(shadowCubemapProgram, mainCamera);
@@ -422,7 +422,7 @@ int main()
 
         // Bind the Shadow Map
         glActiveTexture(GL_TEXTURE0 + 2);
-        if (lightMode == TTT_POINT_LIGHT)
+        if (lightMode == TTT::TTT_POINT_LIGHT)
         {
             shadowPointFBO->BindTex();
             glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 22);
@@ -431,11 +431,11 @@ int main()
         else
         {
             shadowFBO->BindTex();
-            if (lightMode == TTT_DIRECTIONAL_LIGHT)
+            if (lightMode == TTT::TTT_DIRECTIONAL_LIGHT)
             {
                 glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 20);
             }
-            else if (lightMode == TTT_SPOT_LIGHT)
+            else if (lightMode == TTT::TTT_SPOT_LIGHT)
             {
                 glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 21);
             }

@@ -10,8 +10,8 @@ class FBO
 private:
     GLuint m_ID;
     GLuint m_Tex;
-    TTTenum m_Type;
-    TTTenum m_TexType;
+    TTT::TTTenum m_Type;
+    TTT::TTTenum m_TexType;
     unsigned int m_Width;
     unsigned int m_Height;
     unsigned int m_Samples;
@@ -21,7 +21,7 @@ private:
     void TexGenDepthonly();
     void TexGenCubemap();
 public:
-    FBO(unsigned int width, unsigned int height, TTTenum fboType, TTTenum texType, unsigned int samples = 0);
+    FBO(unsigned int width, unsigned int height, TTT::TTTenum fboType, TTT::TTTenum texType, unsigned int samples = 0);
 
     void Bind(GLenum target = GL_FRAMEBUFFER);
     void Unbind();

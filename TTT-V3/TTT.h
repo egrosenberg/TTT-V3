@@ -16,17 +16,23 @@
 #define TERMINAL_PADDING 15
 #define LINE_SPACING 1.2f
 #define TERMINAL_BLINK_INTERVAL 0.5f
-
-enum TTTenum
+namespace TTT
 {
-    TTT_FRAMEBUFFER				= 0,
-    TTT_MULTISAMPLE_FRAMEBUFFER = 1,
-    TTT_DEPTH_FRAMEBUFFER		= 2,
-    TTT_TEXTURE_2D				= 10,
-    TTT_TEXTURE_CUBEMAP			= 11,
-    TTT_DIRECTIONAL_LIGHT		= 20,
-    TTT_SPOT_LIGHT				= 21,
-    TTT_POINT_LIGHT				= 22
-};
+    enum TTTenum
+    {
+        TTT_FRAMEBUFFER = 0,
+        TTT_MULTISAMPLE_FRAMEBUFFER = 1,
+        TTT_DEPTH_FRAMEBUFFER = 2,
+        TTT_TEXTURE_2D = 10,
+        TTT_TEXTURE_CUBEMAP = 11,
+        TTT_DIRECTIONAL_LIGHT = 20,
+        TTT_SPOT_LIGHT = 21,
+        TTT_POINT_LIGHT = 22,
+        TTT_INT = 30,
+        TTT_FLOAT = 31,
+        TTT_STRING = 32,
+        TTT_VEC3 = 33
+    };
+}
 
 #endif
