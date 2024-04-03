@@ -147,6 +147,7 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
         {
             if (m_input.size() > 0)
             {
+                RunCmd(m_input);
                 m_history->push_front(m_input);
                 if (m_history->size() > m_numRows)
                 {
@@ -224,6 +225,48 @@ void Terminal::Log(std::string text)
     {
         m_history->pop_back();
     }
+}
+/**
+ * Parses an command string and runs the correlated command
+ * 
+ * @param cmd: input line of text to parse / run
+ */
+void Terminal::RunCmd(std::string cmd)
+{
+    // split command input with space as delimiter
+    std::vector<std::string> parts;
+    std::stringstream cmdstream(cmd);
+    std::string buffer = "";
+    while (std::getline(cmdstream, buffer, ' '))
+    {
+        parts.push_back(buffer);
+    }
+    // check to make sure command exists
+    if (parts.size() < 1)
+    {
+        return;
+    }
+
+    // iterate through cmd list to find corresponding command
+    std::vector<std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>>>::iterator c;
+    for (c = m_commands->begin(); c != m_commands->end(); ++c)
+    {
+        if (std::get<0>(*c) == parts[0])
+        {
+            // placeholder for running command
+            Log("Executed " + parts[0]);
+            // execute function with dummy value
+            std::get<2>(*c)((void*)NULL);
+            break;
+        }
+    }
+    // see if there was a hit
+    if (c == m_commands->end())
+    {
+        Log("Command not found: " + parts[0]);
+        return;
+    }
+    // handle output based on var type (std::get<1>(*c))
 }
 
 Terminal::~Terminal()

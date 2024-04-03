@@ -61,50 +61,10 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
-
-std::string inputRow = "";
-std::list<std::string> terminal;
-bool terminalActive = false;
-// callback to append text characters to terminal
-void charCallback(GLFWwindow *window, unsigned int codepoint)
+// dummy function for testing purposes
+void dummy(void *p)
 {
-    if (terminalActive == false)
-    {
-        return;
-    }
-    inputRow += (char)codepoint;
-}
-// callback to handle text commands (enter, backspace, etc.)
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
-    {
-        if (terminalActive == false)
-        {
-            terminalActive = true;
-        }
-        else
-        {
-            terminal.push_front(inputRow);
-            if (terminal.size() > TERMINAL_ROWS)
-            {
-                terminal.pop_back();
-            }
-            inputRow = "";
-            terminalActive = false;
-        }
-    }
-    if (terminalActive == false)
-    {
-        return;
-    }
-    if (key == GLFW_KEY_BACKSPACE && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        if (inputRow.size() > 0)
-        {
-            inputRow.pop_back();
-        }
-    }
+    std::cout << "Dummy function triggered" << std::endl;
 }
 
 int main()
@@ -275,6 +235,7 @@ int main()
     Terminal *terminal = Terminal::GetSingleton(winMain, TERMINAL_ROWS, TERMINAL_PADDING, LINE_SPACING,
                                                 TERMINAL_BLINK_INTERVAL, redhat, glm::vec3(1.0f));
     terminal->Log("Terminal loaded!");
+    terminal->BindFunction("Test", TTT::TTT_INT, dummy);
 
     // boolean to track if we should draw wireframe
     bool wireframe = false;

@@ -1,14 +1,8 @@
-﻿  main.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(458,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Model.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(363,114): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(371,116): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
-  Shader.cpp
-  Display.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Display.cpp(16,26): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\Display.cpp(23,26): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Terminal.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(205,41): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(212,38): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+﻿  Terminal.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(206,41): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(213,38): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  main.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(419,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Generating Code...
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'C:\Users\ethan\git\TTT-V3\x64\Debug\glfw3.pdb'; linking object as if no debug info
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe

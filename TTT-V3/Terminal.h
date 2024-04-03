@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <functional>
-#include <string>
+#include <sstream>
 #include <list>
 #include <vector>
 #include <utility>
@@ -33,6 +33,7 @@ private:
     static void staticKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
     void CharCallback(GLFWwindow* window, unsigned int codepoint);
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    void RunCmd(std::string cmd);
 
 public:
     static Terminal *GetSingleton();
