@@ -337,7 +337,6 @@ std::vector<Texture*> Model::GetTextures()
     // loop through images key keeping track of each texture
     for (unsigned int i = 0; i < m_JSON["images"].size(); ++i)
     {
-        std::cout << "Loading texture " << i << "..." << std::endl;
         // get uri for current texture
         std::string texPath = m_JSON["images"][i]["uri"];
 
@@ -355,7 +354,6 @@ std::vector<Texture*> Model::GetTextures()
 
         if (!skip)
         {
-            std::cout << "Texture Found (" << texPath << ")!" << std::endl;
             // check name of tex
             // diffuse texture
             if (texPath.find("baseColor") != std::string::npos || texPath.find("diffuse") != std::string::npos)

@@ -1,0 +1,2054 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.29.30151.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x0050C1B0 -il C:\\Users\\ethan\\AppData\\Local\\Temp\\_CL_7208460fast -typedil -f Font.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -pc \\:/ -D_MSC_VER=1929 -D_MSC_FULL_VER=192930151 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -nologo -W 3 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -MDd -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -Fox64\\Debug\\Font.obj -Fdx64\\Debug\\vc142.pdb -external:W 3 -Gd -analyze:projectdirectory C:\\Users\\ethan\\git\\TTT-V3\\TTT-V3 -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets; -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -I C:\\Users\\ethan\\git\\TTT-V3\\TTT-V3\\Libraries\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -external:I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um",
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/vbo.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "1cdc21208f73c84001ff570efb245a73"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/vbo.h"
+          },
+          "hashes": {
+            "md5": "38a6c1cffc964c4ef7961413df6f7508"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glad/glad.h"
+          },
+          "hashes": {
+            "md5": "9de580e92867cffb32fd5a04a5e38545"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/khr/khrplatform.h"
+          },
+          "hashes": {
+            "md5": "5825532bbe1f36a4bb04da1e823a847b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/glm.hpp"
+          },
+          "hashes": {
+            "md5": "86e130898c9a16fa56a4e1a1d6e4b9bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/_fixes.hpp"
+          },
+          "hashes": {
+            "md5": "4258db4aa4db2fcf1b84b9c64e061c17"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/setup.hpp"
+          },
+          "hashes": {
+            "md5": "880a29af92628acd1ff2075715ed06ba"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/simd/platform.h"
+          },
+          "hashes": {
+            "md5": "c022767b43bffe870735e2000db2de2a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/fwd.hpp"
+          },
+          "hashes": {
+            "md5": "0c94d492f8031511c0b954161a307412"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/qualifier.hpp"
+          },
+          "hashes": {
+            "md5": "ca5da67ccf529c70fd134f265a3a1ad4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/vec2.hpp"
+          },
+          "hashes": {
+            "md5": "0fee695862939477a61a8c70da153b5f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool2.hpp"
+          },
+          "hashes": {
+            "md5": "03e0316c5ed390f7777bc2e3887c71ac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec2.hpp"
+          },
+          "hashes": {
+            "md5": "8be887b8a28588d9319b4a0ee51b88a3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec2.inl"
+          },
+          "hashes": {
+            "md5": "964a5f2c7cbf4c7553dbb460050241d7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/compute_vector_relational.hpp"
+          },
+          "hashes": {
+            "md5": "3dbc4c0370fd4f1afc2de835eef5ee2d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "1fa289fbdb4f7e3fbbdc8ea54f143b2e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float2.hpp"
+          },
+          "hashes": {
+            "md5": "49dd688b9fd99a26ac358e2f6eef952a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "2970883af8ee8e73632605db7fa38582"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double2.hpp"
+          },
+          "hashes": {
+            "md5": "6e89336c6c438cf8f842725b6d979bf5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "13999b208c8c9f89c80c2e83f10c5258"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int2.hpp"
+          },
+          "hashes": {
+            "md5": "426f21371933605c17ded62b4e83f56d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "f2eb1503cfa0ca28ece09e6841faae2a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint2.hpp"
+          },
+          "hashes": {
+            "md5": "fb1d0769086196ce9642c77939f64395"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "70f77fd78513f6cae93bd09715a0fd3f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/vec3.hpp"
+          },
+          "hashes": {
+            "md5": "f2e98ecc30567d926c70341979c44495"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool3.hpp"
+          },
+          "hashes": {
+            "md5": "9f1eb69356c03e6dad0472d65103ed89"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec3.hpp"
+          },
+          "hashes": {
+            "md5": "1b42b53f984bd2fa9761314c81f03e44"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec3.inl"
+          },
+          "hashes": {
+            "md5": "08032a97cc5f9e09df7a3e6ea54afda3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "0caacc42ecbc6b95921dc848cd42230b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float3.hpp"
+          },
+          "hashes": {
+            "md5": "9d538505432eede5b464649e83e6352a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "bb6a82373dbdf07ab4987983ff9625f5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double3.hpp"
+          },
+          "hashes": {
+            "md5": "2e908d1a60b45775bf54d07440b2e2ea"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "b0cb1d7e8daedd408c7914e56d4886aa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int3.hpp"
+          },
+          "hashes": {
+            "md5": "9177707955903f049664f893e56f1030"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "d630fb4019d71726d9d7e2c0781d2514"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint3.hpp"
+          },
+          "hashes": {
+            "md5": "25167e31b36c7793295da7510084070c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "9109468bd7a3ada3f29f3e4910713d84"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/vec4.hpp"
+          },
+          "hashes": {
+            "md5": "8f975281654cd7d5fc19db27173c74c1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool4.hpp"
+          },
+          "hashes": {
+            "md5": "06880ff97b470a930eba055982f0ad9f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec4.hpp"
+          },
+          "hashes": {
+            "md5": "d88e16a82edba11f0e7930fe191736ce"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec4.inl"
+          },
+          "hashes": {
+            "md5": "3a49a2c11e8043af63a6f643c6253da2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "e3a3f70625137f2f8bd281f3375f4552"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float4.hpp"
+          },
+          "hashes": {
+            "md5": "55b643da17a37bdc82f5cd74f09f64c5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "18a43606bd9f0679bf05f1a85bd315bb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double4.hpp"
+          },
+          "hashes": {
+            "md5": "7304908ade91874f663a019949d4da9c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "c4b32c85617367909dfff47bdc2bfd2b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int4.hpp"
+          },
+          "hashes": {
+            "md5": "ada224b16331467c3c41590d07ff6bec"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "930206ece855c5712df00fb6bb298bd9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint4.hpp"
+          },
+          "hashes": {
+            "md5": "64a5d3844628a9f22736ab0f0e306af4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "24d4b5245178ed5267690d7e9760e5d7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat2x2.hpp"
+          },
+          "hashes": {
+            "md5": "f09d4c48512108de48e2c95a1f8297fd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x2.hpp"
+          },
+          "hashes": {
+            "md5": "67f1076b5a202f71d4303846cbaa3f74"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x2.hpp"
+          },
+          "hashes": {
+            "md5": "8000e2be27d42172560991c99c0499bd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x2.inl"
+          },
+          "hashes": {
+            "md5": "de1a084eb0290d4499a15c1bd4825d59"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/matrix.hpp"
+          },
+          "hashes": {
+            "md5": "42fd66519422162bea3542c3a73939b3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat2x3.hpp"
+          },
+          "hashes": {
+            "md5": "f668df5af6f72c51d9bacd470955c565"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x3.hpp"
+          },
+          "hashes": {
+            "md5": "aaa1da294d1d8484119b34c506158849"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x3.hpp"
+          },
+          "hashes": {
+            "md5": "48ad9aee97558da3ecabc33d91d1edde"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x3.inl"
+          },
+          "hashes": {
+            "md5": "ec8f515d10da3dec68dc02b585fff126"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "468883a552985c38ec0852cd4553dbd9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x3.hpp"
+          },
+          "hashes": {
+            "md5": "c5c72f8544f47325d57ac2267e2ba800"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "9d8d4fa547b0516aae41e3006d396ff2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat2x4.hpp"
+          },
+          "hashes": {
+            "md5": "7d79eae01c98fe7540989aa66b0444af"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x4.hpp"
+          },
+          "hashes": {
+            "md5": "7ded1199b1ec5b8baab5d2fed1308060"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x4.hpp"
+          },
+          "hashes": {
+            "md5": "510bcd0c9279d0c60bc261eb888622cf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat2x4.inl"
+          },
+          "hashes": {
+            "md5": "0288d4ab20b1a11f4500684d5e1b8a54"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "8d8bdd1e3ad9f9fdc77f286094a56f2b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x4.hpp"
+          },
+          "hashes": {
+            "md5": "1fdfdde56f3483e76b67966cea5d5c13"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "acff309f234e3dfe20efc23e4d6c2c55"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat3x2.hpp"
+          },
+          "hashes": {
+            "md5": "8ddd1ea2f6968b984e75afc562311fcc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x2.hpp"
+          },
+          "hashes": {
+            "md5": "30ad62cf96f34da17012cf1f44117504"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x2.hpp"
+          },
+          "hashes": {
+            "md5": "1279679850187d2c2b2bee5dd53c6d12"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x2.inl"
+          },
+          "hashes": {
+            "md5": "fb4c5af8d9eeffb1a62d056e2e461c12"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "173487ed009d901886f1d4f49c83e99b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x2.hpp"
+          },
+          "hashes": {
+            "md5": "7ab36c6d6d9b3d299b88340397a0644f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "aa9fa7827108b83ce1b786faf90dda49"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat3x3.hpp"
+          },
+          "hashes": {
+            "md5": "bdeac3c9494ab29b6063e7f20c5f3a76"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x3.hpp"
+          },
+          "hashes": {
+            "md5": "fdadc029e2e2f979092f3558009bc24b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x3.hpp"
+          },
+          "hashes": {
+            "md5": "73516c1ba2f8c4bf2dbb11fdfee334bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x3.inl"
+          },
+          "hashes": {
+            "md5": "081bb36ee96b72e2890a55c7a536d7e2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "39353cd1744b46aac8bfd44aa7670943"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x3.hpp"
+          },
+          "hashes": {
+            "md5": "0a894c4357b58bcd443799d4d70eca8b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "573ce88c36556454fe90f8b2acf41064"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat3x4.hpp"
+          },
+          "hashes": {
+            "md5": "db69584ff612a22f46b6d3d0abf30b18"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x4.hpp"
+          },
+          "hashes": {
+            "md5": "947b7fb951811fd726d796ddbbc51bf4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x4.hpp"
+          },
+          "hashes": {
+            "md5": "5fec13b77bddd12a687866900838f8ef"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat3x4.inl"
+          },
+          "hashes": {
+            "md5": "e317f3f3340b7d5a2507ca44b740bfa8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double3x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "e6779ff4c1759a8db0d6d986bcdb64ba"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x4.hpp"
+          },
+          "hashes": {
+            "md5": "39d375e30adc9f2def3e9e82ce2f72a8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float3x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "14b646c38559751a2dc995f407c8b866"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat4x2.hpp"
+          },
+          "hashes": {
+            "md5": "14a23b93f932b144469b200e87b8f825"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x2.hpp"
+          },
+          "hashes": {
+            "md5": "b13ab8d95a29b67f5e1e94c7bb8e6df9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x2.hpp"
+          },
+          "hashes": {
+            "md5": "1b28ed5990a46ba43c55f0ee41a105cb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x2.inl"
+          },
+          "hashes": {
+            "md5": "4bd9df27ee2ef5669ba648acd3d08722"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "79adfc17ac77ae525ad315f1dd9714d2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x2.hpp"
+          },
+          "hashes": {
+            "md5": "987e6a564945a40805a6fda80503697c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "b0569fc05b029b4873f79f89c6ea632a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat4x3.hpp"
+          },
+          "hashes": {
+            "md5": "d4866acb2b555bdd47ab09ce17715510"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x3.hpp"
+          },
+          "hashes": {
+            "md5": "8b6a3b452070b64c909aa625f7797efc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x3.hpp"
+          },
+          "hashes": {
+            "md5": "ced466943788cfca5bb19249f89a5a7b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x3.inl"
+          },
+          "hashes": {
+            "md5": "223db0fb2270ad5984daf86f771a0801"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "473f5150365f0484d1ba8c1c558b1746"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x3.hpp"
+          },
+          "hashes": {
+            "md5": "d0833389efe6d299c4afddc1fa41c71f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x3_precision.hpp"
+          },
+          "hashes": {
+            "md5": "3470646ee954d2a4ebac7a63b87890a6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/mat4x4.hpp"
+          },
+          "hashes": {
+            "md5": "a7dcdf3d616f5ec44bf6e3886cef69d8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x4.hpp"
+          },
+          "hashes": {
+            "md5": "d712f6bbe13d5e32d19389da62611617"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x4.hpp"
+          },
+          "hashes": {
+            "md5": "244f1a3f9face57382d4c8f671c1e297"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_mat4x4.inl"
+          },
+          "hashes": {
+            "md5": "e70aa231a312b414ce54928c71d79fdd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double4x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "58dbe39d31ed909fee0dfa96b7febd2d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x4.hpp"
+          },
+          "hashes": {
+            "md5": "f55fbdf3dbdf2e5a3d2a4055738ea7b1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float4x4_precision.hpp"
+          },
+          "hashes": {
+            "md5": "b504e594a03c39d97e0ac65217756cf9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_matrix.inl"
+          },
+          "hashes": {
+            "md5": "4e4770dbced546f9b411b76cfdb53e7f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/geometric.hpp"
+          },
+          "hashes": {
+            "md5": "2564acf12cfb14dffc775bba9d05def4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_geometric.inl"
+          },
+          "hashes": {
+            "md5": "20b7c0d583de755f76ed9ea6e7bfd7fa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/exponential.hpp"
+          },
+          "hashes": {
+            "md5": "d0420791049cb2398cbaf2f534378744"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec1.hpp"
+          },
+          "hashes": {
+            "md5": "fab4fd42bc992c425f2e0c2c46ae34d4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_vec1.inl"
+          },
+          "hashes": {
+            "md5": "f355a19ccb34e5f78fd15ba394741e5f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_exponential.inl"
+          },
+          "hashes": {
+            "md5": "b19f14dfb0cfa5ffaa0bdc722dc58583"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/vector_relational.hpp"
+          },
+          "hashes": {
+            "md5": "fc9e73be8c936c74b46c1113342f398c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_vector_relational.inl"
+          },
+          "hashes": {
+            "md5": "91234408444307e7d2d5374b0239bf08"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/_vectorize.hpp"
+          },
+          "hashes": {
+            "md5": "f13f86894c3d12be4a4a5c05bd1b939d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/common.hpp"
+          },
+          "hashes": {
+            "md5": "7dd527c6e4e1d794bbdf2548d5bb557d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_common.inl"
+          },
+          "hashes": {
+            "md5": "bc98dd3ec040625d32c1212323148098"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/compute_common.hpp"
+          },
+          "hashes": {
+            "md5": "5ca0a92abc175d72ce50841ee56a11e3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_double2x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "450bef16ce9975cf6eceb803837eea46"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x2.hpp"
+          },
+          "hashes": {
+            "md5": "aba93c6e3189111b8c738ba96b22744e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_float2x2_precision.hpp"
+          },
+          "hashes": {
+            "md5": "3d06f51d7e991f5c3c8a2baee4198c26"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/trigonometric.hpp"
+          },
+          "hashes": {
+            "md5": "7daa4eb621d3c7b2ef853d26b9bacf99"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_trigonometric.inl"
+          },
+          "hashes": {
+            "md5": "6b9b39951c52f79881c5f6a44bc147ca"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/packing.hpp"
+          },
+          "hashes": {
+            "md5": "d7359a27a6275b1d6239015770896026"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_packing.inl"
+          },
+          "hashes": {
+            "md5": "05831c7ec61e8f2de94180b63e575f3b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_half.hpp"
+          },
+          "hashes": {
+            "md5": "37bd666b26f36fd2c230c580c8fe2a2a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_half.inl"
+          },
+          "hashes": {
+            "md5": "f9dde417557b4a58bff42177fe48727f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/integer.hpp"
+          },
+          "hashes": {
+            "md5": "9c1f4e4cccc9c898d20a19923cd6d9b7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/func_integer.inl"
+          },
+          "hashes": {
+            "md5": "408e40bdbf5bbe602a4e3c13f4c0c299"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/vao.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "b17fc8f940ef2df7bbf7a26cea7f9fe2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/vao.h"
+          },
+          "hashes": {
+            "md5": "392344626db5809ef945d63aa90baaac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/texture.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "bfcd0918905c0af69c96562dd69661a6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/texture.h"
+          },
+          "hashes": {
+            "md5": "e1fcbf61b40346e1c9696424893fe2c8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glfw/glfw3.h"
+          },
+          "hashes": {
+            "md5": "08fe0045a1ac9713e5d85c2cf7f7091e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/stb/stb_image.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "0d2fb398efe75f4f73bdd7359d995933"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/shader.h"
+          },
+          "hashes": {
+            "md5": "2969bcbce9a668ad251d729c851afdc3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/stb.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "c2dbeadc86d4f4c2bf4e94e6a381acff"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/rbo.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "5f8c4c9007a98a33501600b687f2e465"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/rbo.h"
+          },
+          "hashes": {
+            "md5": "36605b5affb9fe2fb0782dbaf82651be"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/font.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "39a9bd4695e75c8ce5c22ec169e36ddb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/font.h"
+          },
+          "hashes": {
+            "md5": "a7f0465cf06c2a984fb11980f7297ac8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/ttt.h"
+          },
+          "hashes": {
+            "md5": "a1a5fe6a5a3bc1f9a3e91e4c0a705f8e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext.hpp"
+          },
+          "hashes": {
+            "md5": "5400f8f31dcb684eb0b0a8afb2adaec7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_relational.hpp"
+          },
+          "hashes": {
+            "md5": "8330cc07a99c4e40c482b06e3f985316"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_relational.inl"
+          },
+          "hashes": {
+            "md5": "30c82a234eb28db29df68e7f813db777"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_relational.hpp"
+          },
+          "hashes": {
+            "md5": "2959cfc6937b919e9cf1f6e489732808"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_relational.inl"
+          },
+          "hashes": {
+            "md5": "09e7b3fd91b42c6d4f204be182c0a5be"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_float.hpp"
+          },
+          "hashes": {
+            "md5": "dbbbdc1019716c3944f478244ecf41e1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_double.hpp"
+          },
+          "hashes": {
+            "md5": "4f093bea45b89e0b3682560ee36f79c0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_quat.hpp"
+          },
+          "hashes": {
+            "md5": "de5195036f4e3ab2465ebea1cccb831b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_relational.hpp"
+          },
+          "hashes": {
+            "md5": "c87f2a1c42fabb62ca32c20cdf6484ea"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_relational.inl"
+          },
+          "hashes": {
+            "md5": "ade4a39cc8051ba3dc1d20eaa75b5566"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/constants.hpp"
+          },
+          "hashes": {
+            "md5": "ff2ca20ef3a0846df61d4270c709315d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_constants.hpp"
+          },
+          "hashes": {
+            "md5": "8d0ab6540c5607c6ffe14b2d4661abc1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_constants.inl"
+          },
+          "hashes": {
+            "md5": "597ae54cdaa8fb2b98eccfb5582ff6f8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/constants.inl"
+          },
+          "hashes": {
+            "md5": "7724d835030a82936fceee11b595a8b7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_transform.hpp"
+          },
+          "hashes": {
+            "md5": "b6f63acd21bf911dda29cd6737dcbfbb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_projection.hpp"
+          },
+          "hashes": {
+            "md5": "edd95a8fc5397ec2fcee498d592c8fb0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_projection.inl"
+          },
+          "hashes": {
+            "md5": "6d3b17c2a385fc51872d56c5fbd17e90"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_clip_space.hpp"
+          },
+          "hashes": {
+            "md5": "c6a778dd1dd57d8892c04d1d3884c05b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_clip_space.inl"
+          },
+          "hashes": {
+            "md5": "f515518d4c61f2aac78130fc28cb15c4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_transform.hpp"
+          },
+          "hashes": {
+            "md5": "ba03712dd9c3842d72e109850ae9f8e8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/matrix_transform.inl"
+          },
+          "hashes": {
+            "md5": "fd4375e7b439e9ecf9c5f039450bd6c8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_transform.inl"
+          },
+          "hashes": {
+            "md5": "6ea7580110141824bf413d5396e4853a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/type_quat.inl"
+          },
+          "hashes": {
+            "md5": "3b06aadb66613b3a662ac1315a680699"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_geometric.hpp"
+          },
+          "hashes": {
+            "md5": "7a9801b2f4fb9862770bd849a4613432"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_geometric.inl"
+          },
+          "hashes": {
+            "md5": "71a5b8efa04b81147cecd630cf5d462b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_double_precision.hpp"
+          },
+          "hashes": {
+            "md5": "9a49f20faa6b6d46d74ecfdad6b9d64f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_float.hpp"
+          },
+          "hashes": {
+            "md5": "93df7cdd7843a12705f288ccfc8f2b5c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_float_precision.hpp"
+          },
+          "hashes": {
+            "md5": "be3830d30c23028c84c2c719d4ce0b1b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_int_sized.hpp"
+          },
+          "hashes": {
+            "md5": "56922a1c4ea160d56d67645575d3c32b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_relational.hpp"
+          },
+          "hashes": {
+            "md5": "52c23ee80eac7bebb2d8db87ec6e89d9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_relational.inl"
+          },
+          "hashes": {
+            "md5": "bf72069fc853cc7720a249cf26a6dcb7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_uint_sized.hpp"
+          },
+          "hashes": {
+            "md5": "8dd47eb717f4dfd571b5074c5597ac46"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool1.hpp"
+          },
+          "hashes": {
+            "md5": "d5b83a791dcb75d61e4fc68cb6aa446b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_bool1_precision.hpp"
+          },
+          "hashes": {
+            "md5": "8cabd19680c59f2b9c5971dabd95ac62"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double1.hpp"
+          },
+          "hashes": {
+            "md5": "94b1644af6405fca137c6bd00c827e32"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_double1_precision.hpp"
+          },
+          "hashes": {
+            "md5": "08b9296a5305e6d37ec31bed0e45a57d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float1.hpp"
+          },
+          "hashes": {
+            "md5": "4748d14a05d34447fd7f226f89e804b0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_float1_precision.hpp"
+          },
+          "hashes": {
+            "md5": "bfdde8d7404de269095c570ede7ce6d2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int1.hpp"
+          },
+          "hashes": {
+            "md5": "e264f2c1303bcc85abc58b851407be94"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_int1_precision.hpp"
+          },
+          "hashes": {
+            "md5": "8ce290615ac3955d1f50de422c2c0fa3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint1.hpp"
+          },
+          "hashes": {
+            "md5": "ec3384086aa3d536dd19ac2fa2ca5a4b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_uint1_precision.hpp"
+          },
+          "hashes": {
+            "md5": "55ef2bf1ddf084abea6b657d3a99e2d5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/bitfield.hpp"
+          },
+          "hashes": {
+            "md5": "eb53f5562f4c1f043d59cc6ca5b449d0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/type_precision.hpp"
+          },
+          "hashes": {
+            "md5": "386cf6bd868a7e0eb9aef72fead197bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/quaternion.hpp"
+          },
+          "hashes": {
+            "md5": "94cdd453da906d3eb1d310bc93bcbac4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_common.hpp"
+          },
+          "hashes": {
+            "md5": "71d6862d7d17aaf8c2a87223e850e88a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_common.inl"
+          },
+          "hashes": {
+            "md5": "2f68d95eb59925869b8c97ec2dffd405"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_trigonometric.hpp"
+          },
+          "hashes": {
+            "md5": "877832534386fa59e8c14606c7b0592b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_trigonometric.inl"
+          },
+          "hashes": {
+            "md5": "73d7ed50434b137113173316d38b6eb4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_transform.hpp"
+          },
+          "hashes": {
+            "md5": "73d519b6a57d35f6265d7368297a8703"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/quaternion_transform.inl"
+          },
+          "hashes": {
+            "md5": "06469830f6976e8404233be4b014f825"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/quaternion.inl"
+          },
+          "hashes": {
+            "md5": "572719ccb59437772c26e15bfe67df96"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/epsilon.hpp"
+          },
+          "hashes": {
+            "md5": "1bc62b34076a67088c62710d1b4d2115"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/epsilon.inl"
+          },
+          "hashes": {
+            "md5": "a809d51b6a872e5a0ad13599e52b60f2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/vec1.hpp"
+          },
+          "hashes": {
+            "md5": "3fba7ab2461c5f69634295fee314290c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/type_precision.inl"
+          },
+          "hashes": {
+            "md5": "b66a3b50c9460d1d96ccdaca13100a67"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/bitfield.inl"
+          },
+          "hashes": {
+            "md5": "e1a003d4b29b196dc5a79773ebdd8284"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/simd/integer.h"
+          },
+          "hashes": {
+            "md5": "f4abd95733c59ed5bc356fe58db4e3d4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/color_space.hpp"
+          },
+          "hashes": {
+            "md5": "6f678a1f2edde103bff465677c171a43"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/color_space.inl"
+          },
+          "hashes": {
+            "md5": "8ea04584d3dc2610338708272bc4e91d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/integer.hpp"
+          },
+          "hashes": {
+            "md5": "a3b37b6235a644e8f2233ea07bf2d9f9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/integer.inl"
+          },
+          "hashes": {
+            "md5": "655517a74a1ec9c1325d4331a143d150"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_access.hpp"
+          },
+          "hashes": {
+            "md5": "ab939bc5b113c9a5fb7b5f5c8d58f242"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_access.inl"
+          },
+          "hashes": {
+            "md5": "a6bce314db4b7eaa70834024f01f691a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_integer.hpp"
+          },
+          "hashes": {
+            "md5": "6a3a9ed672d1da502304848d6e647ea1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_inverse.hpp"
+          },
+          "hashes": {
+            "md5": "006a11062aa5b7afb3784c395ae9ac22"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/matrix_inverse.inl"
+          },
+          "hashes": {
+            "md5": "cee92ac22fc1801b667b8d529d5a9ba3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/noise.hpp"
+          },
+          "hashes": {
+            "md5": "af829e3a32995fdc9a53957c633e9190"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/detail/_noise.hpp"
+          },
+          "hashes": {
+            "md5": "1f8a67b6be5b4c81c31a21294bba7060"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/noise.inl"
+          },
+          "hashes": {
+            "md5": "9f862074d2d2556076f405524618ed4a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/packing.hpp"
+          },
+          "hashes": {
+            "md5": "5dd603f0cae969ba50ead5be9929b223"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/packing.inl"
+          },
+          "hashes": {
+            "md5": "4b5472a3b11e31b65332f4c8639afd18"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/random.hpp"
+          },
+          "hashes": {
+            "md5": "19f1fb5ce9a3dee6326dea503f9b513c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/random.inl"
+          },
+          "hashes": {
+            "md5": "a66447e7aed66d4da2aa22b58775c6e3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/reciprocal.hpp"
+          },
+          "hashes": {
+            "md5": "f95f354d4a7dbadc984ed96b826f9349"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/reciprocal.inl"
+          },
+          "hashes": {
+            "md5": "53d16fdbf126e75b37f17a25d9298884"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/round.hpp"
+          },
+          "hashes": {
+            "md5": "9e9f1850bd83691587694159aefe09b9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/round.inl"
+          },
+          "hashes": {
+            "md5": "1e4fe6337b77434094577f6e7e24190b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_integer.hpp"
+          },
+          "hashes": {
+            "md5": "d48222932322115efb9bc48769e560cb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/vector_integer.inl"
+          },
+          "hashes": {
+            "md5": "fb407357298486cedc324bf45a8f0f20"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_integer.hpp"
+          },
+          "hashes": {
+            "md5": "a768f716cd5644f3430d7b5965a1d339"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_integer.inl"
+          },
+          "hashes": {
+            "md5": "4c8af0983b830e7448f28eac4cf6d470"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/type_ptr.hpp"
+          },
+          "hashes": {
+            "md5": "2d03acc1515589e846798ea377e33cce"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/type_ptr.inl"
+          },
+          "hashes": {
+            "md5": "d83542af89ff4c9e73d4e9132661cfc5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/ulp.hpp"
+          },
+          "hashes": {
+            "md5": "4eccbdfefb0a91f6d117b58b5f7c8a72"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/gtc/ulp.inl"
+          },
+          "hashes": {
+            "md5": "02f8c00f9a0338181ef18e46b5bf8481"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_ulp.hpp"
+          },
+          "hashes": {
+            "md5": "ad2376f7277a80f46942e4a961acf641"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/glm/ext/scalar_ulp.inl"
+          },
+          "hashes": {
+            "md5": "104b6386d59971032f53235d88ffea6c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/ft2build.h"
+          },
+          "hashes": {
+            "md5": "6e5e1290b3ba31ae05490d8c06ea7eac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/ftheader.h"
+          },
+          "hashes": {
+            "md5": "f3ccefcda0e41517816151440cd19509"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/freetype.h"
+          },
+          "hashes": {
+            "md5": "1f614ff25e9b7e06cd481cad52cbb1ca"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/ftconfig.h"
+          },
+          "hashes": {
+            "md5": "46bd622cfabd2a2e874a519f7ff115b9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/ftoption.h"
+          },
+          "hashes": {
+            "md5": "bc0edc0c430e4da3fb59d5bb303a91d6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/ftstdlib.h"
+          },
+          "hashes": {
+            "md5": "814361555932b45c850a3473e7f2447e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/integer-types.h"
+          },
+          "hashes": {
+            "md5": "4006258b996db71304f4f7b08db1dbf6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/public-macros.h"
+          },
+          "hashes": {
+            "md5": "d08cb5f3d9e267cd86e86ebea38c0307"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/config/mac-support.h"
+          },
+          "hashes": {
+            "md5": "9eda50c3849348883322e1fc440db74e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/fttypes.h"
+          },
+          "hashes": {
+            "md5": "5f9b6e1a03eeb76fc8325a21e9fe3ef7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/ftsystem.h"
+          },
+          "hashes": {
+            "md5": "8813c569b6ea083470a3eb1b4deecbf7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/ftimage.h"
+          },
+          "hashes": {
+            "md5": "0fd40dbf25451000358de3ca9edc013f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/fterrors.h"
+          },
+          "hashes": {
+            "md5": "f8ac3dcfa04904e98d5455e811d2c048"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/ftmoderr.h"
+          },
+          "hashes": {
+            "md5": "4092b01aab7680b461d8e5b7811f35ec"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/ethan/git/ttt-v3/ttt-v3/libraries/include/freetype/fterrdef.h"
+          },
+          "hashes": {
+            "md5": "d355a695c4563e4e65f2286337de1706"
+          }
+        }
+      ]
+    }
+  ]
+}

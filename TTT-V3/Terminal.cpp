@@ -3,17 +3,16 @@
 #define CMD_TYPE_POS 1
 #define CMD_FUNC_POS 2
 
-
-Terminal *Terminal::m_singletonInstance = NULL;
+Terminal *Terminal::m_singletonInstance = nullptr;
 
 // gets and returns singleton instance ONLY if it already exists
 Terminal *Terminal::GetSingleton()
 {
-    if (m_singletonInstance != NULL)
+    if (m_singletonInstance)
     {
         return m_singletonInstance;
     }
-    return NULL;
+    return nullptr;
 }
 /**
  * Gets and returns singleton instance if it exsists
@@ -26,10 +25,11 @@ Terminal *Terminal::GetSingleton()
  * @param blinkInterval: percentage of second to show cursor
  * @param font: font object to use to draw terminal
  * @param color: vec3 containing rgb values for font color
+ * @return pointer to singleton instance
  */
 Terminal *Terminal::GetSingleton(GLFWwindow* window, unsigned int nrows, unsigned int padding, float lineSpacing, float blinkInterval, Font* font, glm::vec3 color)
 {
-    if (m_singletonInstance != NULL)
+    if (m_singletonInstance)
     {
         return m_singletonInstance;
     }
@@ -64,7 +64,7 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
     m_blinkInterval = blinkInterval;
     m_input = "";
     m_history = new std::list<std::string>();
-    m_commands = new std::vector<std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>>>();
+    m_commands = new std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>();
 
     m_font = font;
     m_color = color;
@@ -83,7 +83,7 @@ void Terminal::staticCharCallback(GLFWwindow* window, unsigned int codepoint)
 {
     Terminal *singleton = GetSingleton();
     // check to make sure singleton exiists
-    if (singleton != NULL)
+    if (singleton)
     {
         return singleton->CharCallback(window, codepoint);
     }
@@ -102,7 +102,7 @@ void Terminal::staticKeyCallback(GLFWwindow* window, int key, int scancode, int 
 {
     Terminal *singleton = GetSingleton();
     // check to make sure singleton exiists
-    if (singleton != NULL)
+    if (singleton)
     {
         return singleton->KeyCallback(window, key, scancode, action, mods);
     }
@@ -187,9 +187,9 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
  * @param type: enum containing data type of the function input
  * @param function: function to bind to the command
  */
-void Terminal::BindFunction(std::string name, TTT::TTTenum type, std::function<void(void*)> function)
+void Terminal::BindFunction(std::string name, TTTenum type, std::function<void(void*)> function)
 {
-    std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>> cmd = {name, type, function};
+    std::tuple<std::string, TTTenum, std::function<void(void*)>> cmd = {name, type, function};
     m_commands->push_back(cmd);
 }
 /**
@@ -248,27 +248,127 @@ void Terminal::RunCmd(std::string cmd)
     }
 
     // iterate through cmd list to find corresponding command
-    std::vector<std::tuple<std::string, TTT::TTTenum, std::function<void(void*)>>>::iterator c;
+    std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>::iterator c;
     for (c = m_commands->begin(); c != m_commands->end(); ++c)
     {
-        if (std::get<0>(*c) == parts[0])
+        if (std::get<CMD_NAME_POS>(*c) == parts[0])
         {
-            // placeholder for running command
-            Log("Executed " + parts[0]);
-            // execute function with dummy value
-            std::get<2>(*c)((void*)NULL);
             break;
         }
     }
     // see if there was a hit
     if (c == m_commands->end())
     {
-        Log("Command not found: " + parts[0]);
+        Log("UNKNOWN COMMAND: " + parts[0]);
         return;
     }
     // handle output based on var type (std::get<1>(*c))
+    TTTenum type = std::get<CMD_TYPE_POS>(*c);
+    if (type == TTTenum::TTT_VOID)
+    {
+        // run function with nullptr
+        std::get<CMD_FUNC_POS>(*c)(nullptr);
+        return;
+    }
+    // all of the following cases require at least one other arg
+    // to simplify this, we will check if there are at least two args now
+    if (parts.size() < 2)
+    {
+        Log("EXPECTED MORE ARGS");
+        return;
+    }
+    if (type == TTTenum::TTT_CHAR)
+    {
+        char val = parts[1][0];
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_UCHAR)
+    {
+        unsigned char val = (unsigned char)parts[1][0];
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_SHORT)
+    {
+        // check if the int is a valid short
+        int raw = std::stoi(parts[1]);
+        bool valid = std::numeric_limits<short>::max() >= raw
+                    && std::numeric_limits<short>::lowest() <= raw;
+        short val = valid ? (short)raw : 0;
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_INT)
+    {
+        int val = std::stoi(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_UINT)
+    {
+        // read as unsigned long then attempt to cast to short
+        unsigned long raw = std::stoul(parts[1]);
+        bool valid = std::numeric_limits<unsigned int>::max() >= raw;
+        unsigned int val = valid ? (unsigned int)raw : 0;
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_LONG)
+    {
+        long val = std::stol(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_ULONG)
+    {
+        // read as unsigned long then attempt to cast to short
+        unsigned long val = std::stoul(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_FLOAT)
+    {
+        float val = std::stof(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_DOUBLE)
+    {
+        float val = std::stod(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_LDOUBLE)
+    {
+        float val = std::stold(parts[1]);
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
+    else if (type == TTTenum::TTT_STRING)
+    {
+        std::string val = "";
+        // sum up remaining parts
+        for (std::vector<std::string>::iterator s = parts.begin(); s != parts.end(); ++s)
+        {
+            val += *s;
+        }
+        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+    }
 }
 
+/*
+ * Function to bind a member function of this cog to be called later
+ *
+ * @param id: id to assign to function
+ * @param f: std::function of TTT_GENERIC_FUNCTION
+ * @param type: TTTenum holding what type to pass to function
+ * @return: true if function added, false if already exists
+ */
+bool Terminal::BindFn(std::string name, std::function<TTT_GENERIC_FUNCTION> f, TTTenum type)
+{
+    // check if command with name already exists
+    std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>::iterator cmd;
+    for (cmd = m_commands->begin(); cmd != m_commands->end(); ++cmd)
+    {
+        if (std::get<CMD_NAME_POS>(*cmd) == name)
+        {
+            return false;
+        }
+    }
+    m_commands->push_back({ name, type, f });
+    return true;
+}
 Terminal::~Terminal()
 {
     delete m_history;

@@ -20,6 +20,13 @@ Camera::Camera(int width, int height, glm::vec3 position)
     m_position = position;
 
     m_cameraMatrix = glm::mat4(1.0f);
+
+    std::function<TTT_GENERIC_FUNCTION> f = std::bind(&Camera::TestFn, this, std::placeholders::_1);
+    Terminal *t = Terminal::GetSingleton();
+    if (t)
+    {
+        t->BindFn("TestFn", f, TTTenum::TTT_FLOAT);
+    }
 }
 
 // calculares view and projection matrices based on camera

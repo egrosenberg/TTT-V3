@@ -61,6 +61,24 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
+// boolean to track if we should draw wireframe
+bool wireframe = false;
+bool q_pressed = false;
+// boolean to track if we should visualize shadowmap
+bool shadowOnly = false;
+bool e_pressed = false;
+
+void toggleWF(void* v)
+{
+    wireframe = !wireframe;
+}
+void toggleSO(void* v)
+{
+    shadowOnly = !shadowOnly;
+}
+
+
+// cycling shadow modes
 // dummy function for testing purposes
 void dummy(void *p)
 {
@@ -97,6 +115,19 @@ int main()
     glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
     // Disable byte-allignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // create a font
+    Font *redhat = new Font("Fonts/RedHatDisplay-Light.ttf", FONT_HEIGHT);
+
+    // Create terminal
+    Terminal *terminal = Terminal::GetSingleton(winMain, TERMINAL_ROWS, TERMINAL_PADDING, LINE_SPACING,
+        TERMINAL_BLINK_INTERVAL, redhat, glm::vec3(1.0f));
+    terminal->Log("Terminal loaded!");
+    std::function<TTT_GENERIC_FUNCTION> wireframeFunction = std::bind(&toggleWF, std::placeholders::_1);
+    terminal->BindFn("Wireframe", wireframeFunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> shadowFunction = std::bind(&toggleSO, std::placeholders::_1);
+    terminal->BindFn("Shadows", shadowFunction, TTTenum::TTT_VOID);
+
 
     // set up shader program for main object
     Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag", "Shaders/default.geom");
@@ -165,12 +196,6 @@ int main()
     //model->SetTransform(transform);
     //trees->SetTransform(transform);
 
-    // set up variables for FPS tracking
-    double prevTime = 0.0;
-    double crntTime = 0.0;
-    double timeDiff = 0.0;
-    unsigned int frameCounter = 0;
-
     // set up post proccessing display
     Display* display = new Display(AA_SAMPLES);
 
@@ -189,7 +214,7 @@ int main()
     Skybox *skybox = new Skybox(&skyboxFaces, 0);
 
     // Create shadow map fbo
-    FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTT::TTT_DEPTH_FRAMEBUFFER, TTT::TTT_TEXTURE_2D);
+    FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTTenum::TTT_DEPTH_FRAMEBUFFER, TTTenum::TTT_TEXTURE_2D);
 
     // create matrix for light projection for calculating shadow
     float SW = 35.0f;
@@ -204,7 +229,7 @@ int main()
     glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
     // Shadow 
-    FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTT::TTT_DEPTH_FRAMEBUFFER, TTT::TTT_TEXTURE_CUBEMAP);
+    FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTTenum::TTT_DEPTH_FRAMEBUFFER, TTTenum::TTT_TEXTURE_CUBEMAP);
     // define shadow matrices
     glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
     glm::mat4 shadowTransforms[] =
@@ -227,25 +252,14 @@ int main()
     glUniform3f(glGetUniformLocation(shadowCubemapProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
     glUniform1f(glGetUniformLocation(shadowCubemapProgram->ID(), "farPlane"), SHADOW_FARPLANE);
 
-    // create a font
-    Font *redhat = new Font("Fonts/RedHatDisplay-Regular.ttf", FONT_HEIGHT);
-    Font *redhat_bold = new Font("Fonts/RedHatDisplay-Bold.ttf", FONT_HEIGHT);
-
-    // Crete terminal
-    Terminal *terminal = Terminal::GetSingleton(winMain, TERMINAL_ROWS, TERMINAL_PADDING, LINE_SPACING,
-                                                TERMINAL_BLINK_INTERVAL, redhat, glm::vec3(1.0f));
-    terminal->Log("Terminal loaded!");
-    terminal->BindFunction("Test", TTT::TTT_INT, dummy);
-
-    // boolean to track if we should draw wireframe
-    bool wireframe = false;
-    bool q_pressed = false;
-    // boolean to track if we should visualize shadowmap
-    bool shadowOnly = false;
-    bool e_pressed = false;
-    // cycling shadow modes
-    TTT::TTTenum lightMode = TTT::TTT_POINT_LIGHT;
+    TTTenum lightMode = TTTenum::TTT_POINT_LIGHT;
     bool r_pressed = false;
+
+    // set up variables for FPS tracking
+    double prevTime = 0.0;
+    double crntTime = 0.0;
+    double timeDiff = 0.0;
+    unsigned int frameCounter = 0;
 
     // Main loop
     while (!glfwWindowShouldClose(winMain))
@@ -266,56 +280,32 @@ int main()
         // Check inputs
         if (!terminal->Active())
         {
-            if (glfwGetKey(winMain, GLFW_KEY_Q) == GLFW_PRESS)
-            {
-                if (q_pressed == false)
-                {
-                    wireframe = !wireframe;
-                    q_pressed = true;
-                }
-            }
-            else
-            {
-                q_pressed = false;
-            }
-            if (glfwGetKey(winMain, GLFW_KEY_E) == GLFW_PRESS)
-            {
-                if (e_pressed == false)
-                {
-                    shadowOnly = !shadowOnly;
-                    e_pressed = true;
-                }
-            }
-            else
-            {
-                e_pressed = false;
-            }
             if (glfwGetKey(winMain, GLFW_KEY_R) == GLFW_PRESS)
             {
                 if (r_pressed == false)
                 {
                     // cycle through shadow modes
-                    if (lightMode == TTT::TTT_POINT_LIGHT)
+                    if (lightMode == TTTenum::TTT_POINT_LIGHT)
                     {
-                        lightMode = TTT::TTT_DIRECTIONAL_LIGHT;
+                        lightMode = TTTenum::TTT_DIRECTIONAL_LIGHT;
                         lightProj = orthoProj * lightViewDirec;
 
                         // export light projection to shadowmap shader
                         shadowProgram->Activate();
                         glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
                     }
-                    else if (lightMode == TTT::TTT_DIRECTIONAL_LIGHT)
+                    else if (lightMode == TTTenum::TTT_DIRECTIONAL_LIGHT)
                     {
-                        lightMode = TTT::TTT_SPOT_LIGHT;
+                        lightMode = TTTenum::TTT_SPOT_LIGHT;
                         lightProj = perspProj * lightView;
 
                         // export light projection to shadowmap shader
                         shadowProgram->Activate();
                         glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
                     }
-                    else if (lightMode == TTT::TTT_SPOT_LIGHT)
+                    else if (lightMode == TTTenum::TTT_SPOT_LIGHT)
                     {
-                        lightMode = TTT::TTT_POINT_LIGHT;
+                        lightMode = TTTenum::TTT_POINT_LIGHT;
                     }
                     r_pressed = true;
                 }
@@ -329,7 +319,7 @@ int main()
         // get depth buffer from pov of the light
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, SHADOW_W, SHADOW_H);
-        if (lightMode == TTT::TTT_POINT_LIGHT)
+        if (lightMode == TTTenum::TTT_POINT_LIGHT)
         {
             shadowPointFBO->Bind();
         }
@@ -340,7 +330,7 @@ int main()
         glClear(GL_DEPTH_BUFFER_BIT);
         
         // draw model in shadow map
-        if (lightMode == TTT::TTT_POINT_LIGHT)
+        if (lightMode == TTTenum::TTT_POINT_LIGHT)
         {
             model->Draw(shadowCubemapProgram, mainCamera);
             trees->Draw(shadowCubemapProgram, mainCamera);
@@ -383,7 +373,7 @@ int main()
 
         // Bind the Shadow Map
         glActiveTexture(GL_TEXTURE0 + 2);
-        if (lightMode == TTT::TTT_POINT_LIGHT)
+        if (lightMode == TTTenum::TTT_POINT_LIGHT)
         {
             shadowPointFBO->BindTex();
             glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 22);
@@ -392,11 +382,11 @@ int main()
         else
         {
             shadowFBO->BindTex();
-            if (lightMode == TTT::TTT_DIRECTIONAL_LIGHT)
+            if (lightMode == TTTenum::TTT_DIRECTIONAL_LIGHT)
             {
                 glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 20);
             }
-            else if (lightMode == TTT::TTT_SPOT_LIGHT)
+            else if (lightMode == TTTenum::TTT_SPOT_LIGHT)
             {
                 glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 21);
             }
@@ -441,7 +431,6 @@ int main()
     delete shadowFBO;
     delete shadowPointFBO;
     delete redhat;
-    delete redhat_bold;
 
     // close window
     glfwDestroyWindow(winMain);

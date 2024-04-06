@@ -10,12 +10,13 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include "Shader.h"
+#include "TTTcog.h"
 
 #define CAM_SPEED 0.2f
-#define CAM_SPRINT 5.0f
+#define CAM_SPRINT 1.0f
 #define CAM_SENS 100.0f
 
-class Camera
+class Camera : public TTTcog
 {
 private:
     glm::vec3 m_position;
@@ -31,6 +32,16 @@ private:
     float m_sensitivity;
 
     bool m_firstClick;
+
+    void inline TestFn(void *v)
+    {
+        // check to verify pointer is valid
+        if (v)
+        {
+            float *n = (float*)v;
+            std::cout << *n << std::endl;
+        }
+    }
 
 
 public:

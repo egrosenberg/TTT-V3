@@ -3,7 +3,6 @@
 Texture::Texture(const char* fname, const char *texType, GLuint slot)
 {
     m_type = texType;
-    std::cout << slot << std::endl;
 
     // Load image
     stbi_set_flip_vertically_on_load(true);
