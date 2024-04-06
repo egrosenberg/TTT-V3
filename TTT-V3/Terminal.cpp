@@ -181,18 +181,6 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
 }
 
 /**
- * Binds a function to a command and adds it to command vector
- * 
- * @param name: command as string
- * @param type: enum containing data type of the function input
- * @param function: function to bind to the command
- */
-void Terminal::BindFunction(std::string name, TTTenum type, std::function<void(void*)> function)
-{
-    std::tuple<std::string, TTTenum, std::function<void(void*)>> cmd = {name, type, function};
-    m_commands->push_back(cmd);
-}
-/**
  * Draws all text in history + current input line
  * 
  * @param shader: shader program to draw with

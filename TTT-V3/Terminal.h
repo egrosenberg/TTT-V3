@@ -43,13 +43,12 @@ public:
     static Terminal *GetSingleton(GLFWwindow* window, unsigned int nrows, unsigned int padding, float lineSpacing, float blinkInterval, Font* font, glm::vec3 color);
     Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding, float lineSpacing, float blinkInterval, Font *font, glm::vec3 color);
 
-    void BindFunction(std::string name, TTTenum type, std::function<void(void*)> function);
     void Draw(Shader *shader, float crntTime);
     void Log(std::string text);
+    bool BindFn(std::string name, std::function<TTT_GENERIC_FUNCTION> f, TTTenum type);
 
     bool Active() { return m_active; }
 
-    bool BindFn(std::string name, std::function<TTT_GENERIC_FUNCTION> f, TTTenum type);
 
     virtual ~Terminal();
 };
