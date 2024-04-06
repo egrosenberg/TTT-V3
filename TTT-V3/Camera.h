@@ -33,14 +33,15 @@ private:
 
     bool m_firstClick;
 
-    void inline TestFn(void *v)
+    std::string inline TestFn(void *v)
     {
         // check to verify pointer is valid
         if (v)
         {
             float *n = (float*)v;
-            std::cout << *n << std::endl;
+            return std::to_string(*n);
         }
+        return "invalid pointer";
     }
 
 

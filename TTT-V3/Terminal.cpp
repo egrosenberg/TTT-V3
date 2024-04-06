@@ -64,7 +64,7 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
     m_blinkInterval = blinkInterval;
     m_input = "";
     m_history = new std::list<std::string>();
-    m_commands = new std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>();
+    m_commands = new std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>>();
 
     m_font = font;
     m_color = color;
@@ -148,11 +148,6 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
             if (m_input.size() > 0)
             {
                 RunCmd(m_input);
-                m_history->push_front(m_input);
-                if (m_history->size() > m_numRows)
-                {
-                    m_history->pop_back();
-                }
             }
             m_input = "";
             m_active = false;
@@ -236,7 +231,7 @@ void Terminal::RunCmd(std::string cmd)
     }
 
     // iterate through cmd list to find corresponding command
-    std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>::iterator c;
+    std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>>::iterator c;
     for (c = m_commands->begin(); c != m_commands->end(); ++c)
     {
         if (std::get<CMD_NAME_POS>(*c) == parts[0])
@@ -247,7 +242,7 @@ void Terminal::RunCmd(std::string cmd)
     // see if there was a hit
     if (c == m_commands->end())
     {
-        Log("UNKNOWN COMMAND: " + parts[0]);
+        Log("'" + parts[0] + "' is not recognized as a command.");
         return;
     }
     // handle output based on var type (std::get<1>(*c))
@@ -255,83 +250,112 @@ void Terminal::RunCmd(std::string cmd)
     if (type == TTTenum::TTT_VOID)
     {
         // run function with nullptr
-        std::get<CMD_FUNC_POS>(*c)(nullptr);
+        Log(std::get<CMD_FUNC_POS>(*c)(nullptr));
         return;
     }
     // all of the following cases require at least one other arg
     // to simplify this, we will check if there are at least two args now
-    if (parts.size() < 2)
+    try
     {
-        Log("EXPECTED MORE ARGS");
-        return;
-    }
-    if (type == TTTenum::TTT_CHAR)
-    {
-        char val = parts[1][0];
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_UCHAR)
-    {
-        unsigned char val = (unsigned char)parts[1][0];
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_SHORT)
-    {
-        // check if the int is a valid short
-        int raw = std::stoi(parts[1]);
-        bool valid = std::numeric_limits<short>::max() >= raw
-                    && std::numeric_limits<short>::lowest() <= raw;
-        short val = valid ? (short)raw : 0;
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_INT)
-    {
-        int val = std::stoi(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_UINT)
-    {
-        // read as unsigned long then attempt to cast to short
-        unsigned long raw = std::stoul(parts[1]);
-        bool valid = std::numeric_limits<unsigned int>::max() >= raw;
-        unsigned int val = valid ? (unsigned int)raw : 0;
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_LONG)
-    {
-        long val = std::stol(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_ULONG)
-    {
-        // read as unsigned long then attempt to cast to short
-        unsigned long val = std::stoul(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_FLOAT)
-    {
-        float val = std::stof(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_DOUBLE)
-    {
-        float val = std::stod(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_LDOUBLE)
-    {
-        float val = std::stold(parts[1]);
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
-    }
-    else if (type == TTTenum::TTT_STRING)
-    {
-        std::string val = "";
-        // sum up remaining parts
-        for (std::vector<std::string>::iterator s = parts.begin(); s != parts.end(); ++s)
+        if (parts.size() < 2)
         {
-            val += *s;
+            Log("'" + parts[0] + "' expected more arguments.");
+            return;
         }
-        std::get<CMD_FUNC_POS>(*c)((void*)(&val));
+        if (type == TTTenum::TTT_CHAR)
+        {
+            char val = parts[1][0];
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_UCHAR)
+        {
+            unsigned char val = (unsigned char)parts[1][0];
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_SHORT)
+        {
+            // check if the int is a valid short
+            int raw = std::stoi(parts[1]);
+            bool valid = std::numeric_limits<short>::max() >= raw
+                        && std::numeric_limits<short>::lowest() <= raw;
+            short val = valid ? (short)raw : 0;
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_INT)
+        {
+            int val = std::stoi(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_UINT)
+        {
+            // read as unsigned long then attempt to cast to short
+            unsigned long raw = std::stoul(parts[1]);
+            bool valid = std::numeric_limits<unsigned int>::max() >= raw;
+            unsigned int val = valid ? (unsigned int)raw : 0;
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_LONG)
+        {
+            long val = std::stol(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_ULONG)
+        {
+            // read as unsigned long then attempt to cast to short
+            unsigned long val = std::stoul(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_FLOAT)
+        {
+            float val = std::stof(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_DOUBLE)
+        {
+            float val = std::stod(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_LDOUBLE)
+        {
+            float val = std::stold(parts[1]);
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        else if (type == TTTenum::TTT_STRING)
+        {
+            std::string val = "";
+            // sum up remaining parts
+            for (std::vector<std::string>::iterator s = parts.begin(); s != parts.end(); ++s)
+            {
+                val += *s;
+            }
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        // the following data types require at least two pieces of data
+        else if (parts.size() < 3)
+        {
+            Log("'" + parts[0] + "' expected more arguments.");
+            return;
+        }
+        else if (type == TTTenum::TTT_VEC2F)
+        {
+            glm::vec2 val = glm::vec2(std::stof(parts[1]), std::stof(parts[2]));
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        // the following data types require at least three pieces of data
+        else if (parts.size() < 4)
+        {
+            Log("'" + parts[0] + "' expected more arguments.");
+            return;
+        }
+        else if (type == TTTenum::TTT_VEC3F)
+        {
+            glm::vec3 val = glm::vec3(std::stof(parts[1]), std::stof(parts[2]), std::stof(parts[3]));
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+    }
+    catch (std::invalid_argument err)
+    {
+        Log(std::string(err.what()));
     }
 }
 
@@ -346,7 +370,7 @@ void Terminal::RunCmd(std::string cmd)
 bool Terminal::BindFn(std::string name, std::function<TTT_GENERIC_FUNCTION> f, TTTenum type)
 {
     // check if command with name already exists
-    std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>>::iterator cmd;
+    std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>>::iterator cmd;
     for (cmd = m_commands->begin(); cmd != m_commands->end(); ++cmd)
     {
         if (std::get<CMD_NAME_POS>(*cmd) == name)

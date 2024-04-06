@@ -61,20 +61,28 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
-// boolean to track if we should draw wireframe
-bool wireframe = false;
-bool q_pressed = false;
-// boolean to track if we should visualize shadowmap
-bool shadowOnly = false;
-bool e_pressed = false;
 
-void toggleWF(void* v)
+bool wireframe = false;
+bool shadowOnly = false;
+bool drawSkybox = false;
+
+std::string toggleWF(void* v)
 {
     wireframe = !wireframe;
+    std::string onoff = wireframe ? "on" : "off";
+    return "wireframe set to: " + onoff;
 }
-void toggleSO(void* v)
+std::string toggleSO(void* v)
 {
     shadowOnly = !shadowOnly;
+    std::string onoff = shadowOnly ? "on" : "off";
+    return "shadows_only set to: " + onoff;
+}
+std::string toggleSB(void* v)
+{
+    drawSkybox = !drawSkybox;
+    std::string onoff = drawSkybox ? "on" : "off";
+    return "skybox set to: " + onoff;
 }
 
 
@@ -122,11 +130,13 @@ int main()
     // Create terminal
     Terminal *terminal = Terminal::GetSingleton(winMain, TERMINAL_ROWS, TERMINAL_PADDING, LINE_SPACING,
         TERMINAL_BLINK_INTERVAL, redhat, glm::vec3(1.0f));
-    terminal->Log("Terminal loaded!");
+    terminal->Log("TTT-V3 successfully loaded.");
     std::function<TTT_GENERIC_FUNCTION> wireframeFunction = std::bind(&toggleWF, std::placeholders::_1);
-    terminal->BindFn("Wireframe", wireframeFunction, TTTenum::TTT_VOID);
+    terminal->BindFn("wireframe", wireframeFunction, TTTenum::TTT_VOID);
     std::function<TTT_GENERIC_FUNCTION> shadowFunction = std::bind(&toggleSO, std::placeholders::_1);
-    terminal->BindFn("Shadows", shadowFunction, TTTenum::TTT_VOID);
+    terminal->BindFn("shadows", shadowFunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> skyboxfunction = std::bind(&toggleSB, std::placeholders::_1);
+    terminal->BindFn("skybox", skyboxfunction, TTTenum::TTT_VOID);
 
 
     // set up shader program for main object
@@ -403,7 +413,10 @@ int main()
             trees->Draw(wireProgram, mainCamera);
         }
         // draw skybox
-        //skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
+        if (drawSkybox)
+        {
+            skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
+        }
 
         // draw terminal
         terminal->Draw(textProgram, crntTime);

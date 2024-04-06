@@ -1,5 +1,6 @@
-﻿  main.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(409,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  TTTcog.cpp
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'C:\Users\ethan\git\TTT-V3\x64\Debug\glfw3.pdb'; linking object as if no debug info
+﻿  Terminal.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(189,41): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(196,38): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(315,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Terminal.cpp(320,23): warning C4244: 'initializing': conversion from 'long double' to 'float', possible loss of data
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe

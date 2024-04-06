@@ -11,13 +11,13 @@
 #define SHADOW_W 2048
 #define SHADOW_H 2048
 #define SHADOW_FARPLANE 100.0f
-#define FONT_HEIGHT 28
+#define FONT_HEIGHT 18
 #define TERMINAL_ROWS 8
-#define TERMINAL_PADDING 15
+#define TERMINAL_PADDING 10
 #define LINE_SPACING 1.2f
 #define TERMINAL_BLINK_INTERVAL 0.5f
 
-#define TTT_GENERIC_FUNCTION void(void*)
+#define TTT_GENERIC_FUNCTION std::string(void*)
 
 enum class TTTenum
 {
@@ -43,7 +43,8 @@ enum class TTTenum
     TTT_DOUBLE,
     TTT_LDOUBLE,
     TTT_STRING,
-    TTT_VEC3,
+    TTT_VEC2F,
+    TTT_VEC3F,
     // TTT specific types
     TTT_ENGINE,
     TTT_COG,

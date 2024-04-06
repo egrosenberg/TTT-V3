@@ -28,7 +28,7 @@ private:
     float m_blinkInterval;
     std::string m_input;
     std::list<std::string> *m_history;
-    std::vector<std::tuple<std::string, TTTenum, std::function<void(void*)>>> *m_commands;
+    std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>> *m_commands;
     Font *m_font;
     glm::vec3 m_color;
 
