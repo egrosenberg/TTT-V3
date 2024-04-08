@@ -53,6 +53,7 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
     m_active = false;
     m_numRows = nrows;
     m_padding = padding;
+    m_histCursor = -1;
 
     // calculate height of a line of text
     m_lineHeight = font->Height() * lineSpacing;
@@ -63,7 +64,8 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
 
     m_blinkInterval = blinkInterval;
     m_input = "";
-    m_history = new std::list<std::string>();
+    m_log = new std::list<std::string>();
+    m_hist = new std::vector<std::string>();
     m_commands = new std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>>();
 
     m_font = font;
@@ -71,6 +73,10 @@ Terminal::Terminal(GLFWwindow *window, unsigned int nrows, unsigned int padding,
 
     glfwSetCharCallback(window, staticCharCallback);
     glfwSetKeyCallback(window, staticKeyCallback);
+
+    // bind terminal functions
+    std::function<TTT_GENERIC_FUNCTION> colorFn = std::bind(&Terminal::ChangeColor, this, std::placeholders::_1);
+    BindFn("color", colorFn, TTTenum::TTT_VEC3F);
 }
 
 /**
@@ -147,6 +153,11 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
         {
             if (m_input.size() > 0)
             {
+                m_hist->push_back(m_input);
+                if (m_hist->size() > m_numRows)
+                {
+                    m_hist->erase(m_hist->begin());
+                }
                 RunCmd(m_input);
             }
             m_input = "";
@@ -173,6 +184,15 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
         m_input = "";
         m_active = false;
     }
+    // allow up and down arrows to navigate history of commands
+    else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+    {
+        Traverse(true);
+    }
+    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+    {
+        Traverse(false);
+    }
 }
 
 /**
@@ -184,7 +204,7 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
 void Terminal::Draw(Shader *shader, float crntTime)
 {
     int i = 0;
-    for (std::list<std::string>::iterator text = m_history->begin(); text != m_history->end(); ++text, ++i)
+    for (std::list<std::string>::iterator text = m_log->begin(); text != m_log->end(); ++text, ++i)
     {
         m_font->DrawText(shader, *text, m_padding, m_yPos + m_lineHeight * i, 1.0f, m_color);
     }
@@ -203,10 +223,10 @@ void Terminal::Draw(Shader *shader, float crntTime)
  */
 void Terminal::Log(std::string text)
 {
-    m_history->push_front(text);
-    if (m_history->size() > m_numRows)
+    m_log->push_front(text);
+    if (m_log->size() > m_numRows)
     {
-        m_history->pop_back();
+        m_log->pop_back();
     }
 }
 /**
@@ -381,8 +401,69 @@ bool Terminal::BindFn(std::string name, std::function<TTT_GENERIC_FUNCTION> f, T
     m_commands->push_back({ name, type, f });
     return true;
 }
+
+/**
+ * Changes the font color for the terminal
+ * 
+ * @param ptr: GLM_VEC3 cast to void pointer
+ * @return color confirmation if successful, error message otherwise
+ */
+std::string Terminal::ChangeColor(void *ptr)
+{
+    if (!ptr)
+    {
+        return "error: invalid pointer.";
+    }
+    glm::vec3 *color = (glm::vec3*)(ptr);
+    m_color = *color;
+    return "font color changed to (" + std::to_string(color->x) + ", "
+        + std::to_string(color->y) + ", " + std::to_string(color->z) + ")";
+}
+
+/**
+ * Traverses history of inputted commands
+ * and sets current typing to selected command
+ * 
+ * @param up: true if traversing up, false if traversing down
+ */
+void Terminal::Traverse(bool up)
+{
+    // auto abort if history is empty
+    int histS = m_hist->size();
+    if (histS == 0)
+    {
+        return;
+    }
+    // move cursor
+    if (up)
+    {
+        ++m_histCursor;
+    }
+    else
+    {
+        --m_histCursor;
+    }
+    // assure cursor stays within bounds
+    if (m_histCursor >= histS)
+    {
+        m_histCursor = histS - 1;
+    }
+    // less than 0 means we need to stop navigating
+    if (m_histCursor < 0)
+    {
+        m_histCursor = -1;
+        m_input = "";
+    }
+    // get value in history location and set current input line to it
+    else
+    {
+        m_input = m_hist->at(histS - m_histCursor - 1);
+    }
+}
+
 Terminal::~Terminal()
 {
-    delete m_history;
+    delete m_log;
+    delete m_hist;
     delete m_font;
 }

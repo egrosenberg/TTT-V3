@@ -23,11 +23,13 @@ private:
     bool m_active;
     unsigned int m_numRows;
     unsigned int m_padding;
+    int m_histCursor;
     float m_lineHeight;
     float m_yPos;
     float m_blinkInterval;
     std::string m_input;
-    std::list<std::string> *m_history;
+    std::list<std::string> *m_log;
+    std::vector<std::string> *m_hist;
     std::vector<std::tuple<std::string, TTTenum, std::function<TTT_GENERIC_FUNCTION>>> *m_commands;
     Font *m_font;
     glm::vec3 m_color;
@@ -37,6 +39,10 @@ private:
     void CharCallback(GLFWwindow* window, unsigned int codepoint);
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void RunCmd(std::string cmd);
+    void Traverse(bool up);
+
+    // terminal commands
+    std::string ChangeColor(void *ptr);
 
 public:
     static Terminal *GetSingleton();

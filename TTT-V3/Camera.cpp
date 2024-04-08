@@ -50,7 +50,6 @@ void Camera::Matrix(Shader* shader, const char* uniform)
     glUniformMatrix4fv(glGetUniformLocation(shader->ID(), uniform), 1, GL_FALSE, glm::value_ptr(m_cameraMatrix));
 }
 
-
 // process movement inputs for camera
 void Camera::Inputs(GLFWwindow* window)
 {
