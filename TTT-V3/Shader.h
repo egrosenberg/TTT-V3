@@ -14,7 +14,7 @@ private:
     GLuint m_ID;
     bool m_geomPresent;
 
-    void CompileErrors(unsigned int shader, const char* type);
+    void CompileErrors(unsigned int shader, const char* type, const char* fname);
 public:
     Shader(const char *vertexFile, const char *fragmentFile, const char *geometryFile = "none");
     virtual ~Shader();

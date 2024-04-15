@@ -9,6 +9,8 @@
 #include "Font.h"
 #include "Terminal.h"
 #include "TTTengine.h"
+#include "Shadowmap.h"
+
 #include <glad/glad.h>
 #include <list>
 

@@ -26,20 +26,30 @@ std::string readFile(const char* filename)
 
 
 bool wireframe = false;
-bool shadowOnly = false;
 bool drawSkybox = false;
+bool lightingOnly = false;
+bool blitToggle = false;
+unsigned int blitBuffer = 0;
+float ambient = 0.1f;
 
-std::string toggleWF(void* v)
+// create some lights
+std::vector<TTTlight> lights =
+{
+    {true, POINT_LIGHT, glm::vec4(1.00f, 0.00f, 0.00f, 1.0f), glm::vec3(10.0f, 10.0f,  10.0f), 0.01f, 0.15f},
+    {true, SPOT_LIGHT , glm::vec4(1.00f, 1.00f, 0.00f, 1.0f), glm::vec3(10.0f, 10.0f, -10.0f), 0.85f, 0.90f},
+    {true, POINT_LIGHT, glm::vec4(0.00f, 1.00f, 0.00f, 1.0f), glm::vec3(-10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
+    {true, SPOT_LIGHT , glm::vec4(0.00f, 1.00f, 1.00f, 1.0f), glm::vec3(10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
+    {true, POINT_LIGHT, glm::vec4(0.00f, 0.00f, 1.00f, 1.0f), glm::vec3(10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
+    {true, SPOT_LIGHT , glm::vec4(1.00f, 0.00f, 1.00f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
+    {true, DIREC_LIGHT, glm::vec4(0.50f, 0.50f, 0.50f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
+};
+
+
+std::string toggleWF(void *v)
 {
     wireframe = !wireframe;
     std::string onoff = wireframe ? "on" : "off";
     return "wireframe set to: " + onoff;
-}
-std::string toggleSO(void* v)
-{
-    shadowOnly = !shadowOnly;
-    std::string onoff = shadowOnly ? "on" : "off";
-    return "shadows_only set to: " + onoff;
 }
 std::string toggleSB(void* v)
 {
@@ -47,7 +57,48 @@ std::string toggleSB(void* v)
     std::string onoff = drawSkybox ? "on" : "off";
     return "skybox set to: " + onoff;
 }
-
+std::string toggleLO(void* v)
+{
+    lightingOnly = !lightingOnly;
+    std::string onoff = lightingOnly ? "lighting only" : "full color";
+    return "lighting set to: " + onoff;
+}
+std::string toggleBlit(void* v)
+{
+    blitToggle = !blitToggle;
+    std::string onoff = blitToggle ? "on" : "off";
+    return "blit_toggle set to: " + onoff;
+}
+std::string setBlit(void *v)
+{
+    if (!v)
+    {
+        return "invalid pointer";
+    }
+    unsigned int *n = (unsigned int*)v;
+    blitBuffer = *n;
+    return "now blitting from " + std::to_string(*n);
+}
+std::string toggleLight(void* v)
+{
+    if (!v)
+    {
+        return "invalid pointer";
+    }
+    unsigned int *n = (unsigned int*)v;
+    lights[*n].on = !lights[*n].on;
+    return "light " + std::to_string(*n) + " is now " + (lights[*n].on ? "active" : "inactive");
+}
+std::string setAmbient(void* v)
+{
+    if (!v)
+    {
+        return "invalid pointer";
+    }
+    float *n = (float*)v;
+    ambient = *n;
+    return "ambient light set to " + std::to_string(*n);
+}
 
 int main()
 {
@@ -89,13 +140,20 @@ int main()
     terminal->Log("TTT-V3 successfully loaded.");
     std::function<TTT_GENERIC_FUNCTION> wireframeFunction = std::bind(&toggleWF, std::placeholders::_1);
     terminal->BindFn("wireframe", wireframeFunction, TTTenum::TTT_VOID);
-    std::function<TTT_GENERIC_FUNCTION> shadowFunction = std::bind(&toggleSO, std::placeholders::_1);
-    terminal->BindFn("shadows", shadowFunction, TTTenum::TTT_VOID);
     std::function<TTT_GENERIC_FUNCTION> skyboxfunction = std::bind(&toggleSB, std::placeholders::_1);
     terminal->BindFn("skybox", skyboxfunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> lightingOnlyFunction = std::bind(&toggleLO, std::placeholders::_1);
+    terminal->BindFn("lighting_only", lightingOnlyFunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> blitToggleFunction = std::bind(&toggleBlit, std::placeholders::_1);
+    terminal->BindFn("blit_toggle", blitToggleFunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> setBlitFunction = std::bind(&setBlit, std::placeholders::_1);
+    terminal->BindFn("blit_value", setBlitFunction, TTTenum::TTT_UINT);
+    std::function<TTT_GENERIC_FUNCTION> toggleLightFunction = std::bind(&toggleLight, std::placeholders::_1);
+    terminal->BindFn("toggle_light", toggleLightFunction, TTTenum::TTT_UINT);
+    std::function<TTT_GENERIC_FUNCTION> setAmbientFunction = std::bind(&setAmbient, std::placeholders::_1);
+    terminal->BindFn("set_ambient", setAmbientFunction, TTTenum::TTT_FLOAT);
 
     // set up shader program for main object
-    Shader *shaderProgram = new Shader("Shaders/default.vert", "Shaders/default.frag", "Shaders/default.geom");
     Shader *wireProgram = new Shader("Shaders/default.vert", "Shaders/wireframe.frag", "Shaders/wireframe.geom");
     // set up shader for framebuffer
     Shader *frameProgram = new Shader("Shaders/framebuffer.vert", "Shaders/framebuffer.frag");
@@ -103,9 +161,26 @@ int main()
     Shader *skyboxProgram = new Shader("Shaders/skybox.vert", "Shaders/skybox.frag");
     // shader for shadow map
     Shader *shadowProgram = new Shader("Shaders/shadow.vert", "Shaders/shadow.frag");
-    Shader *shadowCubemapProgram = new Shader("Shaders/shadowcubemap.vert", "Shaders/shadowcubemap.frag", "Shaders/shadowcubemap.geom");
     // shader for text
     Shader *textProgram = new Shader("Shaders/font.vert", "Shaders/font.frag");
+    // shader for g-buffer geom
+    Shader *geomPass = new Shader("Shaders/gbuffer_in.vert", "Shaders/gbuffer_in.frag", "Shaders/gbuffer_in.geom");
+    Shader *lightingPass = new Shader("Shaders/gbuffer_out.vert", "Shaders/gbuffer_out.frag");
+
+    // create shadow maps for each of these point lights
+    std::vector<Shader*> shadowPrograms;
+    for (int i = 0; i < lights.size(); ++i)
+    {
+        if (lights[i].type == POINT_LIGHT)
+        {
+            shadowPrograms.push_back(new Shader("Shaders/shadowcubemap.vert", "Shaders/shadowcubemap.frag", "Shaders/shadowcubemap.geom"));
+        }
+        else
+        {
+            shadowPrograms.push_back(new Shader("Shaders/shadow.vert", "Shaders/shadow.frag"));
+        }
+    }
+
 
     // def light color
     glm::vec4 lightColor = glm::vec4(1.00f, 1.00f, 1.00f, 1.0f);
@@ -113,10 +188,6 @@ int main()
     glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
     glm::vec3 lightPosDirec = glm::vec3(0.5f, 0.5f, 0.5f);
 
-    // Activate model shader and set uniforms
-    shaderProgram->Activate();
-    glUniform4f(glGetUniformLocation(shaderProgram->ID(), "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-    glUniform3f(glGetUniformLocation(shaderProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
     // Activate framebuffer shader and set uniform
     frameProgram->Activate();
     glUniform1i(glGetUniformLocation(frameProgram->ID(), "screenTexture"), 0);
@@ -146,20 +217,22 @@ int main()
     // create model object
     Model *model = new Model("models/ground/scene.gltf");
     Model *trees = new Model("models/trees/scene.gltf");
+    Model *cat = new Model("models/cat/scene.gltf");
 
 
     // transform the model
-    glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 translation = glm::vec3(-10.0f, 10.0f, -10.0f);
     glm::vec3 rotation = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 scale = glm::vec3(0.050f);
+    glm::vec3 scale = glm::vec3(0.008f);
     glm::mat4 transform = glm::mat4(1.0f);
-    //transform = glm::translate(transform, translation);
     //transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
     transform = glm::scale(transform, scale);
+    transform = glm::translate(transform, translation);
 
     // set transform of model
     //model->SetTransform(transform);
     //trees->SetTransform(transform);
+    cat->SetTransform(transform);
 
     // set up post proccessing display
     Display* display = new Display(AA_SAMPLES);
@@ -193,29 +266,73 @@ int main()
     shadowProgram->Activate();
     glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
-    // Shadow 
-    FBO *shadowPointFBO = new FBO(SHADOW_W, SHADOW_H, TTTenum::TTT_DEPTH_FRAMEBUFFER, TTTenum::TTT_TEXTURE_CUBEMAP);
-    // define shadow matrices
-    glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
-    glm::mat4 shadowTransforms[] =
+    std::vector<Shadowmap*> shadowMaps;
+    for (int i = 0; i < lights.size(); ++i)
     {
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)),
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)),
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  1.0,  0.0), glm::vec3(0.0,  0.0,  1.0)),
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0, -1.0,  0.0), glm::vec3(0.0,  0.0, -1.0)),
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  0.0,  1.0), glm::vec3(0.0, -1.0,  0.0)),
-        shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3( 0.0,  0.0, -1.0), glm::vec3(0.0, -1.0,  0.0))
-    };
-    // activate shaderprogram and pass uniforms
-    shadowCubemapProgram->Activate();
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[0]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[1]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[1]));
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[2]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[2]));
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[3]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[3]));
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[4]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[4]));
-    glUniformMatrix4fv(glGetUniformLocation(shadowCubemapProgram->ID(), "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(shadowTransforms[5]));
-    glUniform3f(glGetUniformLocation(shadowCubemapProgram->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-    glUniform1f(glGetUniformLocation(shadowCubemapProgram->ID(), "farPlane"), SHADOW_FARPLANE);
+        Shadowmap *shadowMap = new Shadowmap(lights[i].type, SHADOW_W, SHADOW_H, SHADOW_FARPLANE, lights[i].position, shadowPrograms[i]);
+        shadowMaps.push_back(shadowMap);
+    }
+
+    // g-buffer
+    GLuint gBuffer;
+    // generate fbo for g-buffer
+    glGenFramebuffers(1, &gBuffer);
+    // bind g-bufer
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+    // create texture objects to store g-buffer data in
+    GLuint gPosition, gNormal, gAlbedoSpec;
+    // position buffer
+    glGenTextures(1, &gPosition);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+    // normal buffer
+    glGenTextures(1, &gNormal);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+1, GL_TEXTURE_2D, gNormal, 0);
+    // color + specular buffer
+    glGenTextures(1, &gAlbedoSpec);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+    // set up color attachments with opengl
+    GLuint attachments[G_BUFFER_DEPTH];
+    for (unsigned int i = 0; i < G_BUFFER_DEPTH; ++i)
+    {
+        attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+    glDrawBuffers(G_BUFFER_DEPTH, attachments);
+    // create RBO for g-buffer
+    GLuint gRBO;
+    glGenRenderbuffers(1, &gRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, gRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIN_WIDTH, WIN_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, gRBO);
+    // check if fbo is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::cout << "Error in creating g-buffer" << std::endl;
+    }
+
+    // g-buffer quad
+    GLuint gVAO, gVBO;
+    glGenVertexArrays(1, &gVAO);
+    glGenBuffers(1, &gVBO);
+    glBindVertexArray(gVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(SCREEN_VERTS), &SCREEN_VERTS, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
 
     TTTenum lightMode = TTTenum::TTT_POINT_LIGHT;
     bool r_pressed = false;
@@ -281,38 +398,48 @@ int main()
             }
         }
 
-        // get depth buffer from pov of the light
-        glEnable(GL_DEPTH_TEST);
-        glViewport(0, 0, SHADOW_W, SHADOW_H);
-        if (lightMode == TTTenum::TTT_POINT_LIGHT)
+        //// get depth buffer from pov of the light
+        //glEnable(GL_DEPTH_TEST);
+        //glViewport(0, 0, SHADOW_W, SHADOW_H);
+        //if (lightMode == TTTenum::TTT_POINT_LIGHT)
+        //{
+        //    shadowPointFBO->Bind();
+        //}
+        //else
+        //{
+        //    shadowFBO->Bind();
+        //}
+        //glClear(GL_DEPTH_BUFFER_BIT);
+        //
+        //// draw model in shadow map
+        //if (lightMode == TTTenum::TTT_POINT_LIGHT)
+        //{
+        //    model->Draw(shadowCubemapProgram, mainCamera);
+        //    trees->Draw(shadowCubemapProgram, mainCamera);
+        //}
+        //else
+        //{
+        //    model->Draw(shadowProgram, mainCamera);
+        //    trees->Draw(shadowProgram, mainCamera);
+        //}
+        //// bind default framebuffer
+        //shadowPointFBO->Unbind();
+        int nLights = shadowMaps.size();
+        float step = (glm::pi<float>() / nLights) * 2;
+        float fractime = crntTime * 0.33f;
+        for (int i = 0; i < nLights; ++i)
         {
-            shadowPointFBO->Bind();
+            float offset = fractime + step * i;
+            lights[i].position.x = glm::sin(offset) * 15;
+            lights[i].position.z = glm::cos(offset) * 15;
+            shadowMaps[i]->SetLPos(lights[i].position);
+            shadowMaps[i]->SetUniforms(shadowPrograms[i]);
+            shadowMaps[i]->Bind();
+            model->Draw(shadowPrograms[i], mainCamera);
+            trees->Draw(shadowPrograms[i], mainCamera);
+            shadowMaps[i]->Unbind();
         }
-        else
-        {
-            shadowFBO->Bind();
-        }
-        glClear(GL_DEPTH_BUFFER_BIT);
-        
-        // draw model in shadow map
-        if (lightMode == TTTenum::TTT_POINT_LIGHT)
-        {
-            model->Draw(shadowCubemapProgram, mainCamera);
-            trees->Draw(shadowCubemapProgram, mainCamera);
-        }
-        else
-        {
-            model->Draw(shadowProgram, mainCamera);
-            trees->Draw(shadowProgram, mainCamera);
-        }
-        // bind default framebuffer
-        shadowPointFBO->Unbind();
-
-        // set default viewport size
         glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
-
-        // bind display buffer before drawing
-        display->Bind(WIN_WIDTH, WIN_HEIGHT);
 
         // Clean the back depth and color buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -329,41 +456,91 @@ int main()
         }
         // update camera matrix
         mainCamera->UpdateMatrix(FOV, 0.1f, 100.0f);
+        
+        glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 
-        // Send the light matrix to the shader
-        shaderProgram->Activate();
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
-        glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowOnly"), shadowOnly);
-        glUniform1f(glGetUniformLocation(shaderProgram->ID(), "farPlane"), SHADOW_FARPLANE);
+        // Draw scene
+        // bind g-buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // render to g-buffer
+        model->Draw(geomPass, mainCamera);
+        trees->Draw(geomPass, mainCamera);
+        //cat->Draw(geomPass, mainCamera);
+        // unvind g-buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        // Bind the Shadow Map
+        // Do lighting pass
+        // bind display buffer before drawing
+        display->Bind(WIN_WIDTH, WIN_HEIGHT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        lightingPass->Activate();
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+        // bind textures
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gPosition"), 0);
+        glActiveTexture(GL_TEXTURE0 + 0);
+        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gNormal"), 1);
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gAlbedoSpec"), 2);
         glActiveTexture(GL_TEXTURE0 + 2);
-        if (lightMode == TTTenum::TTT_POINT_LIGHT)
+        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+        
+        // Send the light info to the shader
+        glUniform1f(glGetUniformLocation(lightingPass->ID(), "ambientVal"), ambient);
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "lightingOnly"), lightingOnly);
+        glUniform1f(glGetUniformLocation(lightingPass->ID(), "farPlane"), SHADOW_FARPLANE);
+        glUniform4f(glGetUniformLocation(lightingPass->ID(), "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+        glUniform3f(glGetUniformLocation(lightingPass->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "nLights"), nLights);
+        for (int i = 0; i < nLights; ++i)
         {
-            shadowPointFBO->BindTex();
-            glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 22);
-            glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowCubeMap"), 2);
-        }
-        else
-        {
-            shadowFBO->BindTex();
-            if (lightMode == TTTenum::TTT_DIRECTIONAL_LIGHT)
-            {
-                glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 20);
-            }
-            else if (lightMode == TTTenum::TTT_SPOT_LIGHT)
-            {
-                glUniform1i(glGetUniformLocation(shaderProgram->ID(), "lightMode"), 21);
-            }
-            glUniform1i(glGetUniformLocation(shaderProgram->ID(), "shadowMap"), 2);
+            glUniform1i( glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].on").c_str()), lights[i].on);
+            glUniform1ui(glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].type").c_str()), lights[i].type);
+            glUniform4f( glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].color").c_str()), lights[i].color.x, lights[i].color.y, lights[i].color.z, lights[i].color.w);
+            glUniform3f( glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].position").c_str()), lights[i].position.x, lights[i].position.y, lights[i].position.z);
+            glUniform1f( glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].a").c_str()), lights[i].a);
+            glUniform1f( glGetUniformLocation(lightingPass->ID(), ("light[" + std::to_string(i) + "].b").c_str()), lights[i].b);
         }
 
-        // draw model
-        model->Draw(shaderProgram, mainCamera);
-        trees->Draw(shaderProgram, mainCamera);
+        // set view position
+        glm::vec3 campos = mainCamera->GetPos();
+        glUniform3f(glGetUniformLocation(lightingPass->ID(), "camPos"), campos.x, campos.y, campos.z);
+        mainCamera->Matrix(lightingPass, "camMatrix");
+        // Bind the Shadow Map
+        for (int i = 0; i < nLights; ++i)
+        {
+            glActiveTexture(GL_TEXTURE0 + G_BUFFER_DEPTH + i);
+            shadowMaps[i]->BindTex();
+            if (lights[i].type != POINT_LIGHT)
+            {
+                shadowMaps[i]->SetUniforms(lightingPass, ("lightProj[" + std::to_string(i) + "]").c_str());
+            }
+            else
+            {
+                glm::mat4 temp = glm::mat4(1.0f);
+                glUniformMatrix4fv(glGetUniformLocation(lightingPass->ID(), ("lightProj[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(temp));
+            }
+            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowCubeMap[" + std::to_string(i) + "]").c_str()), G_BUFFER_DEPTH + i);
+            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowMap[" + std::to_string(i) + "]").c_str()), G_BUFFER_DEPTH + i);
+        }
+        
+        // bind rect vao
+        glBindVertexArray(gVAO);
+        // disable depth testing and face culling so we can draw our rect
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        // draw our rect
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // reenable depth testing and face culling
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        
         // draw wireframe if we want
         if (wireframe)
         {
+            glEnable(GL_DEPTH_TEST);
             model->Draw(wireProgram, mainCamera);
             trees->Draw(wireProgram, mainCamera);
         }
@@ -381,6 +558,15 @@ int main()
 
         // draw display buffer
         display->Draw(frameProgram, winMain);
+        // simply blit over from g_buffer if we want
+        if (blitToggle)
+        {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //destination
+            glReadBuffer(GL_COLOR_ATTACHMENT0 + blitBuffer);
+            glBlitFramebuffer(0, 0, WIN_WIDTH, WIN_HEIGHT, 0, 0, WIN_WIDTH, WIN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+            terminal->Draw(textProgram, crntTime);
+        }
 
         // Swap the back and front buffers
         glfwSwapBuffers(winMain);
@@ -390,15 +576,15 @@ int main()
 
     // clean up objects used for shaders and drawing
     delete model;
-    delete shaderProgram;
     delete wireProgram;
     delete frameProgram;
     delete shadowProgram;
     delete display;
     delete skybox;
     delete shadowFBO;
-    delete shadowPointFBO;
     delete redhat;
+    delete geomPass;
+    delete lightingPass;
 
     // close window
     glfwDestroyWindow(winMain);

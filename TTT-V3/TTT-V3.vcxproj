@@ -152,6 +152,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="Shadowmap.cpp" />
     <ClCompile Include="TTTcog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -175,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Shadowmap.h" />
     <ClInclude Include="TTTcog.h" />
     <ClInclude Include="TTTengine.h" />
     <ClInclude Include="Font.h" />
@@ -214,6 +216,11 @@
     <None Include="Shaders\font.vert" />
     <None Include="Shaders\framebuffer.frag" />
     <None Include="Shaders\framebuffer.vert" />
+    <None Include="Shaders\gbuffer_in.frag" />
+    <None Include="Shaders\gbuffer_in.geom" />
+    <None Include="Shaders\gbuffer_in.vert" />
+    <None Include="Shaders\gbuffer_out.frag" />
+    <None Include="Shaders\gbuffer_out.vert" />
     <None Include="Shaders\shadow.frag" />
     <None Include="Shaders\shadow.vert" />
     <None Include="Shaders\shadowCubemap.frag" />

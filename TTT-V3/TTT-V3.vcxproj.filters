@@ -84,6 +84,9 @@
     <ClCompile Include="TTTcog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shadowmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -141,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TTTcog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shadowmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -223,6 +229,21 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Shaders\font.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\gbuffer_in.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\gbuffer_in.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\gbuffer_out.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\gbuffer_out.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\gbuffer_in.geom">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

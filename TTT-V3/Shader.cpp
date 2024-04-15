@@ -20,7 +20,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geo
     // compile the vertex shader machine code
     glCompileShader(vertexShader);
     // compile vertex shader errors
-    CompileErrors(vertexShader, "VERTEX");
+    CompileErrors(vertexShader, "VERTEX", vertexFile);
 
     // set up fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -29,7 +29,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geo
     // compile the fragment shader machine code
     glCompileShader(fragmentShader);
     // compile fragment shader errors
-    CompileErrors(fragmentShader, "FRAGMENT");
+    CompileErrors(fragmentShader, "FRAGMENT", fragmentFile);
 
     // compile geometry shader
     GLuint geometryShader = 0;
@@ -42,7 +42,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geo
         // compile the geometry shader machine code
         glCompileShader(geometryShader);
         // compile geometry shader errors
-        CompileErrors(geometryShader, "GEOMETRY");
+        CompileErrors(geometryShader, "GEOMETRY", geometryFile);
     }
 
     // create shader program
@@ -57,7 +57,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geo
     // link our program
     glLinkProgram(m_ID);
     // compile shader program errors
-    CompileErrors(m_ID, "PROGRAM");
+    CompileErrors(m_ID, "PROGRAM", "");
 
     // clean up shaders
     glDeleteShader(vertexShader);
@@ -79,7 +79,7 @@ Shader::~Shader()
     Delete();
 }
 
-void Shader::CompileErrors(unsigned int shader, const char* type)
+void Shader::CompileErrors(unsigned int shader, const char* type, const char *fname)
 {
     GLint hasCompiled;
     char infoLog[1024];
@@ -89,7 +89,7 @@ void Shader::CompileErrors(unsigned int shader, const char* type)
         if (hasCompiled == GL_FALSE)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "SHADER_COMPILATION_ERROR for: " << type << "\n" << std::endl;
+            std::cout << "SHADER_COMPILATION_ERROR for: " << type << " fname " << fname << "\n" << std::endl;
         }
     }
     else
