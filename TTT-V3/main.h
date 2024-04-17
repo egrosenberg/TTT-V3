@@ -10,6 +10,7 @@
 #include "Terminal.h"
 #include "TTTengine.h"
 #include "Shadowmap.h"
+#include "Gbuffer.h"
 
 #include <glad/glad.h>
 #include <list>

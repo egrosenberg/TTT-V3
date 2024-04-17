@@ -48,6 +48,7 @@ enum class TTTenum
     TTT_STRING,
     TTT_VEC2F,
     TTT_VEC3F,
+    TTT_VEC4F,
     // TTT specific types
     TTT_ENGINE,
     TTT_COG,

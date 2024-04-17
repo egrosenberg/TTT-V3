@@ -35,13 +35,13 @@ float ambient = 0.1f;
 // create some lights
 std::vector<TTTlight> lights =
 {
-    {true, POINT_LIGHT, glm::vec4(1.00f, 0.00f, 0.00f, 1.0f), glm::vec3(10.0f, 10.0f,  10.0f), 0.01f, 0.15f},
-    {true, SPOT_LIGHT , glm::vec4(1.00f, 1.00f, 0.00f, 1.0f), glm::vec3(10.0f, 10.0f, -10.0f), 0.85f, 0.90f},
-    {true, POINT_LIGHT, glm::vec4(0.00f, 1.00f, 0.00f, 1.0f), glm::vec3(-10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
-    {true, SPOT_LIGHT , glm::vec4(0.00f, 1.00f, 1.00f, 1.0f), glm::vec3(10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
-    {true, POINT_LIGHT, glm::vec4(0.00f, 0.00f, 1.00f, 1.0f), glm::vec3(10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
-    {true, SPOT_LIGHT , glm::vec4(1.00f, 0.00f, 1.00f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
-    {true, DIREC_LIGHT, glm::vec4(0.50f, 0.50f, 0.50f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
+    {false, POINT_LIGHT, glm::vec4(1.00f, 0.00f, 0.00f, 1.0f), glm::vec3( 10.0f, 10.0f,  10.0f), 0.01f, 0.15f},
+    {false, SPOT_LIGHT , glm::vec4(1.00f, 1.00f, 0.00f, 1.0f), glm::vec3( 10.0f, 10.0f, -10.0f), 0.85f, 0.90f},
+    {false, POINT_LIGHT, glm::vec4(0.00f, 1.00f, 0.00f, 1.0f), glm::vec3(-10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
+    {false, SPOT_LIGHT , glm::vec4(0.00f, 1.00f, 1.00f, 1.0f), glm::vec3( 10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
+    {false, POINT_LIGHT, glm::vec4(0.00f, 0.00f, 1.00f, 1.0f), glm::vec3( 10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
+    {false, SPOT_LIGHT , glm::vec4(1.00f, 0.00f, 1.00f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
+    {false, DIREC_LIGHT, glm::vec4(0.33f, 0.33f, 0.33f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
 };
 
 
@@ -99,6 +99,21 @@ std::string setAmbient(void* v)
     ambient = *n;
     return "ambient light set to " + std::to_string(*n);
 }
+std::string setLightColor(void *v)
+{
+    if (!v)
+    {
+        return "invalid pointer";
+    }
+    glm::vec4 *val = (glm::vec4*)v;
+    int index = (int)val->x;
+    if (index < 0 || index >= lights.size())
+    {
+        return "invalid light index (out of bounds)";
+    }
+    lights[index].color = glm::vec4(val->y, val->z, val->w, 1.0f);
+    return "light " + std::to_string(index) + " changed.";
+}
 
 int main()
 {
@@ -152,6 +167,8 @@ int main()
     terminal->BindFn("toggle_light", toggleLightFunction, TTTenum::TTT_UINT);
     std::function<TTT_GENERIC_FUNCTION> setAmbientFunction = std::bind(&setAmbient, std::placeholders::_1);
     terminal->BindFn("set_ambient", setAmbientFunction, TTTenum::TTT_FLOAT);
+    std::function<TTT_GENERIC_FUNCTION> setColorFunction = std::bind(&setLightColor, std::placeholders::_1);
+    terminal->BindFn("set_color", setColorFunction, TTTenum::TTT_VEC4F);
 
     // set up shader program for main object
     Shader *wireProgram = new Shader("Shaders/default.vert", "Shaders/wireframe.frag", "Shaders/wireframe.geom");
@@ -273,53 +290,8 @@ int main()
         shadowMaps.push_back(shadowMap);
     }
 
-    // g-buffer
-    GLuint gBuffer;
-    // generate fbo for g-buffer
-    glGenFramebuffers(1, &gBuffer);
-    // bind g-bufer
-    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-    // create texture objects to store g-buffer data in
-    GLuint gPosition, gNormal, gAlbedoSpec;
-    // position buffer
-    glGenTextures(1, &gPosition);
-    glBindTexture(GL_TEXTURE_2D, gPosition);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
-    // normal buffer
-    glGenTextures(1, &gNormal);
-    glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+1, GL_TEXTURE_2D, gNormal, 0);
-    // color + specular buffer
-    glGenTextures(1, &gAlbedoSpec);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+2, GL_TEXTURE_2D, gAlbedoSpec, 0);
-    // set up color attachments with opengl
-    GLuint attachments[G_BUFFER_DEPTH];
-    for (unsigned int i = 0; i < G_BUFFER_DEPTH; ++i)
-    {
-        attachments[i] = GL_COLOR_ATTACHMENT0 + i;
-    }
-    glDrawBuffers(G_BUFFER_DEPTH, attachments);
-    // create RBO for g-buffer
-    GLuint gRBO;
-    glGenRenderbuffers(1, &gRBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, gRBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIN_WIDTH, WIN_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, gRBO);
-    // check if fbo is complete
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cout << "Error in creating g-buffer" << std::endl;
-    }
+    // create gbuffer
+    Gbuffer *gbuffer = new Gbuffer(WIN_WIDTH, WIN_HEIGHT);
 
     // g-buffer quad
     GLuint gVAO, gVBO;
@@ -398,32 +370,6 @@ int main()
             }
         }
 
-        //// get depth buffer from pov of the light
-        //glEnable(GL_DEPTH_TEST);
-        //glViewport(0, 0, SHADOW_W, SHADOW_H);
-        //if (lightMode == TTTenum::TTT_POINT_LIGHT)
-        //{
-        //    shadowPointFBO->Bind();
-        //}
-        //else
-        //{
-        //    shadowFBO->Bind();
-        //}
-        //glClear(GL_DEPTH_BUFFER_BIT);
-        //
-        //// draw model in shadow map
-        //if (lightMode == TTTenum::TTT_POINT_LIGHT)
-        //{
-        //    model->Draw(shadowCubemapProgram, mainCamera);
-        //    trees->Draw(shadowCubemapProgram, mainCamera);
-        //}
-        //else
-        //{
-        //    model->Draw(shadowProgram, mainCamera);
-        //    trees->Draw(shadowProgram, mainCamera);
-        //}
-        //// bind default framebuffer
-        //shadowPointFBO->Unbind();
         int nLights = shadowMaps.size();
         float step = (glm::pi<float>() / nLights) * 2;
         float fractime = crntTime * 0.33f;
@@ -461,7 +407,8 @@ int main()
 
         // Draw scene
         // bind g-buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+        //glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+        gbuffer->BindFBO();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render to g-buffer
         model->Draw(geomPass, mainCamera);
@@ -475,17 +422,10 @@ int main()
         display->Bind(WIN_WIDTH, WIN_HEIGHT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         lightingPass->Activate();
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+        // bind gbuffer as read framebuffer for textures
+        gbuffer->BindFBO(GL_READ_FRAMEBUFFER);
         // bind textures
-        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gPosition"), 0);
-        glActiveTexture(GL_TEXTURE0 + 0);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
-        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gNormal"), 1);
-        glActiveTexture(GL_TEXTURE0 + 1);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
-        glUniform1i(glGetUniformLocation(lightingPass->ID(), "gAlbedoSpec"), 2);
-        glActiveTexture(GL_TEXTURE0 + 2);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+        gbuffer->BindTextures(lightingPass);
         
         // Send the light info to the shader
         glUniform1f(glGetUniformLocation(lightingPass->ID(), "ambientVal"), ambient);
@@ -529,7 +469,7 @@ int main()
         // bind rect vao
         glBindVertexArray(gVAO);
         // disable depth testing and face culling so we can draw our rect
-        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND_COLOR);
         glDisable(GL_CULL_FACE);
         // draw our rect
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -537,6 +477,13 @@ int main()
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         
+        // copy depth buffer buffer from gbuffer to display's depth buffer
+        gbuffer->BindFBO(GL_READ_FRAMEBUFFER);
+        //glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+        display->Bind(WIN_WIDTH, WIN_HEIGHT, GL_DRAW_FRAMEBUFFER);
+        // blit contents
+        glBlitFramebuffer(0, 0, WIN_WIDTH, WIN_HEIGHT, 0, 0, WIN_WIDTH, WIN_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
         // draw wireframe if we want
         if (wireframe)
         {
@@ -561,7 +508,7 @@ int main()
         // simply blit over from g_buffer if we want
         if (blitToggle)
         {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+            gbuffer->BindFBO(GL_READ_FRAMEBUFFER);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //destination
             glReadBuffer(GL_COLOR_ATTACHMENT0 + blitBuffer);
             glBlitFramebuffer(0, 0, WIN_WIDTH, WIN_HEIGHT, 0, 0, WIN_WIDTH, WIN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
@@ -585,6 +532,7 @@ int main()
     delete redhat;
     delete geomPass;
     delete lightingPass;
+    delete gbuffer;
 
     // close window
     glfwDestroyWindow(winMain);

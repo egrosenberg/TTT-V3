@@ -56,12 +56,12 @@ Display::Display(unsigned int samples)
     FBO::CheckStatus("POST-PROCESSING");
 }
 
-void Display::Bind(GLuint internalW, GLuint internalH)
+void Display::Bind(GLuint internalW, GLuint internalH, GLenum target)
 {
     // set viewport to internal resolution
     glViewport(0, 0, internalW, internalH);
     // bind frame buffer
-    m_multisampleFBO->Bind();
+    m_multisampleFBO->Bind(target);
 }
 
 void Display::Unbind()

@@ -150,10 +150,19 @@ diffuse_specular pointLight(vec3 FragPos, vec3 Normal, float Specular, int i)
 {
         // calculate vectors for distance and direction
         vec3 lightVec = light[i].position - FragPos;
-        vec3 lightDirection = normalize(lightVec);
-        // calculate intensity
+        
         float dist = length(lightVec);
         float intensity = 1.0f / (light[i].a * dist*dist + light[i].b * dist + 1.0f);
+
+        // check if we need to bother continuing calculations
+        if (intensity < 0.01f)
+        {
+            diffuse_specular ret = {vec3(0.0f), vec3(0.0f)};
+            return ret;
+        }
+
+        vec3 lightDirection = normalize(lightVec);
+        // calculate intensity
         // calculate shadow intesity
         float shadow = pointLightShadow(FragPos, lightDirection, Normal, i);
         float shadowInv = 1.0f - shadow;

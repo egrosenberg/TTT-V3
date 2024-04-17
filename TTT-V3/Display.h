@@ -30,7 +30,7 @@ private:
 public:
     Display(unsigned int samples);
 
-    void Bind(GLuint internalW, GLuint internalH);
+    void Bind(GLuint internalW, GLuint internalH, GLenum target = GL_FRAMEBUFFER);
     void Unbind();
     void Draw(Shader *shader, GLFWwindow *window);
 

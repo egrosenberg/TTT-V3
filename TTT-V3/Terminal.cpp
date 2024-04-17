@@ -160,6 +160,7 @@ void Terminal::KeyCallback(GLFWwindow *window, int key, int scancode, int action
                 }
                 RunCmd(m_input);
             }
+            m_histCursor = -1;
             m_input = "";
             m_active = false;
         }
@@ -370,6 +371,17 @@ void Terminal::RunCmd(std::string cmd)
         else if (type == TTTenum::TTT_VEC3F)
         {
             glm::vec3 val = glm::vec3(std::stof(parts[1]), std::stof(parts[2]), std::stof(parts[3]));
+            Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
+        }
+        // the following data types require at least four pieces of data
+        else if (parts.size() < 5)
+        {
+            Log("'" + parts[0] + "' expected more arguments.");
+            return;
+        }
+        else if (type == TTTenum::TTT_VEC4F)
+        {
+            glm::vec4 val = glm::vec4(std::stof(parts[1]), std::stof(parts[2]), std::stof(parts[3]), std::stof(parts[4]));
             Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
         }
     }
