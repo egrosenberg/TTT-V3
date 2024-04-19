@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdexcept>
 
 std::string readFile(const char* filename)
 {
@@ -44,14 +45,13 @@ std::vector<TTTlight> lights =
     {false, DIREC_LIGHT, glm::vec4(0.33f, 0.33f, 0.33f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
 };
 
-
 std::string toggleWF(void *v)
 {
     wireframe = !wireframe;
     std::string onoff = wireframe ? "on" : "off";
     return "wireframe set to: " + onoff;
 }
-std::string toggleSB(void* v)
+std::string toggleSB(void *v)
 {
     drawSkybox = !drawSkybox;
     std::string onoff = drawSkybox ? "on" : "off";
@@ -79,7 +79,7 @@ std::string setBlit(void *v)
     blitBuffer = *n;
     return "now blitting from " + std::to_string(*n);
 }
-std::string toggleLight(void* v)
+std::string toggleLight(void *v)
 {
     if (!v)
     {
@@ -89,7 +89,7 @@ std::string toggleLight(void* v)
     lights[*n].on = !lights[*n].on;
     return "light " + std::to_string(*n) + " is now " + (lights[*n].on ? "active" : "inactive");
 }
-std::string setAmbient(void* v)
+std::string setAmbient(void *v)
 {
     if (!v)
     {
@@ -176,8 +176,6 @@ int main()
     Shader *frameProgram = new Shader("Shaders/framebuffer.vert", "Shaders/framebuffer.frag");
     // set up shader for skybox
     Shader *skyboxProgram = new Shader("Shaders/skybox.vert", "Shaders/skybox.frag");
-    // shader for shadow map
-    Shader *shadowProgram = new Shader("Shaders/shadow.vert", "Shaders/shadow.frag");
     // shader for text
     Shader *textProgram = new Shader("Shaders/font.vert", "Shaders/font.frag");
     // shader for g-buffer geom
@@ -231,11 +229,10 @@ int main()
     // create camera object
     Camera *mainCamera = new Camera(WIN_WIDTH, WIN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
 
-    // create model object
-    Model *model = new Model("models/ground/scene.gltf");
-    Model *trees = new Model("models/trees/scene.gltf");
-    Model *cat = new Model("models/cat/scene.gltf");
-
+    // create models object
+    Scene *scene = new Scene();
+    scene->LoadModel("models/ground/scene.gltf");
+    scene->LoadModel("models/trees/scene.gltf");
 
     // transform the model
     glm::vec3 translation = glm::vec3(-10.0f, 10.0f, -10.0f);
@@ -249,7 +246,7 @@ int main()
     // set transform of model
     //model->SetTransform(transform);
     //trees->SetTransform(transform);
-    cat->SetTransform(transform);
+    //cat->SetTransform(transform);
 
     // set up post proccessing display
     Display* display = new Display(AA_SAMPLES);
@@ -270,18 +267,6 @@ int main()
 
     // Create shadow map fbo
     FBO *shadowFBO = new FBO(SHADOW_W, SHADOW_H, TTTenum::TTT_DEPTH_FRAMEBUFFER, TTTenum::TTT_TEXTURE_2D);
-
-    // create matrix for light projection for calculating shadow
-    float SW = 35.0f;
-    glm::mat4 orthoProj = glm::ortho(-SW, SW, -SW, SW, 0.1f, SHADOW_FARPLANE);
-    glm::mat4 perspProj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, SHADOW_FARPLANE);
-    glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::mat4 lightViewDirec = glm::lookAt(20.0f * lightPosDirec, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::mat4 lightProj = perspProj * lightView;
-
-    // export light projection to shadowmap shader
-    shadowProgram->Activate();
-    glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
 
     std::vector<Shadowmap*> shadowMaps;
     for (int i = 0; i < lights.size(); ++i)
@@ -331,44 +316,6 @@ int main()
             prevTime = crntTime;
             frameCounter = 0;
         }
-        // Check inputs
-        if (!terminal->Active())
-        {
-            if (glfwGetKey(winMain, GLFW_KEY_R) == GLFW_PRESS)
-            {
-                if (r_pressed == false)
-                {
-                    // cycle through shadow modes
-                    if (lightMode == TTTenum::TTT_POINT_LIGHT)
-                    {
-                        lightMode = TTTenum::TTT_DIRECTIONAL_LIGHT;
-                        lightProj = orthoProj * lightViewDirec;
-
-                        // export light projection to shadowmap shader
-                        shadowProgram->Activate();
-                        glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
-                    }
-                    else if (lightMode == TTTenum::TTT_DIRECTIONAL_LIGHT)
-                    {
-                        lightMode = TTTenum::TTT_SPOT_LIGHT;
-                        lightProj = perspProj * lightView;
-
-                        // export light projection to shadowmap shader
-                        shadowProgram->Activate();
-                        glUniformMatrix4fv(glGetUniformLocation(shadowProgram->ID(), "lightProj"), 1, GL_FALSE, glm::value_ptr(lightProj));
-                    }
-                    else if (lightMode == TTTenum::TTT_SPOT_LIGHT)
-                    {
-                        lightMode = TTTenum::TTT_POINT_LIGHT;
-                    }
-                    r_pressed = true;
-                }
-            }
-            else
-            {
-                r_pressed = false;
-            }
-        }
 
         int nLights = shadowMaps.size();
         float step = (glm::pi<float>() / nLights) * 2;
@@ -381,8 +328,7 @@ int main()
             shadowMaps[i]->SetLPos(lights[i].position);
             shadowMaps[i]->SetUniforms(shadowPrograms[i]);
             shadowMaps[i]->Bind();
-            model->Draw(shadowPrograms[i], mainCamera);
-            trees->Draw(shadowPrograms[i], mainCamera);
+            scene->DrawModels(shadowPrograms[i], mainCamera);
             shadowMaps[i]->Unbind();
         }
         glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
@@ -411,8 +357,7 @@ int main()
         gbuffer->BindFBO();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render to g-buffer
-        model->Draw(geomPass, mainCamera);
-        trees->Draw(geomPass, mainCamera);
+        scene->DrawModels(geomPass, mainCamera);
         //cat->Draw(geomPass, mainCamera);
         // unvind g-buffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -488,8 +433,7 @@ int main()
         if (wireframe)
         {
             glEnable(GL_DEPTH_TEST);
-            model->Draw(wireProgram, mainCamera);
-            trees->Draw(wireProgram, mainCamera);
+            scene->DrawModels(wireProgram, mainCamera);
         }
         // draw skybox
         if (drawSkybox)
@@ -522,10 +466,9 @@ int main()
     }
 
     // clean up objects used for shaders and drawing
-    delete model;
+    delete scene;
     delete wireProgram;
     delete frameProgram;
-    delete shadowProgram;
     delete display;
     delete skybox;
     delete shadowFBO;

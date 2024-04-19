@@ -10,7 +10,7 @@ using json = nlohmann::json;
 class Model
 {
 private:
-    const char *m_fname;
+    std::string m_fname;
     std::vector<unsigned char> *m_data;
     json m_JSON;
     glm::mat4 m_transform;
@@ -48,7 +48,8 @@ public:
 
     void Draw(Shader* shader, Camera* camera);
 
-    void SetTransform(glm::mat4 mat) { m_transform = mat; }
+    void SetTransform(glm::mat4 mat)    { m_transform = mat; }
+    void Transform(glm::mat4 mat)       { m_transform = m_transform * mat; }
 
     std::vector<Mesh*> *Meshes() { return m_meshes; };
 

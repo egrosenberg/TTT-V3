@@ -345,9 +345,10 @@ void Terminal::RunCmd(std::string cmd)
         {
             std::string val = "";
             // sum up remaining parts
-            for (std::vector<std::string>::iterator s = parts.begin(); s != parts.end(); ++s)
+            for (std::vector<std::string>::iterator s = parts.begin() + 1; s != parts.end(); ++s)
             {
                 val += *s;
+                val += " ";
             }
             Log(std::get<CMD_FUNC_POS>(*c)((void*)(&val)));
         }

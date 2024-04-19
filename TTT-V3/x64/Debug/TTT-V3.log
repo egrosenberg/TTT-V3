@@ -1,2 +1,6 @@
-﻿  Gbuffer.cpp
+﻿  Scene.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(114): warning C4715: 'Scene::TerminalScaleModel': not all control paths return a value
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(128): warning C4715: 'Scene::TerminalTranslateModel': not all control paths return a value
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(160): warning C4715: 'Scene::UnloadModel': not all control paths return a value
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(145): warning C4715: 'Scene::LoadModel': not all control paths return a value
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe
