@@ -1,6 +1,25 @@
-﻿  Scene.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(114): warning C4715: 'Scene::TerminalScaleModel': not all control paths return a value
-C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(128): warning C4715: 'Scene::TerminalTranslateModel': not all control paths return a value
-C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(160): warning C4715: 'Scene::UnloadModel': not all control paths return a value
-C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(145): warning C4715: 'Scene::LoadModel': not all control paths return a value
+﻿  Display.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Gbuffer.h(25,25): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Mesh.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Mesh.cpp(82,70): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Model.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Gbuffer.h(25,25): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(361,114): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\Model.cpp(369,116): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+  Scene.cpp
+  Shader.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Gbuffer.h(25,25): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Shadowmap.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Shadowmap.cpp(4,1): warning C4005: 'SHADOW_W': macro redefinition
+C:\Users\ethan\git\TTT-V3\TTT-V3\TTT.h(13): message : see previous definition of 'SHADOW_W'
+  main.cpp
+C:\Users\ethan\git\TTT-V3\TTT-V3\Gbuffer.h(25,25): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(316,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(377,40): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(379,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(536,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(550,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(147): warning C4715: 'Scene::LoadModel': not all control paths return a value
+C:\Users\ethan\git\TTT-V3\TTT-V3\Scene.cpp(162): warning C4715: 'Scene::UnloadModel': not all control paths return a value
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe

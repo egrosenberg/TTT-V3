@@ -25,10 +25,12 @@ uniform mat4 scale;
 
 void main()
 {
-    vec4 crntPos = model * translation * rotation * scale * vec4(aPos, 1.0f);
+    vec4 crntPos = /*model * translation * rotation * scale */ vec4(aPos, 1.0f);
+    crntPos.xyz /= crntPos.w;
+    crntPos.w    = 1.0f;
     // calculate current position
     gl_Position = crntPos;
-    data_out.crntPos = crntPos.rgb / crntPos.w;
+    data_out.crntPos = crntPos.xyz;// / crntPos.w;
     // output variables we pass through
     data_out.Normal = aNormal;
     data_out.color = aColor;

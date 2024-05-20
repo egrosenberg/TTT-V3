@@ -232,6 +232,8 @@
     <None Include="Shaders\shadowCubemap.vert" />
     <None Include="Shaders\skybox.frag" />
     <None Include="Shaders\skybox.vert" />
+    <None Include="Shaders\ssao.frag" />
+    <None Include="Shaders\ssao.vert" />
     <None Include="Shaders\wireframe.frag" />
     <None Include="Shaders\wireframe.geom" />
   </ItemGroup>

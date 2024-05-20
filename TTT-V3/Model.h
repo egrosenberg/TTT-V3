@@ -47,6 +47,7 @@ public:
     Model(const char* fname);
 
     void Draw(Shader* shader, Camera* camera);
+    void SendUniforms(Shader* shader, Camera* camera);
 
     void SetTransform(glm::mat4 mat)    { m_transform = mat; }
     void Transform(glm::mat4 mat)       { m_transform = m_transform * mat; }

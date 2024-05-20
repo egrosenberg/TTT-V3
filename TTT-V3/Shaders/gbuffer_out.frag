@@ -30,6 +30,8 @@ struct diffuse_specular
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
+// screen space ambient occlusion
+uniform sampler2D ssao;
 
 // light uniforms
 uniform int nLights;
@@ -346,7 +348,8 @@ void main()
     vec3 Normal = texture(gNormal, texCoords).rgb;
     vec4 AlbedoSpec = texture(gAlbedoSpec, texCoords);
     vec3 Diffuse = lightingOnly ? vec3(1.0f) : AlbedoSpec.rgb;
-    float Specular = AlbedoSpec.r;
+    float Specular = AlbedoSpec.a;
+    float AmbientOcclusion = texture(ssao, texCoords).r;
 
     // calculate total light from light sources
     vec3 diffuseTotal = vec3(0.0f);
@@ -374,7 +377,7 @@ void main()
         specularTotal += cVals.specular;
     }
 
-    vec3 col = Diffuse * (diffuseTotal + ambientVal);
+    vec3 col = Diffuse * (diffuseTotal + ambientVal * AmbientOcclusion);
     col += specularTotal;
 
     FragColor = vec4(col, 1.0f);

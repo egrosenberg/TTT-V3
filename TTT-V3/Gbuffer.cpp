@@ -3,7 +3,8 @@
 #define G_POSITION      0
 #define G_NORMAL        1
 #define G_ALBEDO_SPEC   2
-#define N_GTEXTURES     3
+#define G_DEPTH         3
+#define N_GTEXTURES     4
 
 Gbuffer::Gbuffer(unsigned int width, unsigned int height)
 {
@@ -41,13 +42,21 @@ Gbuffer::Gbuffer(unsigned int width, unsigned int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + G_ALBEDO_SPEC, GL_TEXTURE_2D, (*m_textures)[G_ALBEDO_SPEC], 0);
+    // depth
+    m_textures->push_back(0);
+    glGenTextures(1, &(*m_textures)[G_DEPTH]);
+    glBindTexture(GL_TEXTURE_2D, (*m_textures)[G_DEPTH]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + G_DEPTH, GL_TEXTURE_2D, (*m_textures)[G_DEPTH], 0);
     // set up color attachments with opengl
     GLuint *attachments = new GLuint[m_textures->size()];
-    for (unsigned int i = 0; i < G_BUFFER_DEPTH; ++i)
+    for (unsigned int i = 0; i < m_textures->size(); ++i)
     {
         attachments[i] = (GLuint)(GL_COLOR_ATTACHMENT0 + i);
     }
-    glDrawBuffers(G_BUFFER_DEPTH, attachments);
+    glDrawBuffers(m_textures->size(), attachments);
     // generate a renderbuffer
     RBO rbo(m_width, m_height, 0);
     // check if fbo is complete
@@ -74,7 +83,10 @@ unsigned int Gbuffer::BindTextures(Shader *shader)
     glUniform1i(glGetUniformLocation(shader->ID(), "gAlbedoSpec"), G_ALBEDO_SPEC);
     glActiveTexture(GL_TEXTURE0 + G_ALBEDO_SPEC);
     glBindTexture(GL_TEXTURE_2D, (*m_textures)[G_ALBEDO_SPEC]);
-    return m_textures->size();
+    glUniform1i(glGetUniformLocation(shader->ID(), "gDepth"), G_DEPTH);
+    glActiveTexture(GL_TEXTURE0 + G_DEPTH);
+    glBindTexture(GL_TEXTURE_2D, (*m_textures)[G_DEPTH]);
+    return G_DEPTH + 1;
 }
 
 Gbuffer::~Gbuffer()

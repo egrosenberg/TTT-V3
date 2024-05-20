@@ -11,6 +11,8 @@ out vec3 Normal;
 out vec3 color;
 out vec2 texCoord;
 out vec4 fragPosLight;
+out float depthValue;
+out mat4 projection;
 
 // specify geometry data input struct
 in DATA
@@ -32,6 +34,7 @@ void main()
     Normal = data_in[0].Normal;
     color = data_in[0].color;
     texCoord = data_in[0].texCoord;
+    projection = data_in[0].projection;
     EmitVertex();
     
     // Vertex 1
@@ -42,6 +45,7 @@ void main()
     Normal = data_in[1].Normal;
     color = data_in[1].color;
     texCoord = data_in[1].texCoord;
+    projection = data_in[1].projection;
     EmitVertex();
     
     // Vertex 2
@@ -52,6 +56,7 @@ void main()
     Normal = data_in[2].Normal;
     color = data_in[2].color;
     texCoord = data_in[2].texCoord;
+    projection = data_in[2].projection;
     EmitVertex();
     // Send triangle
     EndPrimitive();

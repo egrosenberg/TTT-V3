@@ -25,13 +25,18 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
+float lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
 
 bool wireframe = false;
-bool drawSkybox = false;
+bool drawSkybox = true;
+bool blackSkybox = true;
 bool lightingOnly = false;
 bool blitToggle = false;
 unsigned int blitBuffer = 0;
-float ambient = 0.1f;
+float ambient = 0.8f;
 
 // create some lights
 std::vector<TTTlight> lights =
@@ -56,6 +61,12 @@ std::string toggleSB(void *v)
     drawSkybox = !drawSkybox;
     std::string onoff = drawSkybox ? "on" : "off";
     return "skybox set to: " + onoff;
+}
+std::string toggleBlack(void* v)
+{
+    blackSkybox = !blackSkybox;
+    std::string onoff = blackSkybox ? "on" : "off";
+    return "black bg set to: " + onoff;
 }
 std::string toggleLO(void* v)
 {
@@ -157,6 +168,8 @@ int main()
     terminal->BindFn("wireframe", wireframeFunction, TTTenum::TTT_VOID);
     std::function<TTT_GENERIC_FUNCTION> skyboxfunction = std::bind(&toggleSB, std::placeholders::_1);
     terminal->BindFn("skybox", skyboxfunction, TTTenum::TTT_VOID);
+    std::function<TTT_GENERIC_FUNCTION> blackSkyboxFunction = std::bind(&toggleBlack, std::placeholders::_1);
+    terminal->BindFn("toggle_bg", blackSkyboxFunction, TTTenum::TTT_VOID);
     std::function<TTT_GENERIC_FUNCTION> lightingOnlyFunction = std::bind(&toggleLO, std::placeholders::_1);
     terminal->BindFn("lighting_only", lightingOnlyFunction, TTTenum::TTT_VOID);
     std::function<TTT_GENERIC_FUNCTION> blitToggleFunction = std::bind(&toggleBlit, std::placeholders::_1);
@@ -181,6 +194,8 @@ int main()
     // shader for g-buffer geom
     Shader *geomPass = new Shader("Shaders/gbuffer_in.vert", "Shaders/gbuffer_in.frag", "Shaders/gbuffer_in.geom");
     Shader *lightingPass = new Shader("Shaders/gbuffer_out.vert", "Shaders/gbuffer_out.frag");
+    // shader for SSAO
+    Shader *ssaoProgram = new Shader("Shaders/ssao.vert", "Shaders/ssao.frag");
 
     // create shadow maps for each of these point lights
     std::vector<Shader*> shadowPrograms;
@@ -243,11 +258,6 @@ int main()
     transform = glm::scale(transform, scale);
     transform = glm::translate(transform, translation);
 
-    // set transform of model
-    //model->SetTransform(transform);
-    //trees->SetTransform(transform);
-    //cat->SetTransform(transform);
-
     // set up post proccessing display
     Display* display = new Display(AA_SAMPLES);
 
@@ -291,8 +301,55 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 
-    TTTenum lightMode = TTTenum::TTT_POINT_LIGHT;
-    bool r_pressed = false;
+    // SSAO stuff
+    // obtain a sample kernel of 64 sample values 
+    std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
+    std::default_random_engine generator;
+    std::vector<glm::vec3> ssaoKernel;
+    for (unsigned int i = 0; i < 64; ++i)
+    {
+        glm::vec3 sample(
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator)
+        );
+        float scale = (float)i / 64.0;
+        scale = lerp(0.1f, 1.0f, scale * scale);
+        sample *= scale;
+        ssaoKernel.push_back(sample);
+    }
+    // create random noise for shader program
+    std::vector<glm::vec3> ssaoNoise;
+    for (unsigned int i = 0; i < 16; i++)
+    {
+        glm::vec3 noise(
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            0.0f);
+        ssaoNoise.push_back(noise);
+    }
+    // create a 4x4 texture to hold the noise in
+    GLuint noiseTexture;
+    glGenTextures(1, &noiseTexture);
+    glBindTexture(GL_TEXTURE_2D, noiseTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // create an FBO for SSAO
+    GLuint ssaoFBO;
+    glGenFramebuffers(1, &ssaoFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+    // create a texture for the output (only R because its a greyscale value
+    GLuint ssaoColorBuffer;
+    glGenTextures(1, &ssaoColorBuffer);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, WIN_WIDTH, WIN_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // bind texture to FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
 
     // set up variables for FPS tracking
     double prevTime = 0.0;
@@ -359,7 +416,34 @@ int main()
         // render to g-buffer
         scene->DrawModels(geomPass, mainCamera);
         //cat->Draw(geomPass, mainCamera);
-        // unvind g-buffer
+        // unbind g-buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // SSAO pass
+        glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+        glClear(GL_COLOR_BUFFER_BIT);
+        gbuffer->BindFBO(GL_READ_FRAMEBUFFER);
+        ssaoProgram->Activate();
+        unsigned int index = gbuffer->BindTextures(ssaoProgram);
+        glUniform1i(glGetUniformLocation(ssaoProgram->ID(), "texNoise"), index);
+        glActiveTexture(GL_TEXTURE0 + index);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+        // bind samples to shader
+        for (int i = 0; i < ssaoKernel.size(); ++i)
+        {
+            glUniform3f(glGetUniformLocation(ssaoProgram->ID(), ("samples[" + std::to_string(i) + "]").c_str()), ssaoKernel[i].x, ssaoKernel[i].y, ssaoKernel[i].z);
+        }
+        mainCamera->Matrix(ssaoProgram, "projection");
+        // draw SSAO
+        // bind rect vao
+        glBindVertexArray(gVAO);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+        // draw our rect
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        // unbind ssao fbo
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Do lighting pass
@@ -371,6 +455,10 @@ int main()
         gbuffer->BindFBO(GL_READ_FRAMEBUFFER);
         // bind textures
         gbuffer->BindTextures(lightingPass);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, ssaoFBO);
+        glUniform1i(glGetUniformLocation(lightingPass->ID(), "ssao"), index);
+        glActiveTexture(GL_TEXTURE0 + index);
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
         
         // Send the light info to the shader
         glUniform1f(glGetUniformLocation(lightingPass->ID(), "ambientVal"), ambient);
@@ -396,7 +484,8 @@ int main()
         // Bind the Shadow Map
         for (int i = 0; i < nLights; ++i)
         {
-            glActiveTexture(GL_TEXTURE0 + G_BUFFER_DEPTH + i);
+            GLuint texOffset = index + 1 + i;
+            glActiveTexture(GL_TEXTURE0 + texOffset);
             shadowMaps[i]->BindTex();
             if (lights[i].type != POINT_LIGHT)
             {
@@ -407,8 +496,8 @@ int main()
                 glm::mat4 temp = glm::mat4(1.0f);
                 glUniformMatrix4fv(glGetUniformLocation(lightingPass->ID(), ("lightProj[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(temp));
             }
-            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowCubeMap[" + std::to_string(i) + "]").c_str()), G_BUFFER_DEPTH + i);
-            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowMap[" + std::to_string(i) + "]").c_str()), G_BUFFER_DEPTH + i);
+            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowCubeMap[" + std::to_string(i) + "]").c_str()), texOffset);
+            glUniform1i(glGetUniformLocation(lightingPass->ID(), ("shadowMap[" + std::to_string(i) + "]").c_str()), texOffset);
         }
         
         // bind rect vao
@@ -438,6 +527,8 @@ int main()
         // draw skybox
         if (drawSkybox)
         {
+            skyboxProgram->Activate();
+            glUniform1i(glGetUniformLocation(skyboxProgram->ID(), "blackSkybox"), blackSkybox);
             skybox->Draw(skyboxProgram, mainCamera, (float)WIN_WIDTH / WIN_HEIGHT);
         }
 
