@@ -2,7 +2,9 @@
 #define MODEL_H
 
 #include <json/json.h>
+#include <math.h>
 #include "Mesh.h"
+
 
 using json = nlohmann::json;
 
@@ -14,6 +16,12 @@ private:
     std::vector<unsigned char> *m_data;
     json m_JSON;
     glm::mat4 m_transform;
+    glm::quat m_rotation_quat;
+    glm::vec3 m_rotation_euler;
+    glm::vec3 m_scale;
+    glm::vec3 m_translation;
+
+    void UpdateMatrix();
 
     std::vector<Mesh*> *m_meshes;
     std::vector<glm::vec3>	*m_translationsMeshes;
@@ -49,7 +57,11 @@ public:
     void Draw(Shader* shader, Camera* camera);
 
     void SetTransform(glm::mat4 mat)    { m_transform = mat; }
-    void Transform(glm::mat4 mat)       { m_transform = m_transform * mat; }
+    void Transform(glm::mat4 mat)       { m_transform = mat * m_transform; }
+
+    void Rotate(glm::vec3 vec);
+    void Scale(glm::vec3 vec);
+    void Translate(glm::vec3 vec);
 
     std::vector<Mesh*> *Meshes() { return m_meshes; };
 

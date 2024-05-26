@@ -86,6 +86,10 @@ std::string toggleLight(void *v)
         return "invalid pointer";
     }
     unsigned int *n = (unsigned int*)v;
+    if (*n >= lights.size())
+    {
+        return "light out of bounds";
+    }
     lights[*n].on = !lights[*n].on;
     return "light " + std::to_string(*n) + " is now " + (lights[*n].on ? "active" : "inactive");
 }

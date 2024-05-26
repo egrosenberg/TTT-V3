@@ -1,6 +1,8 @@
 #include "Model.h"
 #include "main.h"
 
+const float TWO_PI = glm::two_pi<float>();
+
 Model::Model(const char *fname)
 {
     // read json file
@@ -9,6 +11,11 @@ Model::Model(const char *fname)
 
     // initalize transform matrix
     m_transform = glm::mat4(1.0f);
+    m_rotation_quat = glm::quat();
+    m_rotation_euler = glm::vec3(0.0f);
+    m_scale = glm::vec3(1.0f);
+    m_translation = glm::vec3(0.0f);
+
 
     // set file name
     m_fname = fname;
@@ -28,6 +35,12 @@ Model::Model(const char *fname)
     TraverseNode(0);
 }
 
+/**
+ * Draws each mesh in the model
+ * 
+ * @param shader: shaderProgram to use to draw
+ * @param camera: camera to draw from
+ */
 void Model::Draw(Shader *shader, Camera *camera)
 {
     for (unsigned int i = 0; i < m_meshes->size(); ++i)
@@ -42,6 +55,26 @@ void Model::Draw(Shader *shader, Camera *camera)
             (*m_scalesMeshes)[i]
         );
     }
+}
+
+/**
+ * Updates transform matrix with current transformation values
+ */
+void Model::UpdateMatrix()
+{
+    // calculate translation matrix
+    glm::mat4 translation = glm::mat4(1.0f);
+    translation = glm::translate(translation, m_translation);
+
+    // calculate the scale matrix
+    glm::mat4 scale = glm::mat4(1.0f);
+    scale = glm::scale(scale, m_scale);
+
+    // convert rotation to matrix
+    glm::mat4 rotation = glm::mat4_cast(m_rotation_quat);
+
+    // calculate total transform
+    m_transform = translation * scale * rotation;
 }
 
 void Model::LoadMesh(unsigned int indMesh)
@@ -442,6 +475,52 @@ std::vector<glm::vec4> Model::GroupFloatsVec4(std::vector<float> floatVec)
     }
     // return pointer to new vector
     return vectors;
+}
+
+/**
+ * Rotates the model
+ *
+ * @param vec: vec3 containing roll, pitch, and yaw as degrees
+ */
+void Model::Rotate(glm::vec3 vec)
+{
+    // change euler angles with input vector
+    m_rotation_euler += glm::radians(vec);
+    // wrap angles between -360 and 360
+    m_rotation_euler.x = fmod(m_rotation_euler.x,TWO_PI);
+    m_rotation_euler.y = fmod(m_rotation_euler.y,TWO_PI);
+    m_rotation_euler.z = fmod(m_rotation_euler.z,TWO_PI);
+    
+
+    // convert euler angles to quaternion
+    // create quaternions for each axis rotation
+    glm::quat quat_x = glm::angleAxis(m_rotation_euler.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::quat quat_y = glm::angleAxis(m_rotation_euler.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::quat quat_z = glm::angleAxis(m_rotation_euler.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    // calculate final transformation
+    m_rotation_quat =  quat_x * quat_y * quat_z;
+    // update transform matrix
+    UpdateMatrix();
+}
+/**
+ * Scales the model
+ *
+ * @param vec: vec3 containing values to scale by
+ */
+void Model::Scale(glm::vec3 vec)
+{
+    m_scale *= vec;
+    UpdateMatrix();
+}
+/**
+ * Translates the model
+ * 
+ * @param vec: vec3 containing values to translate by
+ */
+void Model::Translate(glm::vec3 vec)
+{
+    m_translation += vec;
+    UpdateMatrix();
 }
 
 Model::~Model()
