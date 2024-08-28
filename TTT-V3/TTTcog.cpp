@@ -39,4 +39,7 @@ TTTcog::TTTcog()
 
 TTTcog::~TTTcog()
 {
+    // get ID / delete cog from engine
+    TTTengine* engine = TTTengine::GetSingleton();
+    engine->DeleteCog(c_ID);
 }

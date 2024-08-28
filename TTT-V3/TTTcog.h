@@ -17,6 +17,9 @@ public:
 
     int ID() { return c_ID; }
 
+    virtual void Update() {}
+    virtual void FixedUpdate() {}
+
     virtual ~TTTcog();
 };
 

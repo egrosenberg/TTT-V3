@@ -56,12 +56,18 @@ public:
 
     void Draw(Shader* shader, Camera* camera);
 
-    void SetTransform(glm::mat4 mat)    { m_transform = mat; }
-    void Transform(glm::mat4 mat)       { m_transform = mat * m_transform; }
+    glm::quat GetRotationQuat() { return m_rotation_quat; }
+    glm::vec3 GetRotationEuler() { return m_rotation_euler; }
+    glm::vec3 GetScale() { return m_scale; }
+    glm::vec3 GetPosition() { return m_translation; }
 
     void Rotate(glm::vec3 vec);
     void Scale(glm::vec3 vec);
     void Translate(glm::vec3 vec);
+
+    void SetEuler(glm::vec3 eulerValues);
+    void SetScale(glm::vec3 scale);
+    void SetPosition(glm::vec3 position);
 
     std::vector<Mesh*> *Meshes() { return m_meshes; };
 

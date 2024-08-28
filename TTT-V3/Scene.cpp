@@ -93,7 +93,9 @@ std::string Scene::TerminalRotateModel(void* v)
     // create a vec3 of rotation values
     glm::vec3 rotation = glm::vec3(vec->y, vec->z, vec->w);
     // rotate model based on euler values
+    m_modelMutex.lock();
     m_models->at(index)->Rotate(glm::vec3(vec->y, vec->z, vec->w));
+    m_modelMutex.unlock();
     return "rotated model";
 }
 /**
@@ -125,7 +127,9 @@ std::string Scene::TerminalScaleModel(void *v)
     // store scale values in vec3
     glm::vec3 scale = glm::vec3(x, y, z);
     // Scale model by vec values
+    m_modelMutex.lock();
     m_models->at(index)->Scale(scale);
+    m_modelMutex.unlock();
     return "scaled model";
 }
 /**
@@ -157,7 +161,9 @@ std::string Scene::TerminalTranslateModel(void* v)
     // create a vector of translation values
     glm::vec3 translation = glm::vec3(x, y, z);
     // translate model
+    m_modelMutex.lock();
     m_models->at(index)->Translate(translation);
+    m_modelMutex.unlock();
     return "translated model";
 }
 /**
@@ -170,12 +176,32 @@ bool Scene::LoadModel(std::string fname)
 {
     try
     {
+        m_modelMutex.lock();
         m_models->push_back(new Model(fname.c_str()));
     }
     catch (...)
     {
+        m_modelMutex.unlock();
         return false;
     }
+    m_modelMutex.unlock();
+}
+/**
+ * Adds a pre-existing model to the scene
+ *
+ * @param model: pointer to model object
+ * @return true if successful, false otherwise
+ */
+bool Scene::AddModel(Model *model)
+{
+    if (model)
+    {
+        m_modelMutex.lock();
+        m_models->push_back(model);
+        m_modelMutex.unlock();
+        return true;
+    }
+    return false;
 }
 /**
  * Unloads a model from the models list
@@ -185,12 +211,15 @@ bool Scene::LoadModel(std::string fname)
  */
 bool Scene::UnloadModel(unsigned int index)
 {
+    m_modelMutex.lock();
     // check bounds
     if (index >= m_models->size())
     {
+        m_modelMutex.unlock();
         return false;
     }
     m_models->erase(m_models->begin() + index);
+    m_modelMutex.unlock();
 }
 /**
  * Draw each model stored in the model loader
@@ -200,10 +229,35 @@ bool Scene::UnloadModel(unsigned int index)
  */
 void Scene::DrawModels(Shader* shader, Camera* camera)
 {
+    m_modelMutex.lock();
     for (int i = 0; i < m_models->size(); ++i)
     {
-        (*m_models)[i]->Draw(shader, camera);
+        if (m_models->at(i))
+        {
+            (*m_models)[i]->Draw(shader, camera);
+        }
     }
+    m_modelMutex.unlock();
+}
+/**
+ * Get model at speicified index
+ * 
+ * @param index: index of model
+ * 
+ * @return pointer to model if indexed model exists, nullptr if invalid index
+ */
+Model *Scene::ModelAt(unsigned int index)
+{
+    m_modelMutex.lock();
+    // check bounds
+    if (index >= m_models->size())
+    {
+        m_modelMutex.unlock();
+        return nullptr;
+    }
+    Model *model = m_models->at(index);
+    m_modelMutex.unlock();
+    return model;
 }
 
 Scene::~Scene()

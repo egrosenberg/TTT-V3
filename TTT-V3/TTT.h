@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef TTT_H
+#define TTT_H
 
 #include <glm/glm.hpp>
 

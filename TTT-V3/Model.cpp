@@ -74,7 +74,7 @@ void Model::UpdateMatrix()
     glm::mat4 rotation = glm::mat4_cast(m_rotation_quat);
 
     // calculate total transform
-    m_transform = translation * scale * rotation;
+    m_transform = scale * rotation * translation;
 }
 
 void Model::LoadMesh(unsigned int indMesh)
@@ -480,12 +480,12 @@ std::vector<glm::vec4> Model::GroupFloatsVec4(std::vector<float> floatVec)
 /**
  * Rotates the model
  *
- * @param vec: vec3 containing roll, pitch, and yaw as degrees
+ * @param vec: vec3 containing roll, pitch, and yaw as radians
  */
 void Model::Rotate(glm::vec3 vec)
 {
     // change euler angles with input vector
-    m_rotation_euler += glm::radians(vec);
+    m_rotation_euler += vec;
     // wrap angles between -360 and 360
     m_rotation_euler.x = fmod(m_rotation_euler.x,TWO_PI);
     m_rotation_euler.y = fmod(m_rotation_euler.y,TWO_PI);
@@ -523,6 +523,51 @@ void Model::Translate(glm::vec3 vec)
     UpdateMatrix();
 }
 
+/**
+ * Sets the rotation of the model to given euler rotation values
+ *
+ * @param euler: vec3 euler angles
+ */
+void Model::SetEuler(glm::vec3 euler)
+{
+    // change euler angles with input vector
+    m_rotation_euler = euler;
+    // wrap angles between -360 and 360
+    m_rotation_euler.x = fmod(m_rotation_euler.x, TWO_PI);
+    m_rotation_euler.y = fmod(m_rotation_euler.y, TWO_PI);
+    m_rotation_euler.z = fmod(m_rotation_euler.z, TWO_PI);
+
+
+    // convert euler angles to quaternion
+    // create quaternions for each axis rotation
+    glm::quat quat_x = glm::angleAxis(m_rotation_euler.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::quat quat_y = glm::angleAxis(m_rotation_euler.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::quat quat_z = glm::angleAxis(m_rotation_euler.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    // calculate final transformation
+    m_rotation_quat = quat_x * quat_y * quat_z;
+    // update transform matrix
+    UpdateMatrix();
+}
+/**
+ * Sets the scale of the model
+ *
+ * @param scale: vec3 containing scale values for each axis
+ */
+void Model::SetScale(glm::vec3 scale)
+{
+    m_scale = scale;
+    UpdateMatrix();
+}
+/**
+ * Sets the translation values of the model
+ *
+ * @param position: vec3 containing position on each axis
+ */
+void Model::SetPosition(glm::vec3 position)
+{
+    m_translation = position;
+    UpdateMatrix();
+}
 Model::~Model()
 {
     delete m_data;

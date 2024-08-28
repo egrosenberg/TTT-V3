@@ -12,6 +12,8 @@
 #include "Shadowmap.h"
 #include "Gbuffer.h"
 #include "Scene.h"
+#include "TTTphysics.h"
+#include "TTTobject.h"
 
 #include <glad/glad.h>
 #include <list>

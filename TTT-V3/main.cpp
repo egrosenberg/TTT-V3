@@ -25,7 +25,6 @@ std::string readFile(const char* filename)
     throw(errno);
 }
 
-
 bool wireframe = false;
 bool drawSkybox = false;
 bool lightingOnly = false;
@@ -42,7 +41,7 @@ std::vector<TTTlight> lights =
     {false, SPOT_LIGHT , glm::vec4(0.00f, 1.00f, 1.00f, 1.0f), glm::vec3( 10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
     {false, POINT_LIGHT, glm::vec4(0.00f, 0.00f, 1.00f, 1.0f), glm::vec3( 10.0f, 10.0f, -10.0f), 0.01f, 0.15f},
     {false, SPOT_LIGHT , glm::vec4(1.00f, 0.00f, 1.00f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f},
-    {false, DIREC_LIGHT, glm::vec4(0.33f, 0.33f, 0.33f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
+    {true , DIREC_LIGHT, glm::vec4(0.33f, 0.33f, 0.33f, 1.0f), glm::vec3(-10.0f, 10.0f,  10.0f), 0.85f, 0.90f}
 };
 
 std::string toggleWF(void *v)
@@ -200,13 +199,6 @@ int main()
         }
     }
 
-
-    // def light color
-    glm::vec4 lightColor = glm::vec4(1.00f, 1.00f, 1.00f, 1.0f);
-    // define position and model for light
-    glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
-    glm::vec3 lightPosDirec = glm::vec3(0.5f, 0.5f, 0.5f);
-
     // Activate framebuffer shader and set uniform
     frameProgram->Activate();
     glUniform1i(glGetUniformLocation(frameProgram->ID(), "screenTexture"), 0);
@@ -238,19 +230,6 @@ int main()
     scene->LoadModel("models/ground/scene.gltf");
     scene->LoadModel("models/trees/scene.gltf");
 
-    // transform the model
-    glm::vec3 translation = glm::vec3(-10.0f, 10.0f, -10.0f);
-    glm::vec3 rotation = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 scale = glm::vec3(0.008f);
-    glm::mat4 transform = glm::mat4(1.0f);
-    //transform = glm::rotate(transform, glm::radians(-90.0f), rotation);
-    transform = glm::scale(transform, scale);
-    transform = glm::translate(transform, translation);
-
-    // set transform of model
-    //model->SetTransform(transform);
-    //trees->SetTransform(transform);
-    //cat->SetTransform(transform);
 
     // set up post proccessing display
     Display* display = new Display(AA_SAMPLES);
@@ -295,6 +274,13 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 
+    // create a test physics object
+    TTTobject *testObject = new TTTobject(scene);
+    testObject->LoadModel("models/cat/scene.gltf");
+    testObject->SetModelScale(glm::vec3(0.008f));
+    testObject->SetRotation(glm::vec3(0.0f, 0.0f, glm::radians(90.0f)));
+    testObject->SetAcceleration(glm::vec3(1.0f, 0.5f, 0.0f));
+
     TTTenum lightMode = TTTenum::TTT_POINT_LIGHT;
     bool r_pressed = false;
 
@@ -304,9 +290,11 @@ int main()
     double timeDiff = 0.0;
     unsigned int frameCounter = 0;
 
+    TTTengine *gameEngine = TTTengine::GetSingleton();
     // Main loop
     while (!glfwWindowShouldClose(winMain))
     {
+
         // calculate fps
         crntTime = glfwGetTime();
         timeDiff = crntTime - prevTime;
@@ -380,8 +368,6 @@ int main()
         glUniform1f(glGetUniformLocation(lightingPass->ID(), "ambientVal"), ambient);
         glUniform1i(glGetUniformLocation(lightingPass->ID(), "lightingOnly"), lightingOnly);
         glUniform1f(glGetUniformLocation(lightingPass->ID(), "farPlane"), SHADOW_FARPLANE);
-        glUniform4f(glGetUniformLocation(lightingPass->ID(), "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-        glUniform3f(glGetUniformLocation(lightingPass->ID(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
         glUniform1i(glGetUniformLocation(lightingPass->ID(), "nLights"), nLights);
         for (int i = 0; i < nLights; ++i)
         {
@@ -480,10 +466,14 @@ int main()
     delete geomPass;
     delete lightingPass;
     delete gbuffer;
+    delete testObject;
+
+    delete gameEngine;
 
     // close window
     glfwDestroyWindow(winMain);
     // terminate glfw
     glfwTerminate();
+
     return 0;
 }

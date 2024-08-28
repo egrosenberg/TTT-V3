@@ -40,10 +40,6 @@ uniform samplerCube shadowCubeMap[7];
 uniform sampler2D shadowMap[7];
 // use light projection for shadows (spot / directional)
 uniform mat4 lightProj[7];
-// use light color uniform
-uniform vec4 lightColor;
-// use light position
-uniform vec3 lightPos;
 // use camera position for specular lighting
 uniform vec3 camPos;
 // use far plane value
