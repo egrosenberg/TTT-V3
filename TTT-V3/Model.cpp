@@ -49,10 +49,10 @@ void Model::Draw(Shader *shader, Camera *camera)
         (
             shader,
             camera,
-            (*m_matricesMeshes)[i] * m_transform,
-            (*m_translationsMeshes)[i],
-            (*m_rotationsMeshes)[i],
-            (*m_scalesMeshes)[i]
+            glm::mat4(1.0f),//(*m_matricesMeshes)[i],
+            (*m_translationsMeshes)[i] + m_translation,
+            glm::rotate((*m_rotationsMeshes)[i], glm::vec3(m_rotation_euler)),
+            (*m_scalesMeshes)[i] * m_scale
         );
     }
 }
@@ -74,7 +74,7 @@ void Model::UpdateMatrix()
     glm::mat4 rotation = glm::mat4_cast(m_rotation_quat);
 
     // calculate total transform
-    m_transform = scale * rotation * translation;
+    m_transform =  scale * translation * rotation;
 }
 
 void Model::LoadMesh(unsigned int indMesh)

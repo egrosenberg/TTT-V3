@@ -54,6 +54,7 @@ public:
 
     // getters and setters for up
     void SetUp(glm::vec3 up) { m_up = up; }
+    void SetPos(glm::vec3 pos);
     glm::vec3 GetUp() { return m_up; }
     
     glm::vec3 GetPos() { return m_position; }

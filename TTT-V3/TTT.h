@@ -8,6 +8,8 @@
 #define WIN_HEIGHT 1080
 #define WIN_RATIO  1.77	// width / height 
 #define FOV 45.0f
+#define NEAR_PLANE 0.1f
+#define FAR_PLANE 400.0f
 #define AA_SAMPLES 8
 #define GAMMA 2.2f
 #define SHADOW_W 2048

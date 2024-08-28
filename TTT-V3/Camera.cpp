@@ -139,6 +139,11 @@ void Camera::Inputs(GLFWwindow* window)
     }
 }
 
+void Camera::SetPos(glm::vec3 pos)
+{
+    m_position = pos;
+}
+
 Camera::~Camera()
 {
 

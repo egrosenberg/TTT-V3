@@ -28,7 +28,7 @@ void Skybox::CamUniforms(Shader *shader, Camera *camera, float screenRatio)
     glm::vec3 camPos = camera->GetPos();
     view = glm::mat4(glm::mat3(glm::lookAt(camPos, camPos + camera->GetDirection(), camera->GetUp())));
     // set projection matrix
-    projection = glm::perspective(glm::radians(45.0f), screenRatio, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), screenRatio, NEAR_PLANE, FAR_PLANE);
     // export matrices to vertex shader
     glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader->ID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
