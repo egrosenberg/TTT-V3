@@ -50,13 +50,13 @@ void TTTengine::FixedUpdateThreadProc(TTTengine *engine)
 
     // get time for first tick
     double nextTick = engine->m_startTime + TICK_TIME;
+
     // run updates continuously
     while (engine->m_isRunning)
     {
         // only run fixed updates after a tick is available
         if (glfwGetTime() >= nextTick)
         {
-            nextTick += TICK_TIME;
             nextTick += TICK_TIME;
             // lock cogs mutex
             engine->m_cogsMutex->lock();

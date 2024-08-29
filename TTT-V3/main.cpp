@@ -275,11 +275,9 @@ int main()
 
 
     // create a test physics object
-    TTTobject *testObject = new TTTobject(scene);
+    Pilotable *testObject = new Pilotable(scene, mainCamera, winMain);
     testObject->LoadModel("models/cat/scene.gltf");
-    //testObject->SetModelScale(glm::vec3(0.008f));
-    testObject->SetRotation(glm::vec3(0.0f, 0.0f, glm::radians(0.0f)));
-    testObject->SetAcceleration(glm::vec3(1.0f, 0.5f, 0.0f));
+    testObject->SetObjectRotation(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
 
     TTTenum lightMode = TTTenum::TTT_POINT_LIGHT;
     bool r_pressed = false;
@@ -339,7 +337,6 @@ int main()
             mainCamera->Inputs(winMain);
         }
         // update camera matrix
-        mainCamera->SetPos(testObject->Position() + glm::vec3(-10.0f, 10.0f, 0.0f));
         mainCamera->UpdateMatrix(FOV, NEAR_PLANE, FAR_PLANE);
         glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
 

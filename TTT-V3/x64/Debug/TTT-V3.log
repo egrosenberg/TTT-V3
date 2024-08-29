@@ -1,7 +1,2 @@
-﻿  main.cpp
-C:\Users\ethan\git\TTT-V3\TTT-V3\Gbuffer.h(25,25): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(312,40): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(314,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(435,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ethan\git\TTT-V3\TTT-V3\main.cpp(449,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+﻿  Pilotable.cpp
   TTT-V3.vcxproj -> C:\Users\ethan\git\TTT-V3\x64\Debug\TTT-V3.exe

@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Textures\Skybox">
       <UniqueIdentifier>{b9101db6-54d3-4814-8f38-f2dbb63483f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Classes">
+      <UniqueIdentifier>{76146c04-3ba0-4577-a9ab-32f35032d5cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -99,6 +102,9 @@
     <ClCompile Include="TTTobject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pilotable.cpp">
+      <Filter>Game Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -172,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="TTTobject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pilotable.h">
+      <Filter>Game Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

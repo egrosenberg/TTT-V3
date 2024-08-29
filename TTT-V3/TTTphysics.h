@@ -7,6 +7,8 @@
 
 class TTTphysics : public TTTcog
 {
+private:
+    float m_lastTick;
 protected:
     // 3d variables
     glm::vec3 p_position;            // meters

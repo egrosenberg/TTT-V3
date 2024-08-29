@@ -7,6 +7,7 @@ const float TWO_PI = glm::two_pi<float>();
 
 TTTphysics::TTTphysics()
 {
+    m_lastTick = glfwGetTime();
     // inialize variables to 0
     p_position = glm::vec3(0.0f);            // meters
     p_velocity = glm::vec3(0.0f);            // meters/second
@@ -29,8 +30,13 @@ TTTphysics::TTTphysics()
  */
 void TTTphysics::FixedUpdate()
 {
+    // calculate time delta
+    float time = glfwGetTime();
+    float deltaTime = time - m_lastTick;
+    m_lastTick = time;
+
     // update velocity using acceleration
-    p_velocity += p_acceleration * TICK_TIME;
+    p_velocity += p_acceleration * deltaTime;
     // force velocity to respect terminal velocity
     float speed = glm::length(p_velocity);
     if (speed > p_terminalVelocity)
@@ -40,7 +46,7 @@ void TTTphysics::FixedUpdate()
         p_velocity = glm::normalize(p_velocity);
         p_velocity *= speed;
     }
-    p_angularVelocity += p_angularAcceleration * TICK_TIME;
+    p_angularVelocity += p_angularAcceleration * deltaTime;
     // force rotational velocity to respect terminal velocity
     float rotationalSpeed = glm::length(p_velocity);
     if (rotationalSpeed > p_terminalRotationalVelocity)
@@ -52,9 +58,9 @@ void TTTphysics::FixedUpdate()
     }
 
     // update position using velocity
-    p_position += p_velocity * TICK_TIME;
+    p_position += p_velocity * deltaTime;
     // update rotation using angular velocity
-    p_rotation += p_angularVelocity * TICK_TIME;
+    p_rotation += p_angularVelocity * deltaTime;
     // wrap angles betwen -360 and 360
     p_rotation.x = fmod(p_rotation.x, TWO_PI);
     p_rotation.y = fmod(p_rotation.y, TWO_PI);

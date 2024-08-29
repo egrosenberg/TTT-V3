@@ -14,6 +14,7 @@
 #include "Scene.h"
 #include "TTTphysics.h"
 #include "TTTobject.h"
+#include "Pilotable.h"
 
 #include <glad/glad.h>
 #include <list>

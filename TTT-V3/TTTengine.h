@@ -1,7 +1,7 @@
 #ifndef TTT_ENGINE_H
 #define TTT_ENGINE_H
 
-#define TICK_TIME 0.02f
+#define TICK_TIME 0.01f
 
 #include <vector>
 #include <utility>

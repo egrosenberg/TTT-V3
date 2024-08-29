@@ -59,6 +59,7 @@ public:
     
     glm::vec3 GetPos() { return m_position; }
     glm::vec3 GetDirection() { return m_direction; }
+    void SetDirection(glm::vec3 direction) { m_direction = direction; }
 
     virtual ~Camera();
 };

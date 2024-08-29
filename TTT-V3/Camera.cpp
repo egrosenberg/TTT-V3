@@ -53,6 +53,7 @@ void Camera::Matrix(Shader* shader, const char* uniform)
 // process movement inputs for camera
 void Camera::Inputs(GLFWwindow* window)
 {
+    /*
     // forward
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -93,7 +94,7 @@ void Camera::Inputs(GLFWwindow* window)
     {
         m_speed = CAM_SPEED;
     }
-
+    */
     // hide / show mouse when clicking
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
